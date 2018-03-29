@@ -10,8 +10,8 @@
 
 <script>
 import THREE from 'three';
-// import ThreeBSPMaker from "three-js-csg";
-// let ThreeBSP = ThreeBSPMaker(THREE);
+import ThreeBSPMaker from "three-js-csg";
+let ThreeBSP = ThreeBSPMaker(THREE);
 
 console.log('THREE', THREE);
 const OrbitControls = require('three-orbit-controls')(THREE);
@@ -43,12 +43,17 @@ export default {
 
     document.getElementById("main_model").appendChild(renderer.domElement);
 
-    var box = new THREE.BoxGeometry(3, 3, 3);
-    var material = new THREE.MeshPhongMaterial({ color: 0xdddddd, specular: 0x1a1a1a, shininess: 30, shading: THREE.FlatShading });
-    var boxMesh = new THREE.Mesh(box, material);
+    const box = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3));
+    const sphere = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 5, 32));
 
-    scene.add(boxMesh);
+    const sBSP = new ThreeBSP(sphere);
+    const bBSP = new ThreeBSP(box);
 
+    const sub = bBSP.subtract(sBSP);
+    const newMesh = sub.toMesh();
+    newMesh.material = new THREE.MeshPhongMaterial({ color: 0xdddddd, specular: 0x1a1a1a, shininess: 30, shading: THREE.FlatShading });
+
+    scene.add(newMesh);
 
     render();
     controls.addEventListener( 'change', render );
