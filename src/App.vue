@@ -26,8 +26,9 @@ export default {
     };
   },
   mounted() {
+    let canvasContainer = document.getElementById("main_model");
     var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(75, 500.0 / 200, 0.1, 1000);
+    var camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
     camera.position.x = 5;
     camera.position.y = 5;
     camera.position.z = 5;
@@ -35,13 +36,20 @@ export default {
 
     var renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(0xdddddd);
-    renderer.setSize(500, 200);
+
+    function adjustForCanvasContainerSize(){
+      let ccBounds = canvasContainer.getBoundingClientRect();
+      renderer.setSize(ccBounds.width, ccBounds.height);
+      camera.aspect = ccBounds.width / ccBounds.height;
+      camera.updateProjectionMatrix();
+    }
+    adjustForCanvasContainerSize();
 
     const light = new THREE.PointLight(0xffffff);
     light.position.set(-40, 50, 90);
     scene.add(light);
 
-    document.getElementById("main_model").appendChild(renderer.domElement);
+    canvasContainer.appendChild(renderer.domElement);
 
     const box = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3));
     const sphere = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 5, 32));
@@ -60,7 +68,7 @@ export default {
     function render() {
         renderer.render( scene, camera );
     }
-}
+  }
 };
 </script>
 
@@ -70,6 +78,7 @@ body {
   margin: 0;
   padding: 0;
 }
+
 #app {
   /* position: relative; */
   display: flex;
@@ -90,4 +99,5 @@ body {
 #commands {
   flex: 1;
 }
+
 </style>
