@@ -2,7 +2,12 @@
   <div id="app">
     <model-viewer class="model-viewer"/>
     <command-list-viewer class="command-list"/>
-    <button type="button" @click="addCommand">Add Command</button>
+    <div class="">
+      <button type="button" @click="addCommand">Add Command</button>
+      <button type="button" @click="addCube">Add Cube</button>
+      <button type="button" @click="addCylinder">Add Cylinder</button>
+      <button type="button" @click="union">Union</button>
+    </div>
   </div>
 </template>
 
@@ -15,12 +20,13 @@
     name: 'app',
     data() {
       return {
-        myCommands: ["cube", "cylinder", "subtract", 'translate'],
-        commandList: CommandList
       };
     },
     methods: mapMutations([
-      'addCommand'
+      'addCommand',
+      'addCube',
+      'addCylinder',
+      'union'
     ]),
     components: {
       ModelViewer,
