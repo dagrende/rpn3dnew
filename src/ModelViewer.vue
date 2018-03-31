@@ -22,10 +22,10 @@
       camera.position.x = 5;
       camera.position.y = 5;
       camera.position.z = 5;
-      const controls = new OrbitControls(camera);
 
       var renderer = new THREE.WebGLRenderer();
       renderer.setClearColor(0xdddddd);
+      const controls = new OrbitControls(camera, canvasContainer);
 
       function adjustForCanvasContainerSize(){
         let ccBounds = canvasContainer.getBoundingClientRect();
