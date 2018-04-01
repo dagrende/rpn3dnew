@@ -63,7 +63,7 @@
 
   .model-viewer {
     background-color: #ddd;
-    flex: auto;
+    flex: 1;
   }
   .buttons {
     flex: initial;

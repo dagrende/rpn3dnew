@@ -9,7 +9,6 @@ import store from './store';
 
 export default {
   addCube(state) {
-    console.log('add cube');
     let box = new THREE.BoxGeometry(4, 4, 4).translate(2, 0, 2);
     state.stack.splice(0, 0, new ThreeBSP(new THREE.Mesh(box)));
   },

@@ -1,12 +1,11 @@
 <template>
-  <div id="main_model">
+  <div ref="canvasContainer" class="canvas-container">
   </div>
 </template>
 
 <script>
   import THREE from 'three';
-  import ThreeBSPMaker from 'three-js-csg';
-  let ThreeBSP = ThreeBSPMaker(THREE);
+  const ThreeBSP = require('three-js-csg')(THREE);
   const OrbitControls = require('three-orbit-controls')(THREE);
   let setObject;
 
@@ -16,7 +15,7 @@
       };
     },
     mounted() {
-      let canvasContainer = document.getElementById("main_model");
+      let canvasContainer = this.$refs.canvasContainer;
       const scene = new THREE.Scene();
       var camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
       camera.position.x = 5;
@@ -27,27 +26,26 @@
       renderer.setClearColor(0xdddddd);
       const controls = new OrbitControls(camera, canvasContainer);
 
-      function adjustForCanvasContainerSize(){
-        let ccBounds = canvasContainer.getBoundingClientRect();
-        console.log('ccBounds', ccBounds);
-        renderer.setSize(ccBounds.width, ccBounds.height);
-        camera.aspect = ccBounds.width / ccBounds.height;
-        camera.updateProjectionMatrix();
-      }
-      adjustForCanvasContainerSize();
-
       const light = new THREE.PointLight(0xffffff);
       light.position.set(-40, 50, 90);
       scene.add(light);
 
       const material = new THREE.MeshPhongMaterial({ color: 0xdddddd, specular: 0x1a1a1a, shininess: 30, shading: THREE.FlatShading });
 
+      function adjustForCanvasContainerSize(){
+        renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+        camera.aspect = canvasContainer.clientWidth / canvasContainer.clientHeight;
+        camera.updateProjectionMatrix();
+        render();
+      }
+      adjustForCanvasContainerSize();
+      window.onresize = adjustForCanvasContainerSize;
+
       canvasContainer.appendChild(renderer.domElement);
 
       let prevObj = null;
       setObject = function(obj) {
         // Our fancy notification (2).
-        console.log('stackTop change!', scene.children.length)
         if (prevObj) {
           scene.remove(prevObj);
         }
@@ -74,11 +72,18 @@
     },
     watch: {
       stackTop (newStackTop, oldStackTop) {
-        setObject(newStackTop);
+        setObject && setObject(newStackTop);
       }
     }
   };
 </script>
 
 <style>
+.canvas-container {
+  overflow: hidden;
+}
+.canvas-container canvas {
+  width: 100%;
+}
+
 </style>
