@@ -1,15 +1,17 @@
 <template>
-  <div class="calc-button" @click="$store.commit(mutation)">
-    <img :src="'dist/'+ image" alt="">
+  <button class="calc-button" :style="'background:url(dist/'+ image + ') center / contain no-repeat'"
+      @click="$store.commit(mutation)"
+      :title="title || mutation">
     {{text}}
-  </div>
+  </button>
 </template>
 <script>
 export default {
   props: {
     mutation: String,
     image: String,
-    text: String
+    text: String,
+    title: String
   },
   data() {
     return {
@@ -19,14 +21,13 @@ export default {
 </script>
 <style>
   .calc-button {
-    width: 2em;
-    height: 2em;
+    width: 4em;
+    height: 4em;
+    background-size: contain;
     border: solid #eee 1px;
-    //background-color: #ccc;
-    display: inline-block;
   }
   .calc-button img {
-    max-width:100%;
-    max-height:100%;
+    /* max-width:100%;
+    max-height:100%; */
   }
 </style>

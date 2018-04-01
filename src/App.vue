@@ -2,14 +2,14 @@
   <div id="app">
     <model-viewer class="model-viewer"/>
     <!-- <command-list-viewer class="command-list"/> -->
-    <div class="buton-area">
-      <div class="buttons">
-        <calc-button image="cube-icon.png" mutation="addCube"/>
-        <calc-button image="cylinder-icon.png" mutation="addCylinder"/>
-        <calc-button image="torus-icon.png" mutation="addTorus"/>
-        <calc-button image="sphere-icon.png" mutation="addSphere"/>
+    <div class="buttons">
+      <div class="button-row">
+        <calc-button image="cube-icon.png" mutation="addCube" title="cube"/>
+        <calc-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
+        <calc-button image="torus-icon.png" mutation="addTorus" title="torus"/>
+        <calc-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
       </div>
-      <div class="buttons">
+      <div class="button-row">
         <calc-button image="union-icon.svg" mutation="union"/>
         <calc-button image="difference-icon.svg" mutation="subtract"/>
         <calc-button image="intersection-icon.svg" mutation="intersect"/>
@@ -61,11 +61,20 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  .model-viewer {
+    background-color: #ddd;
+    flex: auto;
+  }
   .buttons {
-    padding: 0em;
+    flex: initial;
+    display: flex;
+    flex-direction: column;
+  }
+  .button-row {
+
+  }
+  .button-row button {
+
   }
 
-  .model-viewer {
-    flex: 1;
-  }
 </style>
