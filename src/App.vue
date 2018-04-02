@@ -3,6 +3,11 @@
     <model-viewer class="model-viewer"/>
     <!-- <command-list-viewer class="command-list"/> -->
     <div class="buttons">
+      <div class="field-row">
+        X <input type="text" :value="$store.state.form.x" @input="updateX">
+        Y <input type="text" :value="$store.state.form.y">
+        Z <input type="text" :value="$store.state.form.z">
+      </div>
       <div class="button-row">
         <calc-button image="cube-icon.png" mutation="addCube" title="cube"/>
         <calc-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
@@ -13,6 +18,9 @@
         <calc-button image="union-icon.svg" mutation="union"/>
         <calc-button image="difference-icon.svg" mutation="subtract"/>
         <calc-button image="intersection-icon.svg" mutation="intersect"/>
+        <calc-button text="move" mutation="translate"/>
+        <calc-button text="scale" mutation="scale"/>
+        <calc-button text="rotate" mutation="rotate"/>
       </div>
     </div>
   </div>
@@ -36,6 +44,11 @@
     data() {
       return {
       };
+    },
+    methods: {
+      updateX (e) {
+        this.$store.commit('updateX', e.target.value)
+      }
     },
     components: {
       ModelViewer,
@@ -70,11 +83,12 @@
     display: flex;
     flex-direction: column;
   }
-  .button-row {
-
+  .field-row {
+    padding: .5em 0 .2em .5em;
   }
-  .button-row button {
-
+  .field-row input {
+    width: 5em;
+    text-align: right;
   }
 
 </style>

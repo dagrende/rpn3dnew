@@ -30,6 +30,16 @@ export default {
   },
   intersect(state) {
     ensure2Items(()=>state.stack.splice(0, 2, state.stack[0].intersect(state.stack[1])));
+  },
+  updateX(state, x) {
+    console.log('updateX', x);
+    state.form.x = x;
+  },
+  translate(state) {
+    console.log('x', +state.form.x);
+    let mesh = state.stack[0].toMesh();
+    mesh = mesh.translateX(+state.form.x);
+    state.stack.splice(0, 1, new ThreeBSP(mesh))
   }
 }
 

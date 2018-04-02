@@ -13,7 +13,12 @@ export default new Vuex.Store({
     // ordered sequence of commands that manipulates the stack
     commands: ['addCube', 'addCylinder', 'union'],
     // stack of models represented by ThreeBSP objects - stack[0] is displayed in the web page
-    stack: []
+    stack: [],
+    form: {
+      x: 0,
+      y: 0,
+      z: 0
+    }
   },
   mutations: mutations
 })
