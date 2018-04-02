@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { getField, updateField } from 'vuex-map-fields';
 import commandExecutor from './commandExecutor'
 import THREE from 'three';
-import ThreeBSPMaker from 'three-js-csg';
-let ThreeBSP = ThreeBSPMaker(THREE);
+let ThreeBSP = require('three-js-csg')(THREE);
 import mutations from './mutations';
 
 Vue.use(Vuex)
@@ -20,5 +20,8 @@ export default new Vuex.Store({
       z: 0
     }
   },
+  getters: {
+      getField,
+    },
   mutations: mutations
 })

@@ -4,9 +4,9 @@
     <!-- <command-list-viewer class="command-list"/> -->
     <div class="buttons">
       <div class="field-row">
-        X <input type="text" :value="$store.state.form.x" @input="updateX">
-        Y <input type="text" :value="$store.state.form.y">
-        Z <input type="text" :value="$store.state.form.z">
+        X <input v-model="x" onFocus="this.setSelectionRange(0, this.value.length)">
+        Y <input v-model="y" onFocus="this.setSelectionRange(0, this.value.length)">
+        Z <input v-model="z" onFocus="this.setSelectionRange(0, this.value.length)">
       </div>
       <div class="button-row">
         <calc-button image="cube-icon.png" mutation="addCube" title="cube"/>
@@ -28,6 +28,7 @@
 
 <script>
   import { mapGetters, mapActions, mapMutations } from 'vuex'
+  import { mapFields } from 'vuex-map-fields'
   import ModelViewer from './ModelViewer.vue'
   import CommandListViewer from './CommandListViewer.vue'
   import CalcButton from './CalcButton'
@@ -50,6 +51,12 @@
         this.$store.commit('updateX', e.target.value)
       }
     },
+    computed: {
+      ...mapFields([
+        'form.x',
+        'form.y',
+        'form.z'
+    ])},
     components: {
       ModelViewer,
       CommandListViewer,

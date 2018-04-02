@@ -5,11 +5,12 @@ import THREE from 'three';
 import ThreeBSPMaker from 'three-js-csg';
 let ThreeBSP = ThreeBSPMaker(THREE);
 import store from './store';
+import { getField, updateField } from 'vuex-map-fields';
 
 
 export default {
   addCube(state) {
-    let box = new THREE.BoxGeometry(4, 4, 4).translate(2, 0, 2);
+    let box = new THREE.BoxGeometry(1, 1, 1);
     state.stack.splice(0, 0, new ThreeBSP(new THREE.Mesh(box)));
   },
   addCylinder(state) {
@@ -31,14 +32,24 @@ export default {
   intersect(state) {
     ensure2Items(()=>state.stack.splice(0, 2, state.stack[0].intersect(state.stack[1])));
   },
-  updateX(state, x) {
-    console.log('updateX', x);
-    state.form.x = x;
-  },
+  updateField,
   translate(state) {
-    console.log('x', +state.form.x);
+    let mesh = state.stack[0].toMesh()
+      .translateX(+state.form.x)
+      .translateY(+state.form.y)
+      .translateZ(+state.form.z);
+    state.stack.splice(0, 1, new ThreeBSP(mesh))
+  },
+  scale(state) {
     let mesh = state.stack[0].toMesh();
-    mesh = mesh.translateX(+state.form.x);
+    mesh.scale.x = +state.form.x;
+    state.stack.splice(0, 1, new ThreeBSP(mesh))
+  },
+  rotate(state) {
+    let mesh = state.stack[0].toMesh()
+      .rotateX(+state.form.x * Math.PI / 180)
+      .rotateY(+state.form.y * Math.PI / 180)
+      .rotateZ(+state.form.z * Math.PI / 180);
     state.stack.splice(0, 1, new ThreeBSP(mesh))
   }
 }
