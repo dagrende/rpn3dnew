@@ -10,18 +10,18 @@ import { getField, updateField } from 'vuex-map-fields';
 
 export default {
   addCube(state) {
-    let box = new THREE.BoxGeometry(1, 1, 1);
+    let box = new THREE.BoxGeometry(2, 2, 2);
     state.stack.splice(0, 0, new ThreeBSP(new THREE.Mesh(box)));
   },
   addCylinder(state) {
-    state.stack.splice(0, 0, new ThreeBSP(new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 4, 32))));
+    state.stack.splice(0, 0, new ThreeBSP(new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 2, 32)).rotateX(Math.PI / 2)));
   },
   addTorus(state) {
-    const torus = new THREE.TorusGeometry(4, 2, 16, 32).rotateX(3.1416 / 2);
+    const torus = new THREE.TorusGeometry(2, 1, 16, 32);
     state.stack.splice(0, 0, new ThreeBSP(new THREE.Mesh(torus)));
   },
   addSphere(state) {
-    state.stack.splice(0, 0, new ThreeBSP(new THREE.Mesh(new THREE.SphereGeometry(4, 32, 32))));
+    state.stack.splice(0, 0, new ThreeBSP(new THREE.Mesh(new THREE.SphereGeometry(2, 32, 32))));
   },
   union(state) {
     ensure2Items(()=>state.stack.splice(0, 2, state.stack[1].union(state.stack[0])));

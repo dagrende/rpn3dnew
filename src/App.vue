@@ -3,24 +3,20 @@
     <model-viewer class="model-viewer"/>
     <!-- <command-list-viewer class="command-list"/> -->
     <div class="buttons">
-      <div class="field-row">
-        X <input v-model="x" onFocus="this.setSelectionRange(0, this.value.length)">
-        Y <input v-model="y" onFocus="this.setSelectionRange(0, this.value.length)">
-        Z <input v-model="z" onFocus="this.setSelectionRange(0, this.value.length)">
+      <param-form class="field-row"/>
+      <div class="button-row">
+        <mutation-button image="cube-icon.png" mutation="addCube" title="cube"/>
+        <mutation-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
+        <mutation-button image="torus-icon.png" mutation="addTorus" title="torus"/>
+        <mutation-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
       </div>
       <div class="button-row">
-        <calc-button image="cube-icon.png" mutation="addCube" title="cube"/>
-        <calc-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
-        <calc-button image="torus-icon.png" mutation="addTorus" title="torus"/>
-        <calc-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
-      </div>
-      <div class="button-row">
-        <calc-button image="union-icon.svg" mutation="union"/>
-        <calc-button image="difference-icon.svg" mutation="subtract"/>
-        <calc-button image="intersection-icon.svg" mutation="intersect"/>
-        <calc-button text="move" mutation="translate"/>
-        <calc-button text="scale" mutation="scale"/>
-        <calc-button text="rotate" mutation="rotate"/>
+        <mutation-button image="union-icon.svg" mutation="union"/>
+        <mutation-button image="difference-icon.svg" mutation="subtract"/>
+        <mutation-button image="intersection-icon.svg" mutation="intersect"/>
+        <mutation-button text="move" mutation="translate"/>
+        <!-- <mutation-button text="scale" mutation="scale"/>
+        <mutation-button text="rotate" mutation="rotate"/> -->
       </div>
     </div>
   </div>
@@ -28,10 +24,10 @@
 
 <script>
   import { mapGetters, mapActions, mapMutations } from 'vuex'
-  import { mapFields } from 'vuex-map-fields'
   import ModelViewer from './ModelViewer.vue'
+  import ParamForm from './ParamForm.vue'
   import CommandListViewer from './CommandListViewer.vue'
-  import CalcButton from './CalcButton'
+  import MutationButton from './MutationButton'
   require('./assets/cube-icon.png')
   require('./assets/cylinder-icon.png')
   require('./assets/torus-icon.png')
@@ -51,16 +47,11 @@
         this.$store.commit('updateX', e.target.value)
       }
     },
-    computed: {
-      ...mapFields([
-        'form.x',
-        'form.y',
-        'form.z'
-    ])},
     components: {
       ModelViewer,
       CommandListViewer,
-      CalcButton
+      MutationButton,
+      ParamForm
     }
   }
 </script>
@@ -85,17 +76,15 @@
     background-color: #ddd;
     flex: 1;
   }
+  .field-row {
+    align-self: center;
+  }
   .buttons {
     flex: initial;
     display: flex;
     flex-direction: column;
   }
-  .field-row {
-    padding: .5em 0 .2em .5em;
-  }
-  .field-row input {
-    width: 5em;
-    text-align: right;
+  .button-row  {
   }
 
 </style>

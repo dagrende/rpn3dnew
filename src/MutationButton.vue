@@ -1,8 +1,8 @@
 <template>
-  <button class="calc-button" :style="'background:url(dist/'+ image + ') center / contain no-repeat'"
+  <button class="mutation-button" :style="'background:url(dist/'+ image + ') center / contain no-repeat'"
       @click="$store.commit(mutation)"
       :title="title || mutation">
-    {{text}}
+    <span>{{text}}</span>
   </button>
 </template>
 <script>
@@ -20,14 +20,15 @@ export default {
 }
 </script>
 <style>
-  .calc-button {
+  .mutation-button {
     width: 4em;
     height: 4em;
     background-size: contain;
     border: solid #eee 1px;
   }
-  .calc-button img {
-    /* max-width:100%;
-    max-height:100%; */
+  .mutation-button span {
+    /* position: relative;
+    top: 50%;
+    transform: translateY(-50%); */
   }
 </style>

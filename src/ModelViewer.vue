@@ -18,8 +18,8 @@
       let canvasContainer = this.$refs.canvasContainer;
       const scene = new THREE.Scene();
       var camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-      camera.position.x = 0;
-      camera.position.y = 0;
+      camera.position.x = 2;
+      camera.position.y = 2;
       camera.position.z = -5;
       scene.rotateX(-Math.PI / 2);
       scene.rotateY(-Math.PI);
@@ -30,7 +30,7 @@
       const controls = new OrbitControls(camera, canvasContainer);
 
       const light = new THREE.PointLight(0xffffff);
-      light.position.set(0, -50, 0);
+      light.position.set(30, -20, -10);
       scene.add(light);
 
       const material = new THREE.MeshPhongMaterial({ color: 0xdddddd, specular: 0x1a1a1a, shininess: 30, shading: THREE.FlatShading });
