@@ -69,7 +69,7 @@
     },
     computed: {
       stackTop () {
-        return this.$store.state.stack[0]
+        return this.$store.state.stack.item
       }
     },
     watch: {

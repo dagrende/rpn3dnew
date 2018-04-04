@@ -13,7 +13,7 @@ export default new Vuex.Store({
     // ordered sequence of commands that manipulates the stack
     commandLog: [],
     // stack of models represented by ThreeBSP objects - stack[0] is displayed in the web page
-    stack: [],
+    stack: new Stack(),
     form: {
       x: 0,
       y: 0,
@@ -25,3 +25,11 @@ export default new Vuex.Store({
   },
   mutations
 })
+
+function Stack(item, next) {
+  this.item = item;
+  this.next = next;
+  this.add = (item) => new Stack(item, this);
+  this.empty = !next;
+  return this;
+}
