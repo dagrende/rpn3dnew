@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="field-row">
-    <span>x</span><input v-model="x" onFocus="this.setSelectionRange(0, this.value.length)">
-    <span>y</span><input v-model="y" onFocus="this.setSelectionRange(0, this.value.length)">
-    <span>z</span><input v-model="z" onFocus="this.setSelectionRange(0, this.value.length)">
+    <span>x</span><input v-model="x" @focus="selectAll">
+    <span>y</span><input v-model="y" @focus="selectAll">
+    <span>z</span><input v-model="z" @focus="selectAll">
   </div>
 </template>
 
@@ -15,7 +15,12 @@ export default {
       'form.x',
       'form.y',
       'form.z'
-  ])}
+  ])},
+  methods: {
+    selectAll(ev) {
+      ev.target.setSelectionRange(0, ev.target.value.length)
+    }
+  }
 }
 </script>
 

@@ -11,7 +11,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     // ordered sequence of commands that manipulates the stack
-    commands: ['addCube', 'addCylinder', 'union'],
+    commandLog: [],
     // stack of models represented by ThreeBSP objects - stack[0] is displayed in the web page
     stack: [],
     form: {
@@ -21,7 +21,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
-      getField,
-    },
-  mutations: mutations
+    getField
+  },
+  mutations
 })

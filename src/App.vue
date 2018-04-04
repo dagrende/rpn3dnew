@@ -11,10 +11,10 @@
         <mutation-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
       </div>
       <div class="button-row">
-        <mutation-button image="union-icon.svg" mutation="union"/>
-        <mutation-button image="difference-icon.svg" mutation="subtract"/>
-        <mutation-button image="intersection-icon.svg" mutation="intersect"/>
-        <mutation-button text="move" mutation="translate"/>
+        <mutation-button image="union-icon.svg" mutation="union" opCount="2"/>
+        <mutation-button image="difference-icon.svg" mutation="subtract" opCount="2"/>
+        <mutation-button image="intersection-icon.svg" mutation="intersect" opCount="2"/>
+        <mutation-button text="move" mutation="translate" opCount="1"/>
         <!-- <mutation-button text="scale" mutation="scale"/>
         <mutation-button text="rotate" mutation="rotate"/> -->
       </div>
@@ -77,7 +77,7 @@
     flex: 1;
   }
   .field-row {
-    align-self: center;
+    //align-self: center;
   }
   .buttons {
     flex: initial;

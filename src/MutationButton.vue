@@ -1,6 +1,6 @@
 <template>
-  <button class="mutation-button" :style="'background:url(dist/'+ image + ') center / contain no-repeat'"
-      @click="$store.commit(mutation)"
+  <button class="mutation-button" :style="'background:url(dist/'+ image + ') center / contain no-repeat'" :disabled="disabled"
+      @click="$store.commit('buttonCommand', mutation)"
       :title="title || mutation">
     <span>{{text}}</span>
   </button>
@@ -11,7 +11,13 @@ export default {
     mutation: String,
     image: String,
     text: String,
-    title: String
+    title: String,
+    opCount: String
+  },
+  computed: {
+    disabled() {
+      return this.opCount && this.$store.state.stack.length < +this.opCount
+    }
   },
   data() {
     return {
@@ -27,8 +33,9 @@ export default {
     border: solid #eee 1px;
   }
   .mutation-button span {
-    /* position: relative;
-    top: 50%;
-    transform: translateY(-50%); */
+  }
+  .mutation-button:disabled {
+    opacity: 0.2;
+    filter: alpha(opacity=20); /* msie */
   }
 </style>
