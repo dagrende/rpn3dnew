@@ -17,7 +17,16 @@ export default new Vuex.Store({
     params: {
       x: 0,
       y: 0,
-      z: 0
+      z: 0,
+      r: 0,
+      r1: 0,
+      r2: 0,
+      ri: 0,
+      ro: 0,
+      h: 0,
+      n: 0,
+      ni: 0,
+      no: 0
     }
   },
   getters: {
@@ -26,10 +35,11 @@ export default new Vuex.Store({
   mutations
 })
 
-function Stack(item, next) {
+function Stack(item, next, depth = 0) {
   this.item = item;
   this.next = next;
-  this.add = (item) => new Stack(item, this);
+  this.add = (item) => new Stack(item, this, depth + 1);
   this.empty = !next;
+  this.depth = depth;
   return this;
 }

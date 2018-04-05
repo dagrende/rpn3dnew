@@ -15,8 +15,8 @@
         <mutation-button image="difference-icon.svg" mutation="subtract" opCount="2"/>
         <mutation-button image="intersection-icon.svg" mutation="intersect" opCount="2"/>
         <mutation-button text="move" mutation="translate" opCount="1"/>
-        <!-- <mutation-button text="scale" mutation="scale"/>
-        <mutation-button text="rotate" mutation="rotate"/> -->
+        <mutation-button text="scale" mutation="scale" opCount="1"/>
+        <mutation-button text="rotate" mutation="rotate" opCount="1"/>
       </div>
     </div>
   </div>
