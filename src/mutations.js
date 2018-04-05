@@ -10,18 +10,17 @@ import { getField, updateField } from 'vuex-map-fields';
 export default {
   buttonCommand(state, commandId) {
     let command = commands[commandId];
+    state.params = command.params;
     state.commandLog.push({command: command, stackBefore: state.stack});
-    command.buttonClick(state);
+    state.stack = command.buttonClick(state.stack, state.params);
   },
   updateField(state) {
     updateField(...arguments);
     if (state.commandLog.length > 0) {
       let logItem = state.commandLog[state.commandLog.length - 1];
       let command = logItem.command;
-      console.log('updateField', command);
       if (command.execute) {
-        console.log('execute');
-        let stack = command.execute(state, state.form, logItem.stackBefore);
+        let stack = command.execute(logItem.stackBefore, state.params);
         state.stack = stack;
         logItem.stackAfter = stack;
       }
@@ -32,26 +31,25 @@ export default {
 const commands = {
   addCube: {
     title: 'Add Cube',
-    buttonClick(state) {
-      state.form = {x: 2, y: 2, z: 2};
-      state.stack = this.execute(state, state.form, state.stack);
+    params: {x: 2, y: 2, z: 2},
+    buttonClick(stack, params) {
+      return this.execute(stack, params);
     },
-    execute(state, params, stack) { // returns new stack
+    execute(stack, params) { // returns new stack
       let box = new THREE.BoxGeometry(params.x, params.y, params.z);
-      return state.stack.add(new ThreeBSP(new THREE.Mesh(box)));
+      return stack.add(new ThreeBSP(new THREE.Mesh(box)));
     }
   },
   translate: {
     title: 'Move',
-    buttonClick(state) {
-      state.form = {x: 0, y: 0, z: 0};
-      state.stack = this.execute(state, state.form, state.stack);
+    params: {x: 0, y: 0, z: 0},
+    buttonClick(stack, params) {
+      return this.execute(stack, params);
     },
-    execute(state, params, stack) {
-      var m1 = new THREE.Matrix4();
-      let traMat = m1.makeTranslation(params.x, params.y, params.z);
+    execute(stack, params) {
+      var m4 = new THREE.Matrix4();
       let mesh = stack.item.toMesh();
-      mesh.geometry.applyMatrix(traMat);
+      mesh.geometry.applyMatrix(m4.makeTranslation(params.x, params.y, params.z));
       return stack.next.add(new ThreeBSP(mesh))
     }
   },
@@ -98,7 +96,7 @@ const commands = {
   //   title: '',
   //   mutate(state) {
   //     let mesh = state.stack[0].toMesh();
-  //     mesh.scale.x = +state.form.x;
+  //     mesh.scale.x = +state.params.x;
   //     state.stack.splice(0, 1, new ThreeBSP(mesh))
   //     }
   // },
@@ -106,9 +104,9 @@ const commands = {
   //   title: '',
   //   mutate(state) {
   //     let mesh = state.stack[0].toMesh()
-  //       .rotateX(+state.form.x * Math.PI / 180)
-  //       .rotateY(+state.form.y * Math.PI / 180)
-  //       .rotateZ(+state.form.z * Math.PI / 180);
+  //       .rotateX(+state.params.x * Math.PI / 180)
+  //       .rotateY(+state.params.y * Math.PI / 180)
+  //       .rotateZ(+state.params.z * Math.PI / 180);
   //     state.stack.splice(0, 1, new ThreeBSP(mesh))
   //   }
   // }

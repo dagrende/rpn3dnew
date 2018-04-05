@@ -12,9 +12,9 @@ import { mapFields } from 'vuex-map-fields'
 export default {
   computed: {
     ...mapFields([
-      'form.x',
-      'form.y',
-      'form.z'
+      'params.x',
+      'params.y',
+      'params.z'
   ])},
   methods: {
     selectAll(ev) {

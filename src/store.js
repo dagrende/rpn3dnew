@@ -14,7 +14,7 @@ export default new Vuex.Store({
     commandLog: [],
     // stack of models represented by ThreeBSP objects - stack[0] is displayed in the web page
     stack: new Stack(),
-    form: {
+    params: {
       x: 0,
       y: 0,
       z: 0
