@@ -27,7 +27,8 @@ export default new Vuex.Store({
       n: 0,
       ni: 0,
       no: 0
-    }
+    },
+    formParams: {x:0, y:0, z:0}
   },
   getters: {
     getField
