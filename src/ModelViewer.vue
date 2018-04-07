@@ -25,7 +25,7 @@
       scene.rotateY(-Math.PI);
       scene.rotateX(-Math.PI);
 
-      var renderer = new THREE.WebGLRenderer();
+      var renderer = new THREE.WebGLRenderer({antialias: true});
       renderer.setClearColor(0xdddddd);
       const controls = new OrbitControls(camera, canvasContainer);
 
