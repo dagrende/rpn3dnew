@@ -6,6 +6,7 @@ import ThreeBSPMaker from 'three-js-csg';
 let ThreeBSP = ThreeBSPMaker(THREE);
 import store from './store';
 import { getField, updateField } from 'vuex-map-fields';
+const debounce = require('lodash.debounce');
 
 export default {
   buttonCommand(state, commandId) {
@@ -25,11 +26,15 @@ export default {
     if (state.lastCommand) {
       let logItem = state.lastCommand;
       let command = logItem.command;
-      if (command.execute) {
-        let stack = command.execute(logItem.stackBefore, state.params);
-        state.stack = stack;
-        logItem.stackAfter = stack;
-      }
+      let f = ()=>{
+        console.log('bounce!');
+        if (command.execute) {
+          let stack = command.execute(logItem.stackBefore, state.params);
+          state.stack = stack;
+          logItem.stackAfter = stack;
+        }
+      };
+      debounce(f, 1000)();
     }
   }
 }
