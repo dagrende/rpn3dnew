@@ -1,25 +1,26 @@
 <template>
-  <div id="app">
-    <model-viewer class="model-viewer"/>
-    <!-- <command-list-viewer class="command-list"/> -->
-    <div class="buttons">
-      <param-form class="field-row"/>
-      <div class="button-row">
-        <mutation-button image="cube-icon.png" mutation="addCube" title="cube"/>
-        <mutation-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
-        <mutation-button image="torus-icon.png" mutation="addTorus" title="torus"/>
-        <mutation-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
-      </div>
-      <div class="button-row">
-        <mutation-button image="union-icon.svg" mutation="union" opCount="2"/>
-        <mutation-button image="difference-icon.svg" mutation="subtract" opCount="2"/>
-        <mutation-button image="intersection-icon.svg" mutation="intersect" opCount="2"/>
-        <mutation-button image="translate-icon.svg" mutation="translate" opCount="1"/>
-        <mutation-button image="scale-icon.svg" mutation="scale" opCount="1"/>
-        <mutation-button image="rotate-icon.svg" mutation="rotate" opCount="1"/>
+    <div ref="fullscreen" id="app">
+      <button class="fs" type="button" @click="toggleFullscreen"></button>
+      <model-viewer class="model-viewer"/>
+      <!-- <command-list-viewer class="command-list"/> -->
+      <div class="buttons">
+        <param-form class="field-row"/>
+        <div class="button-row">
+          <mutation-button image="cube-icon.png" mutation="addCube" title="cube"/>
+          <mutation-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
+          <mutation-button image="torus-icon.png" mutation="addTorus" title="torus"/>
+          <mutation-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
+        </div>
+        <div class="button-row">
+          <mutation-button image="union-icon.svg" mutation="union" opCount="2"/>
+          <mutation-button image="difference-icon.svg" mutation="subtract" opCount="2"/>
+          <mutation-button image="intersection-icon.svg" mutation="intersect" opCount="2"/>
+          <mutation-button image="translate-icon.svg" mutation="translate" opCount="1"/>
+          <mutation-button image="scale-icon.svg" mutation="scale" opCount="1"/>
+          <mutation-button image="rotate-icon.svg" mutation="rotate" opCount="1"/>
+        </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -38,16 +39,22 @@
   require('./assets/translate-icon.svg')
   require('./assets/scale-icon.svg')
   require('./assets/rotate-icon.svg')
+  require('./assets/fullscreen-icon.svg')
+
 
   export default {
     name: 'app',
     data() {
       return {
+        fullscreen: false
       };
     },
     methods: {
       updateX (e) {
         this.$store.commit('updateX', e.target.value)
+      },
+      toggleFullscreen () {
+        this.$fullscreen.toggle(this.$refs['fullscreen'], {background: '#eee'})
       }
     },
     components: {
@@ -88,6 +95,15 @@
     flex-direction: column;
   }
   .button-row  {
+  }
+  button.fs {
+    width: 24px;
+    height: 24px;
+    left: 10px;
+    top: 10px;
+    border: none;
+    position: absolute;
+    background: url(/dist/fullscreen-icon.svg) center / contain no-repeat;
   }
 
 </style>
