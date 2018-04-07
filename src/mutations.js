@@ -54,7 +54,7 @@ const commands = {
     title: 'Cylinder',
     params: {r1: 1, r2: 1, h: 2, n: 32},
     execute(stack, params) {
-      let cylinderGeometry = new THREE.CylinderGeometry(+params.r1, +params.r2, +params.h, +params.n);
+      let cylinderGeometry = new THREE.CylinderGeometry(+params.r2, +params.r1, +params.h, +params.n);
       cylinderGeometry.applyMatrix(m4.makeRotationX(90 * Math.PI / 180));
       return stack.add(new ThreeBSP(new THREE.Mesh(
         cylinderGeometry)));

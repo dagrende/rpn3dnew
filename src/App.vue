@@ -14,9 +14,9 @@
         <mutation-button image="union-icon.svg" mutation="union" opCount="2"/>
         <mutation-button image="difference-icon.svg" mutation="subtract" opCount="2"/>
         <mutation-button image="intersection-icon.svg" mutation="intersect" opCount="2"/>
-        <mutation-button text="move" mutation="translate" opCount="1"/>
-        <mutation-button text="scale" mutation="scale" opCount="1"/>
-        <mutation-button text="rotate" mutation="rotate" opCount="1"/>
+        <mutation-button image="translate-icon.svg" mutation="translate" opCount="1"/>
+        <mutation-button image="scale-icon.svg" mutation="scale" opCount="1"/>
+        <mutation-button image="rotate-icon.svg" mutation="rotate" opCount="1"/>
       </div>
     </div>
   </div>
@@ -35,6 +35,9 @@
   require('./assets/union-icon.svg')
   require('./assets/difference-icon.svg')
   require('./assets/intersection-icon.svg')
+  require('./assets/translate-icon.svg')
+  require('./assets/scale-icon.svg')
+  require('./assets/rotate-icon.svg')
 
   export default {
     name: 'app',
