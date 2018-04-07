@@ -10,6 +10,9 @@
           <mutation-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
           <mutation-button image="torus-icon.png" mutation="addTorus" title="torus"/>
           <mutation-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
+          <mutation-button image="pop-icon.svg" mutation="popStack" title="remove top of stack" opCount="1"/>
+          <mutation-button image="dup-icon.svg" mutation="dupStack" title="duplicates top of stack" opCount="1"/>
+          <mutation-button image="swap-icon.svg" mutation="swapStack" title="swap top two stack items" opCount="2"/>
         </div>
         <div class="button-row">
           <mutation-button image="union-icon.svg" mutation="union" opCount="2"/>
@@ -40,6 +43,9 @@
   require('./assets/scale-icon.svg')
   require('./assets/rotate-icon.svg')
   require('./assets/fullscreen-icon.svg')
+  require('./assets/pop-icon.svg')
+  require('./assets/swap-icon.svg')
+  require('./assets/dup-icon.svg')
 
 
   export default {
@@ -87,14 +93,16 @@
     flex: 1;
   }
   .field-row {
-    //align-self: center;
   }
   .buttons {
     flex: initial;
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
   }
   .button-row  {
+    margin: .1em;
+    padding-left: 4px;
   }
   button.fs {
     width: 24px;

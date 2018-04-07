@@ -62,7 +62,7 @@ const commands = {
   },
   addTorus: {
     title: 'Torus',
-    params: {ri: 0.5, ro: 1, ni: 16, no: 32},
+    params: {ri: 0.5, ro: 1, ni: 8, no: 16},
     execute(stack, params) {
       return stack.add(new ThreeBSP(new THREE.Mesh(
         new THREE.TorusGeometry(+params.ro, +params.ri, +params.ni, +params.no))));
@@ -70,7 +70,7 @@ const commands = {
   },
   addSphere: {
     title: 'Sphere',
-    params: {r: 1, n1: 32, n2: 16},
+    params: {r: 1, n1: 16, n2: 8},
     execute(stack, params) {
       return stack.add(new ThreeBSP(new THREE.Mesh(
         new THREE.SphereGeometry(+params.r, +params.n1, +params.n2).rotateX(Math.PI / 2))));
@@ -80,6 +80,24 @@ const commands = {
     title: 'Union',
     execute(stack, params) {
       return stack.next.next.add(stack.next.item.union(stack.item));
+    }
+  },
+  popStack: {
+    title: 'pop',
+    execute(stack, params) {
+      return stack.next;
+    }
+  },
+  swapStack: {
+    title: 'swap',
+    execute(stack, params) {
+      return stack.next.next.add(stack.item).add(stack.next.item);
+    }
+  },
+  dupStack: {
+    title: 'swap',
+    execute(stack, params) {
+      return stack.add(stack.item);
     }
   },
   subtract: {

@@ -30,7 +30,7 @@ export default {
     width: 3em;
     height: 3em;
     background-size: contain;
-    border: solid #eee 1px;
+    border: none;
   }
   .mutation-button span {
   }

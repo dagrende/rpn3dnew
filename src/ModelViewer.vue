@@ -56,8 +56,8 @@
           newMesh.material = material;
           scene.add(newMesh);
           prevObj = newMesh;
-          render();
         }
+        render();
       }
 
       // render model initially and on camera movement
@@ -74,6 +74,7 @@
     },
     watch: {
       stackTop (newStackTop, oldStackTop) {
+        console.log('stackTop', newStackTop);
         setObject && setObject(newStackTop);
       }
     }
