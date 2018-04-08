@@ -22,7 +22,6 @@
       },
       emptyReplacement(key) {
         let command = this.$store.state.lastCommand.command
-        console.log('lastCommand', command, command.name, key, command.emptyParamSource);
         if (command && command.emptyParamSource) {
           return this.$store.state.params[command.emptyParamSource[key]]
         }

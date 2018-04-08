@@ -9,14 +9,18 @@
   const OrbitControls = require('three-orbit-controls')(THREE);
   import store from './store';
 
-  let setObject;
-
   export default {
+    props: {
+      stackIndex: String
+    },
     data() {
       return {
+        setObject: null
       };
     },
     mounted() {
+      console.log('ModelViewer.mounted i=', this.stackIndex);
+
       let canvasContainer = this.$refs.canvasContainer;
       const scene = new THREE.Scene();
       scene.rotateX(-Math.PI / 2);
@@ -51,7 +55,9 @@
       canvasContainer.appendChild(renderer.domElement);
 
       let prevObj = null;
-      setObject = function(obj) {
+      let stackIndex = this.stackIndex;
+      this.setObject = function(obj) {
+        console.log(stackIndex, 'setObject(', obj, ')');
         if (prevObj) {
           scene.remove(prevObj);
         }
@@ -78,12 +84,17 @@
     },
     computed: {
       stackTop () {
-        return this.$store.state.stack.item
+        return this.$store.state.stack
       }
     },
     watch: {
       stackTop (newStackTop, oldStackTop) {
-        setObject && setObject(newStackTop);
+        let i = +this.stackIndex;
+        let stack = newStackTop;
+        while (stack.item && i-- > 0) {
+          stack = stack.prev;
+        }
+        this.setObject && this.setObject(stack.item);
       }
     }
   };

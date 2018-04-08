@@ -1,7 +1,14 @@
 <template>
     <div ref="fullscreen" id="app">
       <button class="fs" type="button" @click="toggleFullscreen"></button>
-      <model-viewer class="model-viewer"/>
+      <div class="model-viewers">
+        <model-viewer stackIndex="0" class="model-viewer top"/>
+        <div class="model-viewer stack">
+          <model-viewer stackIndex="1" class="model-viewer sx"/>
+          <model-viewer stackIndex="2" class="model-viewer sx"/>
+          <model-viewer stackIndex="3" class="model-viewer sx"/>
+        </div>
+      </div>
       <!-- <command-list-viewer class="command-list"/> -->
       <div class="buttons">
         <param-form class="field-row"/>
@@ -47,7 +54,6 @@
   require('./assets/swap-icon.svg')
   require('./assets/dup-icon.svg')
 
-
   export default {
     name: 'app',
     data() {
@@ -88,8 +94,22 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  .model-viewer {
+  .model-viewers {
     background-color: #ddd;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+  }
+  .model-viewer.top {
+    flex: 8;
+    border-right: solid #e8e8e8 1px;
+  }
+  .model-viewer.stack {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .model-viewer.sx {
     flex: 1;
   }
   .field-row {
