@@ -36,11 +36,11 @@ export default new Vuex.Store({
   mutations
 })
 
-function Stack(item, next, depth = 0) {
+function Stack(item, prev, depth = 0) {
   this.item = item;
-  this.next = next;
+  this.prev = prev;
   this.add = (item) => new Stack(item, this, depth + 1);
-  this.empty = !next;
+  this.empty = !prev;
   this.depth = depth;
   return this;
 }

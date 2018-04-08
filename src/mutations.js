@@ -27,7 +27,6 @@ export default {
       let logItem = state.lastCommand;
       let command = logItem.command;
       let f = ()=>{
-        console.log('bounce!');
         if (command.execute) {
           let stack = command.execute(logItem.stackBefore, state.params);
           state.stack = stack;
@@ -79,19 +78,19 @@ const commands = {
   union: {
     title: 'Union',
     execute(stack, params) {
-      return stack.next.next.add(stack.next.item.union(stack.item));
+      return stack.prev.prev.add(stack.prev.item.union(stack.item));
     }
   },
   popStack: {
     title: 'pop',
     execute(stack, params) {
-      return stack.next;
+      return stack.prev;
     }
   },
   swapStack: {
     title: 'swap',
     execute(stack, params) {
-      return stack.next.next.add(stack.item).add(stack.next.item);
+      return stack.prev.prev.add(stack.item).add(stack.prev.item);
     }
   },
   dupStack: {
@@ -103,13 +102,13 @@ const commands = {
   subtract: {
     title: 'Subtract',
     execute(stack, params) {
-      return stack.next.next.add(stack.next.item.subtract(stack.item));
+      return stack.prev.prev.add(stack.prev.item.subtract(stack.item));
     }
   },
   intersect: {
     title: 'Intersect',
     execute(stack, params) {
-      return stack.next.next.add(stack.next.item.intersect(stack.item));
+      return stack.prev.prev.add(stack.prev.item.intersect(stack.item));
     }
   },
   translate: {
@@ -118,7 +117,7 @@ const commands = {
     execute(stack, params) {
       let mesh = stack.item.toMesh();
       mesh.geometry.applyMatrix(m4.makeTranslation(+params.x, +params.y, +params.z));
-      return stack.next.add(new ThreeBSP(mesh))
+      return stack.prev.add(new ThreeBSP(mesh))
     }
   },
   scale: {
@@ -127,7 +126,7 @@ const commands = {
     execute(stack, params) {
       let mesh = stack.item.toMesh();
       mesh.geometry.applyMatrix(m4.makeScale(+params.x, +params.y, +params.z));
-      return stack.next.add(new ThreeBSP(mesh))
+      return stack.prev.add(new ThreeBSP(mesh))
     }
   },
   rotate: {
@@ -140,7 +139,7 @@ const commands = {
           +params.x * Math.PI / 180,
           +params.y * Math.PI / 180,
           +params.z * Math.PI / 180, 'XYZ')));
-      return stack.next.add(new ThreeBSP(mesh))
+      return stack.prev.add(new ThreeBSP(mesh))
     }
   }
 }
