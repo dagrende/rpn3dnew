@@ -3,9 +3,10 @@
     <template v-for="(v, k) in $store.state.formParams">
       <span>{{k}}</span><input
         :value="$store.state.params[k]"
-        @input="$store.commit('updateField', {path: 'params.' + k, value: $event.target.value})"
+        @input="inputChanged($event, k)"
         type="number"
-        onclick="this.select()">
+        onclick="this.select()"
+        :placeholder="emptyReplacement(k)">
     </template>
   </div>
 </template>
@@ -15,8 +16,18 @@
     methods: {
       selectAll(ev) {
         ev.target.setSelect
+      },
+      inputChanged(event, key) {
+        this.$store.commit('updateField', {path: 'params.' + key, value: event.target.value})
+      },
+      emptyReplacement(key) {
+        let command = this.$store.state.lastCommand.command
+        console.log('lastCommand', command, command.name, key, command.emptyParamSource);
+        if (command && command.emptyParamSource) {
+          return this.$store.state.params[command.emptyParamSource[key]]
+        }
       }
-    },
+    }
   }
 </script>
 
@@ -38,4 +49,7 @@
     -webkit-appearance: none;
     margin: 0;
   }
+  ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    opacity: .5; /* Firefox */
+}
 </style>
