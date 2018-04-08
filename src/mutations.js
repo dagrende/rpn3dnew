@@ -33,7 +33,7 @@ export default {
           logItem.stackAfter = stack;
         }
       };
-      debounce(f, 1000)();
+      debounce(f, 600)();
     }
   }
 }
