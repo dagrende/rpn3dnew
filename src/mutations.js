@@ -18,7 +18,7 @@ export default {
     if (command.buttonClick) {
       state.stack = command.buttonClick(state.stack, state.params);
     } else {
-      state.stack = command.execute(state.stack, state.params)
+      state.stack = command.execute(state.stack, prepareParams(command, state.params))
     }
   },
   updateField(state) {
@@ -28,7 +28,7 @@ export default {
       let command = logItem.command;
       let f = ()=>{
         if (command.execute) {
-          let stack = command.execute(logItem.stackBefore, state.params);
+          let stack = command.execute(logItem.stackBefore, prepareParams(command, state.params));
           state.stack = stack;
           logItem.stackAfter = stack;
         }
@@ -38,12 +38,26 @@ export default {
   }
 }
 
+function prepareParams(command, params) {
+  if (!params || !command.emptyParamSource) {
+    return params;
+  }
+  let p = Object.assign({}, params);
+  for (let key in params) {
+    if (p[key] === '') {
+      p[key] = p[command.emptyParamSource[key]];
+    }
+  }
+  return p;
+}
+
 const m4 = new THREE.Matrix4();
 
 const commands = {
   addCube: {
     title: 'Add Cube',
-    params: {x: 2, y: 2, z: 2},
+    params: {x: 2, y: '', z: ''},
+    emptyParamSource: {y: 'x', z: 'x'},
     execute(stack, params) {
       let box = new THREE.BoxGeometry(+params.x, +params.y, +params.z);
       return stack.add(new ThreeBSP(new THREE.Mesh(box)));
@@ -51,7 +65,8 @@ const commands = {
   },
   addCylinder: {
     title: 'Cylinder',
-    params: {r1: 1, r2: 1, h: 2, n: 32},
+    params: {r1: 1, r2: '', h: 2, n: 32},
+    emptyParamSource: {r2: 'r1'},
     execute(stack, params) {
       let cylinderGeometry = new THREE.CylinderGeometry(+params.r2, +params.r1, +params.h, +params.n);
       cylinderGeometry.applyMatrix(m4.makeRotationX(90 * Math.PI / 180));
@@ -112,7 +127,7 @@ const commands = {
     }
   },
   translate: {
-    title: 'Move',
+    title: 'Translate',
     params: {x: 0, y: 0, z: 0},
     execute(stack, params) {
       let mesh = stack.item.toMesh();
@@ -122,7 +137,8 @@ const commands = {
   },
   scale: {
     title: 'Scale',
-    params: {x: 1, y: 1, z: 1},
+    params: {x: 1, y: '', z: ''},
+    emptyParamSource: {y: 'x', z: 'x'},
     execute(stack, params) {
       let mesh = stack.item.toMesh();
       mesh.geometry.applyMatrix(m4.makeScale(+params.x, +params.y, +params.z));
