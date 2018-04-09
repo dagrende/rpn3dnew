@@ -5,7 +5,7 @@
         :value="$store.state.params[k]"
         @input="inputChanged($event, k)"
         type="number"
-        onclick="this.select()"
+        @click="fieldClick"
         :placeholder="emptyReplacement(k)">
     </template>
   </div>
@@ -13,9 +13,13 @@
 
 <script>
   export default {
+    data() {
+      return {
+      }
+    },
     methods: {
-      selectAll(ev) {
-        ev.target.setSelect
+      fieldClick(ev) {
+        ev.target.select();
       },
       inputChanged(event, key) {
         this.$store.commit('updateField', {path: 'params.' + key, value: event.target.value})
@@ -37,7 +41,6 @@
   .field-row span {
     padding-left: .3em;
   }
-
   .field-row input {
     width: 3em;
     text-align: right;

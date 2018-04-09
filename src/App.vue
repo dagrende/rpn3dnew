@@ -28,6 +28,7 @@
           <mutation-button image="translate-icon.svg" mutation="translate" opCount="1"/>
           <mutation-button image="scale-icon.svg" mutation="scale" opCount="1"/>
           <mutation-button image="rotate-icon.svg" mutation="rotate" opCount="1"/>
+          <mutation-button image="align-icon.svg" mutation="align" opCount="2"/>
         </div>
       </div>
     </div>
@@ -53,6 +54,7 @@
   require('./assets/pop-icon.svg')
   require('./assets/swap-icon.svg')
   require('./assets/dup-icon.svg')
+  require('./assets/align-icon.svg')
 
   export default {
     name: 'app',
