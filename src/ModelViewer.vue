@@ -57,7 +57,6 @@
       let prevObj = null;
       let stackIndex = this.stackIndex;
       this.setObject = function(obj) {
-        console.log(stackIndex, 'setObject(', obj, ')');
         if (prevObj) {
           scene.remove(prevObj);
         }

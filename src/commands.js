@@ -8,7 +8,7 @@ const m4 = new THREE.Matrix4();
 export default {
   addCube: {
     title: 'Add Cube',
-    params: {x: 2, y: '', z: ''},
+    params: {x: {type: 'number', defaultValue: 2}, y: {type: 'number', defaultValue: ''}, z: {type: 'number', defaultValue: ''}},
     emptyParamSource: {y: 'x', z: 'x'},
     execute(stack, params) {
       let box = new THREE.BoxGeometry(+params.x, +params.y, +params.z);
@@ -17,7 +17,11 @@ export default {
   },
   addCylinder: {
     title: 'Cylinder',
-    params: {r1: 1, r2: '', h: 2, n: 32},
+    params: {
+      r1: {type: 'number', defaultValue: 1},
+      r2: {type: 'number', defaultValue: ''},
+      h: {type: 'number', defaultValue: 2},
+      n: {type: 'number', defaultValue: 32}},
     emptyParamSource: {r2: 'r1'},
     execute(stack, params) {
       let cylinderGeometry = new THREE.CylinderGeometry(+params.r2, +params.r1, +params.h, +params.n);
@@ -28,7 +32,12 @@ export default {
   },
   addTorus: {
     title: 'Torus',
-    params: {ri: 0.5, ro: 1, ni: 8, no: 16},
+    params: {
+      ri: {type: 'number', defaultValue: 0.5},
+      ro: {type: 'number', defaultValue: 1},
+      ni: {type: 'number', defaultValue: 8},
+      no: {type: 'number', defaultValue: 16}
+    },
     execute(stack, params) {
       return stack.add(new ThreeBSP(new THREE.Mesh(
         new THREE.TorusGeometry(+params.ro, +params.ri, +params.ni, +params.no))));
@@ -36,7 +45,7 @@ export default {
   },
   addSphere: {
     title: 'Sphere',
-    params: {r: 1, n1: 16, n2: 8},
+    params: {r: {type: 'number', defaultValue: 1}, n1: {type: 'number', defaultValue: 16}, n2: {type: 'number', defaultValue: 8}},
     execute(stack, params) {
       return stack.add(new ThreeBSP(new THREE.Mesh(
         new THREE.SphereGeometry(+params.r, +params.n1, +params.n2).rotateX(Math.PI / 2))));
@@ -80,7 +89,7 @@ export default {
   },
   translate: {
     title: 'Translate',
-    params: {x: 0, y: 0, z: 0},
+    params: {x: {type: 'number', defaultValue: 0}, y: {type: 'number', defaultValue: 0}, z: {type: 'number', defaultValue: 0}},
     execute(stack, params) {
       let mesh = stack.item.toMesh();
       mesh.geometry.applyMatrix(m4.makeTranslation(+params.x, +params.y, +params.z));
@@ -89,7 +98,7 @@ export default {
   },
   scale: {
     title: 'Scale',
-    params: {x: 1, y: '', z: ''},
+    params: {x: {type: 'number', defaultValue: 1}, y: {type: 'number', defaultValue: ''}, z: {type: 'number', defaultValue: ''}},
     emptyParamSource: {y: 'x', z: 'x'},
     execute(stack, params) {
       let mesh = stack.item.toMesh();
@@ -99,7 +108,7 @@ export default {
   },
   rotate: {
     title: 'Rotate',
-    params: {x: 0, y: 0, z: 0},
+    params: {x: {type: 'number', defaultValue: 0}, y: {type: 'number', defaultValue: 0}, z: {type: 'number', defaultValue: 0}},
     execute(stack, params) {
       let mesh = stack.item.toMesh();
       mesh.geometry.applyMatrix(m4.makeRotationFromEuler(
@@ -111,8 +120,44 @@ export default {
     }
   },
   align: {
+    // translate object along each axis to get the same start, center or
+    // end coordinate, or be placed before or after the object in stack.prev
     title: 'Align',
-    params: {x: 0, y: 0, z: 0},   // number is 0=none, 1=before, 2=left, 3=center, 4=right, 5=after
+    params: {
+      x: {
+        type: 'select',
+        defaultValue: 0,
+        options: [
+          {title: 'none', value: 0},
+          {title: 'left of', value: 1},
+          {title: 'left', value: 2},
+          {title: 'center', value: 3},
+          {title: 'right', value: 4},
+          {title: 'right of', value: 5}]
+        },
+      y: {
+        type: 'select',
+        defaultValue: 0,
+        options: [
+          {title: 'none', value: 0},
+          {title: 'in front of', value: 1},
+          {title: 'front', value: 2},
+          {title: 'center', value: 3},
+          {title: 'back', value: 4},
+          {title: 'behind', value: 5}]
+        },
+      z: {
+        type: 'select',
+        defaultValue: 0,
+        options: [
+          {title: 'none', value: 0},
+          {title: 'under', value: 1},
+          {title: 'bottom', value: 2},
+          {title: 'center', value: 3},
+          {title: 'top', value: 4},
+          {title: 'on top of', value: 5}]
+        }
+    },
     execute(stack, params) {
       let topMesh = stack.item.toMesh();
       topMesh.geometry.computeBoundingBox();

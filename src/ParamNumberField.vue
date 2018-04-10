@@ -1,22 +1,19 @@
 <template lang="html">
-  <div class="field-row">
-    <template v-for="(v, k) in $store.state.formParams">
-      <span>{{k}}</span><component :is='componentByType[v.type]' :paramKey="k"/>
-    </template>
-  </div>
+  <input
+      :value="$store.state.params[paramKey]"
+      @input="inputChanged($event, paramKey)"
+      type="number"
+      @click="fieldClick"
+      :placeholder="emptyReplacement(paramKey)">
 </template>
 
 <script>
-import ParamNumberField from './ParamNumberField.vue';
-import ParamSelectField from './ParamSelectField.vue';
-
   export default {
+    props: {
+      paramKey: String
+    },
     data() {
       return {
-        componentByType: {
-          number: 'ParamNumberField',
-          select: 'ParamSelectField'
-        }
       }
     },
     methods: {
@@ -32,22 +29,12 @@ import ParamSelectField from './ParamSelectField.vue';
           return this.$store.state.params[command.emptyParamSource[key]]
         }
       }
-    },
-    components: {
-      ParamNumberField,
-      ParamSelectField
     }
   }
 </script>
 
 <style scoped>
-  .field-row {
-    padding: .5em 0 .2em .2em;
-  }
-  .field-row span {
-    padding-left: .3em;
-  }
-  .field-row input {
+  input {
     width: 3em;
     text-align: right;
     margin-left: .2em;
@@ -59,5 +46,5 @@ import ParamSelectField from './ParamSelectField.vue';
   }
   ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     opacity: .5; /* Firefox */
-}
+  }
 </style>
