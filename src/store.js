@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import { getField, updateField } from 'vuex-map-fields';
 import commandExecutor from './commandExecutor'
 import THREE from 'three';
-let ThreeBSP = require('three-js-csg')(THREE);
 import mutations from './mutations';
 
 Vue.use(Vuex)

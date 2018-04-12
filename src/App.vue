@@ -15,7 +15,7 @@
         <div class="button-row">
           <mutation-button image="cube-icon.png" mutation="addCube" title="cube"/>
           <mutation-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
-          <mutation-button image="torus-icon.png" mutation="addTorus" title="torus"/>
+          <!-- <mutation-button image="torus-icon.png" mutation="addTorus" title="torus"/> -->
           <mutation-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
           <mutation-button image="pop-icon.svg" mutation="popStack" title="remove top of stack" opCount="1"/>
           <mutation-button image="dup-icon.svg" mutation="dupStack" title="duplicates top of stack" opCount="1"/>

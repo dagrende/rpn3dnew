@@ -2,8 +2,6 @@ import THREE from 'three';
 import {CSG, CAG} from '@jscad/csg';
 import store from './store';
 
-const m4 = new THREE.Matrix4();
-
 export default {
   addCube: {
     title: 'Add Cube',
@@ -31,22 +29,22 @@ export default {
       return stack.add(cylinder);
     }
   },
-  addTorus: {
-    title: 'Torus',
-    params: {
-      ri: {type: 'number', defaultValue: 0.5},
-      ro: {type: 'number', defaultValue: 1},
-      ni: {type: 'number', defaultValue: 8},
-      no: {type: 'number', defaultValue: 16}
-    },
-    execute(stack, params) {
-      return stack.add(CSG.torus({
-        ro: +params.ro,
-        ri: +params.ri,
-        fno: +params.no,
-        fni: +params.ni}));
-    }
-  },
+  // addTorus: {
+  //   title: 'Torus',
+  //   params: {
+  //     ri: {type: 'number', defaultValue: 0.5},
+  //     ro: {type: 'number', defaultValue: 1},
+  //     ni: {type: 'number', defaultValue: 8},
+  //     no: {type: 'number', defaultValue: 16}
+  //   },
+  //   execute(stack, params) {
+  //     return stack.add(torus({
+  //       ro: +params.ro,
+  //       ri: +params.ri,
+  //       fno: +params.no,
+  //       fni: +params.ni}));
+  //   }
+  // },
   addSphere: {
     title: 'Sphere',
     params: {r: {type: 'number', defaultValue: 1}, n: {type: 'number', defaultValue: 32}},
