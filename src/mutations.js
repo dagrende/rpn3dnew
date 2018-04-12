@@ -9,9 +9,7 @@ import commands from './commands'
 export default {
   buttonCommand(state, commandId) {
     let command = commands[commandId];
-    console.log('command.params',commandId, command.params);
     for (let k in command.params) {
-      console.log('k',k);
       state.params[k] = command.params[k].defaultValue;
     }
     state.formParams = command.params;

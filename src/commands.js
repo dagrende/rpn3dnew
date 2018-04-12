@@ -1,6 +1,5 @@
 import THREE from 'three';
-import ThreeBSPMaker from 'three-js-csg';
-let ThreeBSP = ThreeBSPMaker(THREE);
+import {CSG, CAG} from '@jscad/csg';
 import store from './store';
 
 const m4 = new THREE.Matrix4();
@@ -11,8 +10,8 @@ export default {
     params: {x: {type: 'number', defaultValue: 2}, y: {type: 'number', defaultValue: ''}, z: {type: 'number', defaultValue: ''}},
     emptyParamSource: {y: 'x', z: 'x'},
     execute(stack, params) {
-      let box = new THREE.BoxGeometry(+params.x, +params.y, +params.z);
-      return stack.add(new ThreeBSP(new THREE.Mesh(box)));
+      let cube = CSG.cube({center:[0,0,0],radius:[+params.x / 2, +params.y / 2, +params.z / 2]});
+      return stack.add(cube);
     }
   },
   addCylinder: {
@@ -24,10 +23,12 @@ export default {
       n: {type: 'number', defaultValue: 32}},
     emptyParamSource: {r2: 'r1'},
     execute(stack, params) {
-      let cylinderGeometry = new THREE.CylinderGeometry(+params.r2, +params.r1, +params.h, +params.n);
-      cylinderGeometry.applyMatrix(m4.makeRotationX(90 * Math.PI / 180));
-      return stack.add(new ThreeBSP(new THREE.Mesh(
-        cylinderGeometry)));
+      let cylinder = CSG.cylinder({
+          radiusStart: +params.r1,
+          radiusEnd: +params.r2,
+          start: [0, 0, -+params.h / 2],
+          end: [0, 0, +params.h / 2], resolution: +params.n});
+      return stack.add(cylinder);
     }
   },
   addTorus: {
@@ -39,16 +40,18 @@ export default {
       no: {type: 'number', defaultValue: 16}
     },
     execute(stack, params) {
-      return stack.add(new ThreeBSP(new THREE.Mesh(
-        new THREE.TorusGeometry(+params.ro, +params.ri, +params.ni, +params.no))));
+      return stack.add(CSG.torus({
+        ro: +params.ro,
+        ri: +params.ri,
+        fno: +params.no,
+        fni: +params.ni}));
     }
   },
   addSphere: {
     title: 'Sphere',
-    params: {r: {type: 'number', defaultValue: 1}, n1: {type: 'number', defaultValue: 16}, n2: {type: 'number', defaultValue: 8}},
+    params: {r: {type: 'number', defaultValue: 1}, n: {type: 'number', defaultValue: 32}},
     execute(stack, params) {
-      return stack.add(new ThreeBSP(new THREE.Mesh(
-        new THREE.SphereGeometry(+params.r, +params.n1, +params.n2).rotateX(Math.PI / 2))));
+      return stack.add(CSG.sphere({radius: +params.r, resolution:+params.n}));
     }
   },
   union: {
@@ -91,9 +94,7 @@ export default {
     title: 'Translate',
     params: {x: {type: 'number', defaultValue: 0}, y: {type: 'number', defaultValue: 0}, z: {type: 'number', defaultValue: 0}},
     execute(stack, params) {
-      let mesh = stack.item.toMesh();
-      mesh.geometry.applyMatrix(m4.makeTranslation(+params.x, +params.y, +params.z));
-      return stack.prev.add(new ThreeBSP(mesh))
+      return stack.prev.add(stack.item.translate([+params.x, +params.y, +params.z]))
     }
   },
   scale: {
@@ -101,22 +102,14 @@ export default {
     params: {x: {type: 'number', defaultValue: 1}, y: {type: 'number', defaultValue: ''}, z: {type: 'number', defaultValue: ''}},
     emptyParamSource: {y: 'x', z: 'x'},
     execute(stack, params) {
-      let mesh = stack.item.toMesh();
-      mesh.geometry.applyMatrix(m4.makeScale(+params.x, +params.y, +params.z));
-      return stack.prev.add(new ThreeBSP(mesh))
+      return stack.prev.add(stack.item.scale([+params.x, +params.y, +params.z]))
     }
   },
   rotate: {
     title: 'Rotate',
     params: {x: {type: 'number', defaultValue: 0}, y: {type: 'number', defaultValue: 0}, z: {type: 'number', defaultValue: 0}},
     execute(stack, params) {
-      let mesh = stack.item.toMesh();
-      mesh.geometry.applyMatrix(m4.makeRotationFromEuler(
-        new THREE.Euler(
-          +params.x * Math.PI / 180,
-          +params.y * Math.PI / 180,
-          +params.z * Math.PI / 180, 'XYZ')));
-      return stack.prev.add(new ThreeBSP(mesh))
+      return stack.prev.add(stack.item.rotateX(+params.x).rotateY(+params.y).rotateZ(+params.z))
     }
   },
   align: {
@@ -159,33 +152,27 @@ export default {
         }
     },
     execute(stack, params) {
-      let topMesh = stack.item.toMesh();
-      topMesh.geometry.computeBoundingBox();
-      let topBB = topMesh.geometry.boundingBox;
-
-      let prevMesh = stack.prev.item.toMesh();
-      prevMesh.geometry.computeBoundingBox();
-      let prevBB = prevMesh.geometry.boundingBox;
+      console.log(stack.item.getBounds(), CAG);
+      const topBB = stack.item.getBounds();
+      const prevBB = stack.prev.item.getBounds();
 
       let d = {x: 0, y: 0, z: 0};
       for (let key in d) {  // for each axis
         let aligmentType = params[key]; //
         if (aligmentType == 1) { // before
-          d[key] = prevBB.min[key] - topBB.max[key];
+          d[key] = prevBB[0][key] - topBB[1][key];
         } else if (aligmentType == 2) { // start
-          d[key] = prevBB.min[key] - topBB.min[key];
+          d[key] = prevBB[0][key] - topBB[0][key];
         } else if (aligmentType == 3) { // center
-          d[key] = (prevBB.min[key] + prevBB.max[key]) / 2
-                  - (topBB.min[key] + topBB.max[key]) / 2;
+          d[key] = (prevBB[0][key] + prevBB[1][key]) / 2
+                  - (topBB[0][key] + topBB[1][key]) / 2;
         } else if (aligmentType == 4) { // end
-          d[key] = prevBB.max[key] - topBB.max[key];
+          d[key] = prevBB[1][key] - topBB[1][key];
         } else if (aligmentType == 5) { // after
-          d[key] = prevBB.max[key] - topBB.min[key];
+          d[key] = prevBB[1][key] - topBB[0][key];
         }
       }
-      topMesh.geometry.applyMatrix(m4.makeTranslation(d.x, d.y, d.z));
-
-      return stack.prev.add(new ThreeBSP(topMesh))
+      return stack.prev.add(stack.item.translate([d.x, d.y, d.z]))
     }
   }
 }

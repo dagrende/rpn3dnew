@@ -11,8 +11,10 @@
     "deploy": "npm run build && sed 's#/dist#dist#' index.html | ssh dev.find-out.se 'cat >public_html/rpn3d/index.html' && scp -r dist src dev.find-out.se:public_html/rpn3d && rm -rf dist"
   },
   "dependencies": {
+    "@jscad/csg": "^0.5.4",
     "lodash.debounce": "^4.0.8",
     "three": "^0.73.0",
+    "three-2-csg": "^1.0.2",
     "three-js-csg": "^72.0.0",
     "three-orbit-controls": "^72.0.0",
     "vue": "^2.5.11",

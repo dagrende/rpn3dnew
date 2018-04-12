@@ -5,8 +5,8 @@
 
 <script>
   import THREE from 'three';
-  const ThreeBSP = require('three-js-csg')(THREE);
   const OrbitControls = require('three-orbit-controls')(THREE);
+  import { toCSG, fromCSG } from 'three-2-csg';
   import store from './store';
 
   export default {
@@ -19,7 +19,6 @@
       };
     },
     mounted() {
-      console.log('ModelViewer.mounted i=', this.stackIndex);
 
       let canvasContainer = this.$refs.canvasContainer;
       const scene = new THREE.Scene();
@@ -61,8 +60,8 @@
           scene.remove(prevObj);
         }
         if (obj) {
-          const newMesh = obj.toMesh();
-          newMesh.material = material;
+          const newMesh = new THREE.Mesh(fromCSG(obj), material);
+          newMesh.geometry.computeVertexNormals();
           scene.add(newMesh);
           prevObj = newMesh;
         }
