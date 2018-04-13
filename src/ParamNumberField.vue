@@ -26,7 +26,7 @@
         this.$store.commit('updateField', {path: 'params.' + key, value: event.target.value})
       },
       emptyReplacement(key) {
-        let command = commands[this.$store.getters.getLastCommand().id]
+        let command = commands[this.$store.state.commandLog.last().id]
         if (command && command.emptyParamSource) {
           return this.$store.state.params[command.emptyParamSource[key]]
         }

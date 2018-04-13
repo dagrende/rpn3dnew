@@ -8,6 +8,7 @@ import commands from './commands'
 
 export default {
   buttonCommand(state, commandId) {
+    //state.stack = store.getLastCommand().stackAfter;
     let command = commands[commandId];
     for (let k in command.params) {
       state.params[k] = command.params[k].defaultValue;
@@ -19,12 +20,12 @@ export default {
     } else {
       state.stack = command.execute(state.stack, prepareParams(command, state.params))
     }
-    state.commandLog.push({id: commandId, stackBefore, stackAfter: state.stack});
+    state.commandLog = state.commandLog.add({id: commandId, stackBefore, stackAfter: state.stack});
   },
   updateField(state) {
     updateField(...arguments);
-    if (state.commandLog.length > 0) {
-      let logItem = store.getters.getLastCommand();
+    if (!state.commandLog.isEmpty()) {
+      let logItem = store.state.commandLog.last();
       let command = commands[logItem.id];
       let f = ()=>{
         if (command.execute) {

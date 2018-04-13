@@ -4,7 +4,7 @@ import store from './store';
 
 export default {
   addCube: {
-    title: 'Cube',
+    title: 'cube',
     params: {x: {type: 'number', defaultValue: 2}, y: {type: 'number', defaultValue: ''}, z: {type: 'number', defaultValue: ''}},
     emptyParamSource: {y: 'x', z: 'x'},
     execute(stack, params) {
@@ -13,7 +13,7 @@ export default {
     }
   },
   addCylinder: {
-    title: 'Cylinder',
+    title: 'cylinder',
     params: {
       r1: {type: 'number', defaultValue: 1},
       r2: {type: 'number', defaultValue: ''},
@@ -46,14 +46,14 @@ export default {
   //   }
   // },
   addSphere: {
-    title: 'Sphere',
+    title: 'sphere',
     params: {r: {type: 'number', defaultValue: 1}, n: {type: 'number', defaultValue: 32}},
     execute(stack, params) {
       return stack.add(CSG.sphere({radius: +params.r, resolution:+params.n}));
     }
   },
   union: {
-    title: 'Union',
+    title: 'union',
     execute(stack, params) {
       return stack.prev.prev.add(stack.prev.item.union(stack.item));
     }
@@ -71,32 +71,32 @@ export default {
     }
   },
   dupStack: {
-    title: 'swap',
+    title: 'dup',
     execute(stack, params) {
       return stack.add(stack.item);
     }
   },
   subtract: {
-    title: 'Subtract',
+    title: 'subtract',
     execute(stack, params) {
       return stack.prev.prev.add(stack.prev.item.subtract(stack.item));
     }
   },
   intersect: {
-    title: 'Intersect',
+    title: 'intersect',
     execute(stack, params) {
       return stack.prev.prev.add(stack.prev.item.intersect(stack.item));
     }
   },
   translate: {
-    title: 'Translate',
+    title: 'translate',
     params: {x: {type: 'number', defaultValue: 0}, y: {type: 'number', defaultValue: 0}, z: {type: 'number', defaultValue: 0}},
     execute(stack, params) {
       return stack.prev.add(stack.item.translate([+params.x, +params.y, +params.z]))
     }
   },
   scale: {
-    title: 'Scale',
+    title: 'scale',
     params: {x: {type: 'number', defaultValue: 1}, y: {type: 'number', defaultValue: ''}, z: {type: 'number', defaultValue: ''}},
     emptyParamSource: {y: 'x', z: 'x'},
     execute(stack, params) {
@@ -104,7 +104,7 @@ export default {
     }
   },
   rotate: {
-    title: 'Rotate',
+    title: 'rotate',
     params: {x: {type: 'number', defaultValue: 0}, y: {type: 'number', defaultValue: 0}, z: {type: 'number', defaultValue: 0}},
     execute(stack, params) {
       return stack.prev.add(stack.item.rotateX(+params.x).rotateY(+params.y).rotateZ(+params.z))

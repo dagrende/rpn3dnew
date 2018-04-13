@@ -1,6 +1,6 @@
 <template>
-  <div :hidden="$store.state.commandLog.length == 0">
-    <div v-for="command in $store.state.commandLog"
+  <div :hidden="$store.state.commandLog.isEmpty()">
+    <div v-for="command in $store.state.commandLog.list()"
       class="command-log-item"
       :class="{selected: selected.indexOf(command) != -1}"
       @click="click($event, command)">{{commands[command.id].title}}</div>
