@@ -4,7 +4,7 @@ import store from './store';
 
 export default {
   addCube: {
-    title: 'Add Cube',
+    title: 'Cube',
     params: {x: {type: 'number', defaultValue: 2}, y: {type: 'number', defaultValue: ''}, z: {type: 'number', defaultValue: ''}},
     emptyParamSource: {y: 'x', z: 'x'},
     execute(stack, params) {

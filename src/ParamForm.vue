@@ -27,7 +27,7 @@ import ParamSelectField from './ParamSelectField.vue';
         this.$store.commit('updateField', {path: 'params.' + key, value: event.target.value})
       },
       emptyReplacement(key) {
-        let command = this.$store.state.lastCommand.command
+        let command = this.$store.state.commandLog.last().command
         if (command && command.emptyParamSource) {
           return this.$store.state.params[command.emptyParamSource[key]]
         }

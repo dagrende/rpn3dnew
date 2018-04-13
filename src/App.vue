@@ -10,26 +10,29 @@
         </div>
       </div>
       <!-- <command-list-viewer class="command-list"/> -->
-      <div class="buttons">
-        <param-form class="field-row"/>
-        <div class="button-row">
-          <mutation-button image="cube-icon.png" mutation="addCube" title="cube"/>
-          <mutation-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
-          <!-- <mutation-button image="torus-icon.png" mutation="addTorus" title="torus"/> -->
-          <mutation-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
-          <mutation-button image="pop-icon.svg" mutation="popStack" title="remove top of stack" opCount="1"/>
-          <mutation-button image="dup-icon.svg" mutation="dupStack" title="duplicates top of stack" opCount="1"/>
-          <mutation-button image="swap-icon.svg" mutation="swapStack" title="swap top two stack items" opCount="2"/>
+      <div class="controls">
+        <div class="buttons">
+          <param-form class="field-row"/>
+          <div class="button-row">
+            <mutation-button image="cube-icon.png" mutation="addCube" title="cube"/>
+            <mutation-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
+            <!-- <mutation-button image="torus-icon.png" mutation="addTorus" title="torus"/> -->
+            <mutation-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
+            <mutation-button image="pop-icon.svg" mutation="popStack" title="remove top of stack" opCount="1"/>
+            <mutation-button image="dup-icon.svg" mutation="dupStack" title="duplicates top of stack" opCount="1"/>
+            <mutation-button image="swap-icon.svg" mutation="swapStack" title="swap top two stack items" opCount="2"/>
+          </div>
+          <div class="button-row">
+            <mutation-button image="union-icon.svg" mutation="union" opCount="2"/>
+            <mutation-button image="difference-icon.svg" mutation="subtract" opCount="2"/>
+            <mutation-button image="intersection-icon.svg" mutation="intersect" opCount="2"/>
+            <mutation-button image="translate-icon.svg" mutation="translate" opCount="1"/>
+            <mutation-button image="scale-icon.svg" mutation="scale" opCount="1"/>
+            <mutation-button image="rotate-icon.svg" mutation="rotate" opCount="1"/>
+            <mutation-button image="align-icon.svg" mutation="align" opCount="2"/>
+          </div>
         </div>
-        <div class="button-row">
-          <mutation-button image="union-icon.svg" mutation="union" opCount="2"/>
-          <mutation-button image="difference-icon.svg" mutation="subtract" opCount="2"/>
-          <mutation-button image="intersection-icon.svg" mutation="intersect" opCount="2"/>
-          <mutation-button image="translate-icon.svg" mutation="translate" opCount="1"/>
-          <mutation-button image="scale-icon.svg" mutation="scale" opCount="1"/>
-          <mutation-button image="rotate-icon.svg" mutation="rotate" opCount="1"/>
-          <mutation-button image="align-icon.svg" mutation="align" opCount="2"/>
-        </div>
+        <command-list-viewer class="command-list"/>
       </div>
     </div>
 </template>
@@ -116,8 +119,19 @@
   }
   .field-row {
   }
-  .buttons {
+  .controls {
     flex: initial;
+    display: flex;
+    flex-direction: row;
+  }
+  .command-list {
+    border-left: solid #fff 2px;
+    padding: .2em .3em;
+    max-height: 5em;
+    overflow: scroll;
+  }
+  .buttons {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;

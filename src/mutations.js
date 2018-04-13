@@ -13,19 +13,19 @@ export default {
       state.params[k] = command.params[k].defaultValue;
     }
     state.formParams = command.params;
-
-    state.lastCommand = {command: command, stackBefore: state.stack};
+    let stackBefore = state.stack;
     if (command.buttonClick) {
       state.stack = command.buttonClick(state.stack, state.params);
     } else {
       state.stack = command.execute(state.stack, prepareParams(command, state.params))
     }
+    state.commandLog.push({id: commandId, stackBefore, stackAfter: state.stack});
   },
   updateField(state) {
     updateField(...arguments);
-    if (state.lastCommand) {
-      let logItem = state.lastCommand;
-      let command = logItem.command;
+    if (state.commandLog.length > 0) {
+      let logItem = store.getters.getLastCommand();
+      let command = commands[logItem.id];
       let f = ()=>{
         if (command.execute) {
           let stack = command.execute(logItem.stackBefore, prepareParams(command, state.params));

@@ -8,6 +8,8 @@
 </template>
 
 <script>
+  import commands from './commands';
+
   export default {
     props: {
       paramKey: String
@@ -24,7 +26,7 @@
         this.$store.commit('updateField', {path: 'params.' + key, value: event.target.value})
       },
       emptyReplacement(key) {
-        let command = this.$store.state.lastCommand.command
+        let command = commands[this.$store.getters.getLastCommand().id]
         if (command && command.emptyParamSource) {
           return this.$store.state.params[command.emptyParamSource[key]]
         }
