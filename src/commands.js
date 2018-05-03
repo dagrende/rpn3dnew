@@ -3,29 +3,36 @@ import {CSG, CAG} from '@jscad/csg';
 import store from './store';
 
 export default {
+  noop: {
+    title: 'noop',
+    params: {},
+    execute(stack, params) {
+      return stack
+    }
+  },
   addCube: {
     title: 'cube',
-    params: {x: {type: 'number', defaultValue: 2}, y: {type: 'number', defaultValue: ''}, z: {type: 'number', defaultValue: ''}},
-    emptyParamSource: {y: 'x', z: 'x'},
+    params: {width: {type: 'number', defaultValue: 2}, depth: {type: 'number', defaultValue: ''}, height: {type: 'number', defaultValue: ''}},
+    emptyParamSource: {depth: 'width', height: 'width'},
     execute(stack, params) {
-      let cube = CSG.cube({center:[0,0,0],radius:[+params.x / 2, +params.y / 2, +params.z / 2]});
+      let cube = CSG.cube({center:[0,0,0],radius:[+params.width / 2, +params.depth / 2, +params.height / 2]});
       return stack.add(cube);
     }
   },
   addCylinder: {
     title: 'cylinder',
     params: {
-      r1: {type: 'number', defaultValue: 1},
-      r2: {type: 'number', defaultValue: ''},
-      h: {type: 'number', defaultValue: 2},
-      n: {type: 'number', defaultValue: 32}},
-    emptyParamSource: {r2: 'r1'},
+      rbottom: {type: 'number', defaultValue: 1},
+      rtop: {type: 'number', defaultValue: ''},
+      height: {type: 'number', defaultValue: 2},
+      sides: {type: 'number', defaultValue: 32}},
+    emptyParamSource: {rtop: 'rbottom'},
     execute(stack, params) {
       let cylinder = CSG.cylinder({
-          radiusStart: +params.r1,
-          radiusEnd: +params.r2,
-          start: [0, 0, -+params.h / 2],
-          end: [0, 0, +params.h / 2], resolution: +params.n});
+          radiusStart: +params.rbottom,
+          radiusEnd: +params.rtop,
+          start: [0, 0, -+params.height / 2],
+          end: [0, 0, +params.height / 2], resolution: +params.sides});
       return stack.add(cylinder);
     }
   },

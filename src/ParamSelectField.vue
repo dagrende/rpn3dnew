@@ -2,7 +2,7 @@
   <select
       :value="$store.state.params[paramKey]"
       @input="inputChanged($event, paramKey)">
-      <option v-for="option in $store.state.formParams[paramKey].options":value="option.value">{{option.title}}</option>
+      <option v-for="option in $store.state.commandLog.current().params[paramKey].options" :value="option.value">{{option.title}}</option>
   </select>
 </template>
 

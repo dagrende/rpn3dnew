@@ -1,9 +1,9 @@
 <template>
   <div :hidden="$store.state.commandLog.isEmpty()">
-    <div v-for="command in $store.state.commandLog.list()"
+    <div v-for="(command, i) in $store.state.commandLog.list()"
       class="command-log-item"
-      :class="{selected: selected.indexOf(command) != -1}"
-      @click="click($event, command)">{{commands[command.id].title}}</div>
+      :class="{selected: i == $store.state.commandLog.currentIndex()}"
+      @click="click($event, i)">{{commands[command.id].title}}</div>
   </div>
 </template>
 <script>
@@ -13,15 +13,11 @@
     data() {
       return {
         commands,
-        selected: []
       };
     },
     methods: {
-      click(event, command) {
-        console.log(event, command);
-        this.selected = [];
-        this.selected.push(command);
-        this.$store.state.stack = command.stackAfter;
+      click(event, i) {
+        this.$store.commit('setCommandLogIndex', i)
       }
     }
   }

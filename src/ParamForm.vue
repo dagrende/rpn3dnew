@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="field-row">
-    <template v-for="(v, k) in $store.state.formParams">
+    <template v-for="(v, k) in params">
       <span>{{k}}</span><component :is='componentByType[v.type]' :paramKey="k"/>
     </template>
   </div>
@@ -9,6 +9,7 @@
 <script>
 import ParamNumberField from './ParamNumberField.vue';
 import ParamSelectField from './ParamSelectField.vue';
+import commands from './commands';
 
   export default {
     data() {
@@ -16,6 +17,17 @@ import ParamSelectField from './ParamSelectField.vue';
         componentByType: {
           number: 'ParamNumberField',
           select: 'ParamSelectField'
+        }
+      }
+    },
+    computed: {
+      params() {
+        let current = this.$store.state.commandLog.current();
+        console.log('ParamForm params', current);
+        if (current) {
+          return commands[current.id].params
+        } else {
+          return {}
         }
       }
     },

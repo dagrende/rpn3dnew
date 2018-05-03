@@ -56,6 +56,7 @@
       let prevObj = null;
       let stackIndex = this.stackIndex;
       this.setObject = function(obj) {
+        console.log('ModelViewer setObject');
         if (prevObj) {
           scene.remove(prevObj);
         }
@@ -81,14 +82,14 @@
       // store.commit('buttonCommand', 'addCube')
     },
     computed: {
-      stackTop () {
-        return this.$store.state.stack
+      currentLogItem () {
+        return this.$store.state.commandLog.current()
       }
     },
     watch: {
-      stackTop (newStackTop, oldStackTop) {
+      currentLogItem (newLogItem, oldLogItem) {
         let i = +this.stackIndex;
-        let stack = newStackTop;
+        let stack = newLogItem.stack;
         while (stack.item && i-- > 0) {
           stack = stack.prev;
         }

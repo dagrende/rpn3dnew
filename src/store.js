@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { getField, updateField } from 'vuex-map-fields';
 import commandExecutor from './commandExecutor'
-import THREE from 'three';
 import mutations from './mutations';
 
 Vue.use(Vuex)
@@ -10,26 +9,10 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     // ordered sequence of commands that manipulates the stack
-    // items are {id: 'cube', stackAfter: [csg], params: {x: 2, y: '', z: ''}}
+    // items are {id: 'cube', stack: [csg], params: {x: 2, y: '', z: ''}}
+    // stack is after command execution
+    // viewer should show stack of last log item
     commandLog: new CommandLog(),
-    currentCommandIndex: 0,
-    // stack of models represented by ThreeBSP objects - stack[0] is displayed in the web page
-    stack: new Stack(),
-    params: {
-      x: 0,
-      y: 0,
-      z: 0,
-      r: 0,
-      r1: 0,
-      r2: 0,
-      ri: 0,
-      ro: 0,
-      h: 0,
-      n: 0,
-      ni: 0,
-      no: 0
-    },
-    formParams: {}
   },
   getters: {
     getField,
@@ -46,9 +29,14 @@ function Stack(item, prev, depth = 0) {
   return this;
 }
 
-function CommandLog(commands = []) {
-  this.last = ()=>commands[commands.length - 1];
-  this.add = (command)=>new CommandLog([...commands, command]);
-  this.isEmpty = ()=>commands.length == 0;
-  this.list = ()=>commands;
+function CommandLog(list = [], currentIndex = -1) {
+  this.last = ()=>list[list.length - 1];
+  this.add = (command)=>new CommandLog([...list, command], currentIndex + 1);
+  this.replaceCurrent = (command)=>new CommandLog([...list.slice(0, currentIndex), command, ...list.slice(currentIndex + 1)], currentIndex);
+  this.isEmpty = ()=>list.length == 0;
+  this.list = ()=>list;
+  this.prev = ()=>currentIndex > 0 ? list[currentIndex - 1] : {id: 'noop', params: {}, stack: new Stack()};
+  this.current = ()=>currentIndex > -1 ? list[currentIndex] : {id: 'noop', params: {}, stack: new Stack()};
+  this.currentIndex = ()=>currentIndex;
+  this.setCurrentIndex = (i)=>new CommandLog(list, i)
 }

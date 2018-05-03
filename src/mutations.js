@@ -3,39 +3,48 @@ import Vuex from 'vuex'
 import commandExecutor from './commandExecutor'
 import store from './store';
 import { getField, updateField } from 'vuex-map-fields';
-import debounce  from 'lodash.debounce'
-import commands from './commands'
+import debounce  from 'lodash.debounce';
+import mapValues  from 'lodash.mapvalues';
+import commands from './commands';
 
 export default {
   buttonCommand(state, commandId) {
+    console.log('buttonCommand', state.commandLog.list.length);
+    // a command button has been clicked - find the associated command, prepare the param form and execute it
     //state.stack = store.getLastCommand().stackAfter;
     let command = commands[commandId];
-    for (let k in command.params) {
-      state.params[k] = command.params[k].defaultValue;
-    }
-    state.formParams = command.params;
-    let stackBefore = state.stack;
+    let params = mapValues(command.params, v=>v.defaultValue);
+    let logItem = {id: commandId, params, stack: state.commandLog.current().stack};
     if (command.buttonClick) {
-      state.stack = command.buttonClick(state.stack, state.params);
+      logItem.stack = command.buttonClick(logItem.stack, logItem.params);
     } else {
-      state.stack = command.execute(state.stack, prepareParams(command, state.params))
+      console.log('logItem1', logItem.stack);
+      logItem.stack = command.execute(logItem.stack, prepareParams(command, logItem.params))
+      console.log('logItem2', logItem.stack);
     }
-    state.commandLog = state.commandLog.add({id: commandId, stackBefore, stackAfter: state.stack});
+    state.commandLog = state.commandLog.add(logItem);
+    console.log(state.commandLog.list());
   },
-  updateField(state) {
-    updateField(...arguments);
+  updateField(state, {path, value}) {
+    console.log('updateField(',arguments,');');
+    console.log('params[',path.substring(7),'] = ',value);
+    state.commandLog.current().params[path.substring(7)] = value;
     if (!state.commandLog.isEmpty()) {
-      let logItem = store.state.commandLog.last();
+      let logItem = store.state.commandLog.current();
       let command = commands[logItem.id];
       let f = ()=>{
         if (command.execute) {
-          let stack = command.execute(logItem.stackBefore, prepareParams(command, state.params));
-          state.stack = stack;
-          logItem.stackAfter = stack;
+          console.log('execute', logItem.params);
+          logItem.stack = command.execute(store.state.commandLog.prev().stack, prepareParams(command, logItem.params));
+          state.commandLog = state.commandLog.replaceCurrent(logItem);
         }
       };
       debounce(f, 600)();
     }
+  },
+  setCommandLogIndex(state, i) {
+    console.log('setCommandLogIndex', state, i);
+    state.commandLog = state.commandLog.setCurrentIndex(i);
   }
 }
 

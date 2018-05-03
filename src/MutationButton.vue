@@ -16,7 +16,7 @@ export default {
   },
   computed: {
     disabled() {
-      return this.opCount && this.$store.state.stack.depth < +this.opCount
+      return this.opCount && this.$store.state.commandLog.current().stack.depth < +this.opCount
     }
   },
   data() {

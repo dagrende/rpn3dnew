@@ -1,6 +1,6 @@
 <template lang="html">
   <input
-      :value="$store.state.params[paramKey]"
+      :value="$store.state.commandLog.current().params[paramKey]"
       @input="inputChanged($event, paramKey)"
       type="number"
       @click="fieldClick"
@@ -26,9 +26,9 @@
         this.$store.commit('updateField', {path: 'params.' + key, value: event.target.value})
       },
       emptyReplacement(key) {
-        let command = commands[this.$store.state.commandLog.last().id]
+        let command = commands[this.$store.state.commandLog.current().id]
         if (command && command.emptyParamSource) {
-          return this.$store.state.params[command.emptyParamSource[key]]
+          return this.$store.state.commandLog.current().params[command.emptyParamSource[key]]
         }
       }
     }
