@@ -1,12 +1,14 @@
 <template lang="html">
   <select
-      :value="$store.state.params[paramKey]"
+      :value="$store.state.commandLog.current().params[paramKey]"
       @input="inputChanged($event, paramKey)">
-      <option v-for="option in $store.state.commandLog.current().params[paramKey].options" :value="option.value">{{option.title}}</option>
+      <option v-for="option in command.params[paramKey].options" :value="option.value">{{option.title}}</option>
   </select>
 </template>
 
 <script>
+  import commands from './commands';
+
   export default {
     props: {
       paramKey: String
@@ -15,15 +17,14 @@
       return {
       }
     },
+    computed: {
+      command() {
+        return commands[this.$store.state.commandLog.current().id]
+      }
+    },
     methods: {
       inputChanged(event, key) {
-        this.$store.commit('updateField', {path: 'params.' + key, value: event.target.value})
-      },
-      emptyReplacement(key) {
-        let command = commands[this.$store.state.commandLog.last().id]
-        if (command && command.emptyParamSource) {
-          return this.$store.state.params[command.emptyParamSource[key]]
-        }
+        this.$store.commit('updateField', {path: key, value: event.target.value})
       }
     }
   }

@@ -23,7 +23,7 @@
         ev.target.select();
       },
       inputChanged(event, key) {
-        this.$store.commit('updateField', {path: 'params.' + key, value: event.target.value})
+        this.$store.commit('updateField', {path: key, value: event.target.value})
       },
       emptyReplacement(key) {
         let command = commands[this.$store.state.commandLog.current().id]

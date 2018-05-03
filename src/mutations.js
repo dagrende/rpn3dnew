@@ -26,15 +26,13 @@ export default {
     console.log(state.commandLog.list());
   },
   updateField(state, {path, value}) {
-    console.log('updateField(',arguments,');');
-    console.log('params[',path.substring(7),'] = ',value);
-    state.commandLog.current().params[path.substring(7)] = value;
+    console.log('updateField(state, {',path,', ',value,'})');
+    state.commandLog.current().params[path] = value;
     if (!state.commandLog.isEmpty()) {
       let logItem = store.state.commandLog.current();
       let command = commands[logItem.id];
       let f = ()=>{
         if (command.execute) {
-          console.log('execute', logItem.params);
           logItem.stack = command.execute(store.state.commandLog.prev().stack, prepareParams(command, logItem.params));
           state.commandLog = state.commandLog.replaceCurrent(logItem);
         }

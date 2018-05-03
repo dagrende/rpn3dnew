@@ -36,7 +36,7 @@ import commands from './commands';
         ev.target.select();
       },
       inputChanged(event, key) {
-        this.$store.commit('updateField', {path: 'params.' + key, value: event.target.value})
+        this.$store.commit('updateField', {path: key, value: event.target.value})
       },
       emptyReplacement(key) {
         let command = this.$store.state.commandLog.last().command
