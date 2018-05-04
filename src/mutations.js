@@ -9,40 +9,30 @@ import commands from './commands';
 
 export default {
   buttonCommand(state, commandId) {
-    console.log('buttonCommand', state.commandLog.list.length);
     // a command button has been clicked - find the associated command, prepare the param form and execute it
-    //state.stack = store.getLastCommand().stackAfter;
     let command = commands[commandId];
     let params = mapValues(command.params, v=>v.defaultValue);
     let logItem = {id: commandId, params, stack: state.commandLog.current().stack};
     if (command.buttonClick) {
       logItem.stack = command.buttonClick(logItem.stack, logItem.params);
     } else {
-      console.log('logItem1', logItem.stack);
       logItem.stack = command.execute(logItem.stack, prepareParams(command, logItem.params))
-      console.log('logItem2', logItem.stack);
     }
     state.commandLog = state.commandLog.add(logItem);
-    console.log(state.commandLog.list());
   },
   updateField(state, {path, value}) {
-    console.log('updateField(state, {',path,', ',value,'})');
     state.commandLog.current().params[path] = value;
-    if (!state.commandLog.isEmpty()) {
-      let logItem = store.state.commandLog.current();
-      let command = commands[logItem.id];
-      let f = ()=>{
-        if (command.execute) {
-          logItem.stack = command.execute(store.state.commandLog.prev().stack, prepareParams(command, logItem.params));
-          state.commandLog = state.commandLog.replaceCurrent(logItem);
-        }
-      };
-      debounce(f, 600)();
-    }
+    let f = ()=>{
+      state.commandLog = state.commandLog.executeIndex(state.commandLog.currentIndex());
+    };
+    debounce(f, 600)();
   },
   setCommandLogIndex(state, i) {
-    console.log('setCommandLogIndex', state, i);
+    for (let j = state.commandLog.dirtyIndex(); j <= i; j++) {
+      state.commandLog = state.commandLog.executeIndex(j);
+    }
     state.commandLog = state.commandLog.setCurrentIndex(i);
+
   }
 }
 

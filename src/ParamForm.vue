@@ -23,7 +23,6 @@ import commands from './commands';
     computed: {
       params() {
         let current = this.$store.state.commandLog.current();
-        console.log('ParamForm params', current);
         if (current) {
           return commands[current.id].params
         } else {

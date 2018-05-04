@@ -56,7 +56,6 @@
       let prevObj = null;
       let stackIndex = this.stackIndex;
       this.setObject = function(obj) {
-        console.log('ModelViewer setObject');
         if (prevObj) {
           scene.remove(prevObj);
         }
