@@ -9,7 +9,6 @@
           <model-viewer stackIndex="3" class="model-viewer sx"/>
         </div>
       </div>
-      <!-- <command-list-viewer class="command-list"/> -->
       <div class="controls">
         <div class="buttons">
           <param-form class="field-row"/>
@@ -31,6 +30,12 @@
             <mutation-button image="rotate-icon.svg" mutation="rotate" opCount="1"/>
             <mutation-button image="align-icon.svg" mutation="align" opCount="2"/>
           </div>
+          <div class="button-row">
+            <button type="button" @click="login">login</button>
+            <button type="button" @click="logout">logout</button>
+            <button type="button" @click="save">save</button>
+            <button type="button" @click="open">open</button>
+          </div>
         </div>
         <command-list-viewer class="command-list"/>
       </div>
@@ -38,11 +43,13 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   import { mapGetters, mapActions, mapMutations } from 'vuex'
   import ModelViewer from './ModelViewer.vue'
   import ParamForm from './ParamForm.vue'
   import CommandListViewer from './CommandListViewer.vue'
   import MutationButton from './MutationButton'
+  import openSave from './openSave.js'
   require('./assets/cube-icon.png')
   require('./assets/cylinder-icon.png')
   require('./assets/torus-icon.png')
@@ -67,6 +74,28 @@
       };
     },
     methods: {
+      login() {
+        console.log('login');
+        Vue.googleAuth().signIn(function (authorizationCode) {
+          console.log('login success');
+        }, function (error) {
+          console.log('login failure');
+        })
+      },
+      logout() {
+        console.log('logout');
+        Vue.googleAuth().signOut(function () {
+          console.log('logout success');
+        }, function (error) {
+          console.log('logout failure');
+        })
+      },
+      save() {
+        openSave.save();
+      },
+      open() {
+        openSave.open();
+      },
       updateX (e) {
         this.$store.commit('updateX', e.target.value)
       },

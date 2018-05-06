@@ -51,7 +51,18 @@ function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0) {
       return this.replaceIndex(logItem, i);
     }
     return this;
-  }
+  };
+  // returns an object suitable for storing
+  this.saveFormat = ()=>list.map(item=>({id: item.id, params: item.params}));
+  // returns a new CommandLog set from content that is loaded from a file storage
+  this.load = content=>{
+    let newList = content.map(item=>({id: item.id, params: item.params}));
+    let newLog = new CommandLog(newList, newList.length - 1, 0);
+    for (let i = 0; i < newList.length; i++) {
+      newLog.executeIndex(i);
+    }
+    return newLog
+  };
 }
 
 function prepareParams(command, params) {
