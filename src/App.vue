@@ -1,5 +1,7 @@
 <template>
     <div ref="fullscreen" id="app">
+      <span class="title" :hidden="editingTitle" @click.stop="editTitle">{{$store.state.currentFile.name || 'Untitled'}}</span>
+      <input class="title-edit" :hidden="!editingTitle" @keyup.enter="commitTitleEdit" type="text" v-model="$store.state.currentFile.name">
       <button class="fs" type="button" @click="toggleFullscreen"></button>
       <div class="model-viewers">
         <model-viewer stackIndex="0" class="model-viewer top"/>
@@ -70,10 +72,18 @@
     name: 'app',
     data() {
       return {
-        fullscreen: false
+        fullscreen: false,
+        editingTitle: false
       };
     },
     methods: {
+      editTitle() {
+        this.editingTitle = true;
+      },
+      commitTitleEdit() {
+        console.log('commit title');
+        this.editingTitle = false;
+      },
       login() {
         console.log('login');
         Vue.googleAuth().signIn(function (authorizationCode) {
@@ -126,6 +136,7 @@
     font-family: "Avenir", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    align-items: stretch;
   }
 
   .model-viewers {
@@ -177,6 +188,15 @@
     border: none;
     position: absolute;
     background: url(/dist/fullscreen-icon.svg) center / contain no-repeat;
+  }
+  span.title, input.title-edit {
+      text-align: center;
+      position: absolute;
+      width: 100%;
+      background-color: #ffffff40;
+  }
+  input.title-edit {
+    font-size: 100%;
   }
 
 </style>

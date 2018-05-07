@@ -4,28 +4,28 @@ export default {
   open() {
     window.gapi.load('picker', function () {
       console.log('picker load finished.')
-      showPicker().then(function(id) {
-        console.log('picked file', id);
-        getFileContents(id).then(function(contents) {
+      showPicker().then(function(file) {
+        console.log('picked file', file);
+        getFileContents(file.id).then(function(contents) {
           console.log('contents', contents);
           store.state.commandLog = store.state.commandLog.load(JSON.parse(contents));
-          store.state.currentFileId = id;
+          store.state.currentFile = file;
         })
         .catch(function(err) {
           console.log('file read error', err);
-          store.state.currentFileId = undefined;
+          store.state.currentFile.id = undefined;
         })
       })
     });
   },
   save() {
-    if (store.state.currentFileId) {
-      saveFile(store.state.currentFileId, JSON.stringify(store.state.commandLog.saveFormat(), null, '  '))
+    if (store.state.currentFile.id) {
+      saveFile(store.state.currentFile.id, JSON.stringify(store.state.commandLog.saveFormat(), null, '  '))
       .then(function(file) {
         console.log(file);
       });
     } else {
-      createFile('rpn3d.json', JSON.stringify(store.state.commandLog.saveFormat(), null, '  '))
+      createFile(store.state.currentFile.name, JSON.stringify(store.state.commandLog.saveFormat(), null, '  '))
       .then(function(file) {
         console.log(file);
       });
@@ -42,7 +42,7 @@ function createFile(name, data) {
   console.log('createFile');
   return writeFile({name, method: 'POST'}, data)
   .then(function(file) {
-    store.state.currentFileId = file.id;
+    store.state.currentFile.id = file.id;
     return file
   })
 }
@@ -57,7 +57,7 @@ function writeFile(options, data) {
       const contentType = 'application/json';
 
       var metadata = {
-        //'name': options.name,
+        'name': options.name,
         'mimeType': contentType
       };
 
@@ -96,8 +96,7 @@ function showPicker() {
           .addView(view)
           .setCallback(function (data) {
             if (data.action === 'picked') {
-              var id = data.docs[0].id
-              resolve(id)
+              resolve(data.docs[0])
             } else if (data.action === 'cancel') {
               reject('cancel')
             }

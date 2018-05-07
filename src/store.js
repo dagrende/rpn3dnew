@@ -14,6 +14,7 @@ export default new Vuex.Store({
     // stack is after command execution
     // viewer should show stack of last log item
     commandLog: new CommandLog(),
+    currentFile: {name: undefined, id: undefined}
   },
   getters: {
     getField,
