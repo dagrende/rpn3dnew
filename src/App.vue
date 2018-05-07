@@ -3,6 +3,7 @@
       <span class="title" :hidden="editingTitle" @click.stop="editTitle">{{$store.state.currentFile.name || 'Untitled'}}</span>
       <input class="title-edit" :hidden="!editingTitle" @keyup.enter="commitTitleEdit" type="text" v-model="$store.state.currentFile.name">
       <button class="fs" type="button" @click="toggleFullscreen"></button>
+      <button class="user-image" type="button" @click="loginOut" :style="'background:url('+ user.image + ') center / contain no-repeat'"></button>
       <div class="model-viewers">
         <model-viewer stackIndex="0" class="model-viewer top"/>
         <div class="model-viewer stack">
@@ -33,10 +34,8 @@
             <mutation-button image="align-icon.svg" mutation="align" opCount="2"/>
           </div>
           <div class="button-row">
-            <button type="button" @click="login">login</button>
-            <button type="button" @click="logout">logout</button>
-            <button type="button" @click="save">save</button>
             <button type="button" @click="open">open</button>
+            <button type="button" @click="save">save</button>
           </div>
         </div>
         <command-list-viewer class="command-list"/>
@@ -73,7 +72,8 @@
     data() {
       return {
         fullscreen: false,
-        editingTitle: false
+        editingTitle: false,
+        user: {image: 'https://lh6.googleusercontent.com/-StdUSaMlaIc/AAAAAAAAAAI/AAAAAAAAGZ0/JDy-bTWT0Xs/s96-c/photo.jpg'}
       };
     },
     methods: {
@@ -84,18 +84,29 @@
         console.log('commit title');
         this.editingTitle = false;
       },
+      loginOut() {
+        if (gapi.auth2.getAuthInstance().currentUser.get().isSignedIn()) {
+          this.logout();
+        } else {
+          this.login();
+        }
+      },
       login() {
         console.log('login');
+        let self = this;
         Vue.googleAuth().signIn(function (authorizationCode) {
-          console.log('login success');
+          console.log('login success', authorizationCode);
+          self.user.image = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getImageUrl();
         }, function (error) {
           console.log('login failure');
         })
       },
       logout() {
         console.log('logout');
+        let self = this;
         Vue.googleAuth().signOut(function () {
           console.log('logout success');
+          self.user.image = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getImageUrl();
         }, function (error) {
           console.log('logout failure');
         })
@@ -181,10 +192,10 @@
     padding-left: 4px;
   }
   button.fs {
-    width: 24px;
-    height: 24px;
-    left: 10px;
-    top: 10px;
+    width: 15px;
+    height: 15px;
+    left: 5px;
+    top: 5px;
     border: none;
     position: absolute;
     background: url(/dist/fullscreen-icon.svg) center / contain no-repeat;
@@ -193,10 +204,22 @@
       text-align: center;
       position: absolute;
       width: 100%;
+      font-size: 125%;
       background-color: #ffffff40;
   }
   input.title-edit {
     font-size: 100%;
+  }
+  button.user-image {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 2em;
+    height: 2em;
+    background-size: contain;
+    border: none;
+    border-radius: 50%;
+    outline: 0;
   }
 
 </style>
