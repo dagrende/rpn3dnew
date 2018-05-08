@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import store from './store'
 import fullscreen from 'vue-fullscreen'
-import GoogleAuth from 'vue-google-oauth'
+import GoogleAuth from './vue-google-oauth'
 
 Vue.use(fullscreen)
 

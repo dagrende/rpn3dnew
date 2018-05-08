@@ -34,8 +34,8 @@
             <mutation-button image="align-icon.svg" mutation="align" opCount="2"/>
           </div>
           <div class="button-row">
-            <button type="button" @click="open">open</button>
-            <button type="button" @click="save">save</button>
+            <button type="button" :disabled="!isSignedIn" @click="open">open</button>
+            <button type="button" :disabled="!isSignedIn" @click="save">save</button>
           </div>
         </div>
         <command-list-viewer class="command-list"/>
@@ -66,6 +66,7 @@
   require('./assets/swap-icon.svg')
   require('./assets/dup-icon.svg')
   require('./assets/align-icon.svg')
+  require('./assets/unknown-user.png')
 
   export default {
     name: 'app',
@@ -73,8 +74,15 @@
       return {
         fullscreen: false,
         editingTitle: false,
-        user: {image: 'https://lh6.googleusercontent.com/-StdUSaMlaIc/AAAAAAAAAAI/AAAAAAAAGZ0/JDy-bTWT0Xs/s96-c/photo.jpg'}
+        user: {image: 'dist/unknown-user.png'},
+        isSignedIn: false
       };
+    },
+    mounted() {
+      // if (gapi.auth2.getAuthInstance().currentUser.get().isSignedIn()) {
+      //   this.isSignedIn = true;
+      //   this.user.image = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getImageUrl();
+      // }
     },
     methods: {
       editTitle() {
@@ -95,7 +103,8 @@
         console.log('login');
         let self = this;
         Vue.googleAuth().signIn(function (authorizationCode) {
-          console.log('login success', authorizationCode);
+          console.log('login success');
+          self.isSignedIn = true;
           self.user.image = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getImageUrl();
         }, function (error) {
           console.log('login failure');
@@ -106,7 +115,8 @@
         let self = this;
         Vue.googleAuth().signOut(function () {
           console.log('logout success');
-          self.user.image = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getImageUrl();
+          self.user.image = 'dist/unknown-user.png';
+          self.isSignedIn = false;
         }, function (error) {
           console.log('logout failure');
         })
