@@ -1,7 +1,7 @@
 <template>
     <div ref="fullscreen" id="app">
       <span class="title" :hidden="editingTitle" @click.stop="editTitle">{{$store.state.currentFile.name || 'Untitled'}}</span>
-      <input class="title-edit" :hidden="!editingTitle" @keyup.enter="commitTitleEdit" type="text" v-model="$store.state.currentFile.name">
+      <input class="title-edit" ref="titleField" :hidden="!editingTitle" @keyup.enter="commitTitleEdit" type="text" v-model="$store.state.currentFile.name">
       <button class="fs" type="button" @click="toggleFullscreen"></button>
       <button class="user-image" type="button" @click="loginOut" :style="'background:url('+ user.image + ') center / contain no-repeat'"></button>
       <div class="model-viewers">
@@ -78,15 +78,33 @@
         isSignedIn: false
       };
     },
-    mounted() {
-      // if (gapi.auth2.getAuthInstance().currentUser.get().isSignedIn()) {
-      //   this.isSignedIn = true;
-      //   this.user.image = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getImageUrl();
-      // }
+    created() {
+      let self = this;
+      window.googleApiLoad.then(function() {
+        gapi.auth2.getAuthInstance().then(function(googleAuth) {
+          self.adjustSignedInStatus(googleAuth);
+          googleAuth.currentUser.listen(function() {
+            self.adjustSignedInStatus(googleAuth)
+          });
+        })
+      })
     },
     methods: {
+      adjustSignedInStatus(googleAuth) {
+        this.isSignedIn = googleAuth.currentUser.get().isSignedIn();
+        console.log('signeIn', this.isSignedIn);
+        if (this.isSignedIn) {
+          this.user.image = googleAuth.currentUser.get().getBasicProfile().getImageUrl();
+        } else {
+          this.user.image = 'dist/unknown-user.png';
+        }
+      },
       editTitle() {
         this.editingTitle = true;
+        setTimeout(()=>{
+          this.$refs.titleField.focus();
+          this.$refs.titleField.select()
+        }, 10)
       },
       commitTitleEdit() {
         console.log('commit title');
@@ -104,8 +122,6 @@
         let self = this;
         Vue.googleAuth().signIn(function (authorizationCode) {
           console.log('login success');
-          self.isSignedIn = true;
-          self.user.image = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getImageUrl();
         }, function (error) {
           console.log('login failure');
         })
@@ -115,8 +131,6 @@
         let self = this;
         Vue.googleAuth().signOut(function () {
           console.log('logout success');
-          self.user.image = 'dist/unknown-user.png';
-          self.isSignedIn = false;
         }, function (error) {
           console.log('logout failure');
         })

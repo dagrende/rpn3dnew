@@ -15,7 +15,7 @@ export default {
           console.log('file read error', err);
           store.state.currentFile.id = undefined;
         })
-      })
+      }).catch(err=>{console.log('cancel')})
     });
   },
   save() {
@@ -84,26 +84,25 @@ function writeFile(options, data) {
 };
 
 function showPicker() {
-    return new Promise(
-      (resolve, reject) => {
-        var view = new google.picker.DocsView(google.picker.ViewId.DOCS)
-        view.setMimeTypes(process.env.DEFAULT_MIMETYPE)
-        view.setSelectFolderEnabled(true)
-        view.setIncludeFolders(true)
-        var picker = new google.picker.PickerBuilder()
-          .setAppId(process.env.APPLICATION_ID)
-          .setOAuthToken(gapi.auth.getToken().access_token)
-          .addView(view)
-          .setCallback(function (data) {
-            if (data.action === 'picked') {
-              resolve(data.docs[0])
-            } else if (data.action === 'cancel') {
-              reject('cancel')
-            }
-          })
-          .build()
-        picker.setVisible(true)
-      })
+  return new Promise((resolve, reject) => {
+      var view = new google.picker.DocsView(google.picker.ViewId.DOCS)
+      view.setMimeTypes('application/json')
+      view.setSelectFolderEnabled(false)
+      view.setIncludeFolders(true)
+      var picker = new google.picker.PickerBuilder()
+        .setAppId(process.env.APPLICATION_ID)
+        .setOAuthToken(gapi.auth.getToken().access_token)
+        .addView(view)
+        .setCallback(function (data) {
+          if (data.action === 'picked') {
+            resolve(data.docs[0])
+          } else if (data.action === 'cancel') {
+            reject('cancel')
+          }
+        })
+        .build()
+      picker.setVisible(true)
+    })
   };
 
   function getFileContents(fileId) {
