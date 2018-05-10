@@ -30,8 +30,31 @@ function Stack(item, prev, depth = 0) {
   this.depth = depth;
   return this;
 }
+function logList(list) {
+  console.log(list.map(li=>{
+    const b = li.stack.item.getBounds();
+    return [b[1].x-b[0].x, b[1].y-b[0].y, b[1].z-b[0].z]
+  }));
+  return list;
+}
 
 function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0) {
+  const emptyStack = new Stack();
+  const stackAt = i => i < 0 || i >=list.length ? emptyStack : list[i].stack;
+  // returns a copy of list where item start up to end is replaced by executed items
+  const executeSlice = (start, end)=>{
+    let prevStack = stackAt(start - 1);
+    return list.map((listItem, i)=>{
+      if (start <= i && i < end) {
+        const command = commands[listItem.id];
+        const stack = command.execute(prevStack, prepareParams(command, listItem.params));
+        prevStack = stack;
+        return {id: listItem.id, params: listItem.params, stack}
+      } else {
+        return listItem;
+      }
+    })
+  }
   this.last = ()=>list[list.length - 1];
   this.add = (command)=>new CommandLog([...list, command], currentIndex + 1, dirtyIndex + 1);
   this.replaceIndex = (command, i)=>new CommandLog([...list.slice(0, i), command, ...list.slice(i + 1)], currentIndex, i + 1);
@@ -40,29 +63,16 @@ function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0) {
   this.prev = ()=>currentIndex > 0 ? list[currentIndex - 1] : {id: 'noop', params: {}, stack: new Stack()};
   this.current = ()=>currentIndex > -1 ? list[currentIndex] : {id: 'noop', params: {}, stack: new Stack()};
   this.currentIndex = ()=>currentIndex;
-  this.setCurrentIndex = (i)=>new CommandLog(list, i);
-  this.dirtyIndex = ()=>dirtyIndex;
-  this.executeIndex = (i)=>{
-    let logItem = i >= 0 ? list[i] : {id: 'noop', params: {}, stack: new Stack()};
-    let stackBefore = i > 0 ? list[i - 1].stack : new Stack();
-    let command = commands[logItem.id];
-    if (command.execute) {
-      logItem.stack = command.execute(stackBefore, prepareParams(command, logItem.params));
-      dirtyIndex = i + 1;
-      return this.replaceIndex(logItem, i);
-    }
-    return this;
-  };
+  this.setCurrentIndex = (i)=>new CommandLog(executeSlice(dirtyIndex, i + 1), i, i + 1);
+  this.dirtyIndex = ()=>dirtyIndex
+  this.executeCurrent = () => new CommandLog(executeSlice(currentIndex, currentIndex + 1), currentIndex, currentIndex + 1);
   // returns an object suitable for storing
   this.saveFormat = ()=>list.map(item=>({id: item.id, params: item.params}));
   // returns a new CommandLog set from content that is loaded from a file storage
-  this.load = content=>{
-    let newList = content.map(item=>({id: item.id, params: item.params}));
-    let newLog = new CommandLog(newList, newList.length - 1, 0);
-    for (let i = 0; i < newList.length; i++) {
-      newLog.executeIndex(i);
-    }
-    return newLog
+  this.load = content=>new CommandLog(content, 0, 0).setCurrentIndex(content.length - 1);
+  this.deleteCurrent = ()=>{
+    return new CommandLog([...list.slice(0, currentIndex), ...list.slice(currentIndex + 1)], currentIndex, currentIndex)
+      .setCurrentIndex(currentIndex > list.length - 2 ? currentIndex - 1 : currentIndex);
   };
 }
 

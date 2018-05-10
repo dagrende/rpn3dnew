@@ -36,6 +36,7 @@
           <div class="button-row">
             <button type="button" :disabled="!isSignedIn" @click="open">open</button>
             <button type="button" :disabled="!isSignedIn" @click="save">save</button>
+            <button type="button" @click="$store.commit('deleteLogRow')">Del</button>
           </div>
         </div>
         <command-list-viewer class="command-list"/>

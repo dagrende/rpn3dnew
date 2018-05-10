@@ -23,16 +23,15 @@ export default {
   updateField(state, {path, value}) {
     state.commandLog.current().params[path] = value;
     let f = ()=>{
-      state.commandLog = state.commandLog.executeIndex(state.commandLog.currentIndex());
+      state.commandLog = state.commandLog.executeCurrent();
     };
     debounce(f, 600)();
   },
   setCommandLogIndex(state, i) {
-    for (let j = state.commandLog.dirtyIndex(); j <= i; j++) {
-      state.commandLog = state.commandLog.executeIndex(j);
-    }
     state.commandLog = state.commandLog.setCurrentIndex(i);
-
+  },
+  deleteLogRow(state) {
+    state.commandLog = state.commandLog.deleteCurrent();
   }
 }
 

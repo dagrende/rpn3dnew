@@ -87,12 +87,16 @@
     },
     watch: {
       currentLogItem (newLogItem, oldLogItem) {
-        let i = +this.stackIndex;
-        let stack = newLogItem.stack;
-        while (stack.item && i-- > 0) {
-          stack = stack.prev;
+        if (newLogItem) {
+          let i = +this.stackIndex;
+          let stack = newLogItem.stack;
+          while (stack.item && i-- > 0) {
+            stack = stack.prev;
+          }
+          this.setObject && this.setObject(stack.item);
+        } else {
+          this.setObject(null);
         }
-        this.setObject && this.setObject(stack.item);
       }
     }
   };
