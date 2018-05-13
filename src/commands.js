@@ -14,6 +14,7 @@ export default {
     title: 'cube',
     params: {width: {type: 'number', defaultValue: 2}, depth: {type: 'number', defaultValue: ''}, height: {type: 'number', defaultValue: ''}},
     emptyParamSource: {depth: 'width', height: 'width'},
+    inItemCount: 0,
     execute(stack, params) {
       let cube = CSG.cube({center:[0,0,0],radius:[+params.width / 2, +params.depth / 2, +params.height / 2]});
       return stack.add(cube);
@@ -27,6 +28,7 @@ export default {
       height: {type: 'number', defaultValue: 2},
       sides: {type: 'number', defaultValue: 32}},
     emptyParamSource: {rtop: 'rbottom'},
+    inItemCount: 0,
     execute(stack, params) {
       let cylinder = CSG.cylinder({
           radiusStart: +params.rbottom,
@@ -55,48 +57,56 @@ export default {
   addSphere: {
     title: 'sphere',
     params: {r: {type: 'number', defaultValue: 1}, n: {type: 'number', defaultValue: 32}},
+    inItemCount: 0,
     execute(stack, params) {
       return stack.add(CSG.sphere({radius: +params.r, resolution:+params.n}));
     }
   },
-  union: {
-    title: 'union',
-    execute(stack, params) {
-      return stack.prev.prev.add(stack.prev.item.union(stack.item));
-    }
-  },
   popStack: {
     title: 'pop',
+    inItemCount: 1,
     execute(stack, params) {
       return stack.prev;
     }
   },
   swapStack: {
     title: 'swap',
+    inItemCount: 2,
     execute(stack, params) {
       return stack.prev.prev.add(stack.item).add(stack.prev.item);
     }
   },
   dupStack: {
     title: 'dup',
+    inItemCount: 1,
     execute(stack, params) {
       return stack.add(stack.item);
     }
   },
+  union: {
+    title: 'union',
+    inItemCount: 2,
+    execute(stack, params) {
+      return stack.prev.prev.add(stack.prev.item.union(stack.item));
+    }
+  },
   subtract: {
     title: 'subtract',
+    inItemCount: 2,
     execute(stack, params) {
       return stack.prev.prev.add(stack.prev.item.subtract(stack.item));
     }
   },
   intersect: {
     title: 'intersect',
+    inItemCount: 2,
     execute(stack, params) {
       return stack.prev.prev.add(stack.prev.item.intersect(stack.item));
     }
   },
   translate: {
     title: 'translate',
+    inItemCount: 1,
     params: {x: {type: 'number', defaultValue: 0}, y: {type: 'number', defaultValue: 0}, z: {type: 'number', defaultValue: 0}},
     execute(stack, params) {
       return stack.prev.add(stack.item.translate([+params.x, +params.y, +params.z]))
@@ -106,12 +116,14 @@ export default {
     title: 'scale',
     params: {x: {type: 'number', defaultValue: 1}, y: {type: 'number', defaultValue: ''}, z: {type: 'number', defaultValue: ''}},
     emptyParamSource: {y: 'x', z: 'x'},
+    inItemCount: 1,
     execute(stack, params) {
       return stack.prev.add(stack.item.scale([+params.x, +params.y, +params.z]))
     }
   },
   rotate: {
     title: 'rotate',
+    inItemCount: 1,
     params: {x: {type: 'number', defaultValue: 0}, y: {type: 'number', defaultValue: 0}, z: {type: 'number', defaultValue: 0}},
     execute(stack, params) {
       return stack.prev.add(stack.item.rotateX(+params.x).rotateY(+params.y).rotateZ(+params.z))
@@ -121,6 +133,7 @@ export default {
     // translate object along each axis to get the same start, center or
     // end coordinate, or be placed before or after the object in stack.prev
     title: 'Align',
+    inItemCount: 2,
     params: {
       x: {
         type: 'select',

@@ -6,6 +6,8 @@
   </button>
 </template>
 <script>
+import commands from './commands';
+
 export default {
   props: {
     mutation: String,
@@ -16,9 +18,11 @@ export default {
   },
   computed: {
     disabled() {
-      return this.opCount
-        && this.$store.state.commandLog.current()
-        && this.$store.state.commandLog.current().stack.depth < +this.opCount
+      const command = commands[this.mutation];
+      console.log(command);
+      return command
+        && command.inItemCount != undefined
+        && this.$store.state.commandLog.current().stack.depth < command.inItemCount
     }
   },
   data() {

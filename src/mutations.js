@@ -18,7 +18,7 @@ export default {
     } else {
       logItem.stack = command.execute(logItem.stack, prepareParams(command, logItem.params))
     }
-    state.commandLog = state.commandLog.add(logItem);
+    state.commandLog = state.commandLog.addAfterCurrent(logItem);
   },
   updateField(state, {path, value}) {
     state.commandLog.current().params[path] = value;

@@ -20,18 +20,18 @@
             <mutation-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
             <!-- <mutation-button image="torus-icon.png" mutation="addTorus" title="torus"/> -->
             <mutation-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
-            <mutation-button image="pop-icon.svg" mutation="popStack" title="remove top of stack" opCount="1"/>
-            <mutation-button image="dup-icon.svg" mutation="dupStack" title="duplicates top of stack" opCount="1"/>
-            <mutation-button image="swap-icon.svg" mutation="swapStack" title="swap top two stack items" opCount="2"/>
+            <mutation-button image="pop-icon.svg" mutation="popStack" title="remove top of stack"/>
+            <mutation-button image="dup-icon.svg" mutation="dupStack" title="duplicates top of stack"/>
+            <mutation-button image="swap-icon.svg" mutation="swapStack" title="swap top two stack items"/>
           </div>
           <div class="button-row">
-            <mutation-button image="union-icon.svg" mutation="union" opCount="2"/>
-            <mutation-button image="difference-icon.svg" mutation="subtract" opCount="2"/>
-            <mutation-button image="intersection-icon.svg" mutation="intersect" opCount="2"/>
-            <mutation-button image="translate-icon.svg" mutation="translate" opCount="1"/>
-            <mutation-button image="scale-icon.svg" mutation="scale" opCount="1"/>
-            <mutation-button image="rotate-icon.svg" mutation="rotate" opCount="1"/>
-            <mutation-button image="align-icon.svg" mutation="align" opCount="2"/>
+            <mutation-button image="union-icon.svg" mutation="union"/>
+            <mutation-button image="difference-icon.svg" mutation="subtract"/>
+            <mutation-button image="intersection-icon.svg" mutation="intersect"/>
+            <mutation-button image="translate-icon.svg" mutation="translate"/>
+            <mutation-button image="scale-icon.svg" mutation="scale"/>
+            <mutation-button image="rotate-icon.svg" mutation="rotate"/>
+            <mutation-button image="align-icon.svg" mutation="align"/>
           </div>
           <div class="button-row">
             <button type="button" :disabled="!isSignedIn" @click="open">open</button>
