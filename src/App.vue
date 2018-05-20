@@ -39,7 +39,9 @@
             <button type="button" @click="$store.commit('deleteLogRow')">Del</button>
           </div>
         </div>
-        <command-list-viewer class="command-list"/>
+        <div class="command-list-parent">
+          <command-list-viewer class="command-list"/>
+        </div>
       </div>
     </div>
 </template>
@@ -199,12 +201,21 @@
     flex: initial;
     display: flex;
     flex-direction: row;
+    align-items: stretch;
+  }
+  .command-list-parent {
+    flex: .2;
+    border-left: solid #fff 1px;
+    position: relative;
+    overflow: hidden;
   }
   .command-list {
-    border-left: solid #fff 2px;
-    padding: .2em .3em;
-    max-height: 5em;
-    overflow: scroll;
+    position: absolute;
+    padding: 2px 5px;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
   }
   .buttons {
     flex: 1;

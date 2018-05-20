@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <style>
+    #container {
+      display: flex;
+      width: 400px;
+    }
+
+    .box2 {
+      position: relative;
+    }
+    .box {
+      background: gray;
+    flex: 200px;
+      margin: 10px;
+      padding: 10px;
+    }
+    .box2 {
+      background: gray;
+      flex: 200px;
+      margin: 10px;
+      padding: 0;
+      overflow: hidden;
+    }
+    #scrolling-content {
+      position: absolute;
+      padding: 10px;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      overflow-y: scroll;
+    }
+</style>
+  </head>
+  <body>
+    <div id="container">
+      <div class="box">
+        ölasdölasdjöla sadf sdf sdf sdf sd f sdf sdf ssd  asd asdasdasdasd ASa sA AS as Sa ssdf sfsd
+      </div>
+      <div class="box2">
+        <div id="scrolling-content">
+          sadasdasd asda s da s d a a dsa d adfasfa sdf sadf sadf asdfas df asdf as df asd f asdf sa df sadf  asdf sdafasdf asdf asdfas dfa sdf asd fa sd f asdfas dfasd fasdf asdf asdf as dfas df asd f asdf
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
