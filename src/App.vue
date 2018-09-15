@@ -14,34 +14,35 @@
       </div>
       <div class="controls">
         <div class="buttons">
-          <param-form class="field-row"/>
-          <div class="button-row">
-            <mutation-button image="cube-icon.png" mutation="addCube" title="cube"/>
-            <mutation-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
-            <!-- <mutation-button image="torus-icon.png" mutation="addTorus" title="torus"/> -->
-            <mutation-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
-            <mutation-button image="pop-icon.svg" mutation="popStack" title="remove top of stack"/>
-            <mutation-button image="dup-icon.svg" mutation="dupStack" title="duplicates top of stack"/>
-            <mutation-button image="swap-icon.svg" mutation="swapStack" title="swap top two stack items"/>
-          </div>
-          <div class="button-row">
-            <mutation-button image="union-icon.svg" mutation="union"/>
-            <mutation-button image="difference-icon.svg" mutation="subtract"/>
-            <mutation-button image="intersection-icon.svg" mutation="intersect"/>
-            <mutation-button image="translate-icon.svg" mutation="translate"/>
-            <mutation-button image="scale-icon.svg" mutation="scale"/>
-            <mutation-button image="rotate-icon.svg" mutation="rotate"/>
-            <mutation-button image="align-icon.svg" mutation="align"/>
-          </div>
-          <div class="button-row">
-            <button type="button" :disabled="!isSignedIn" @click="open">open</button>
-            <button type="button" :disabled="!isSignedIn" @click="save">save</button>
-            <button type="button" @click="$store.commit('deleteLogRow')">Del</button>
+          <div ref="buttons">
+            <param-form class="field-row"/>
+            <div class="button-row">
+              <mutation-button image="cube-icon.png" mutation="addCube" title="cube"/>
+              <mutation-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
+              <!-- <mutation-button image="torus-icon.png" mutation="addTorus" title="torus"/> -->
+              <mutation-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
+              <mutation-button image="pop-icon.svg" mutation="popStack" title="remove top of stack"/>
+              <mutation-button image="dup-icon.svg" mutation="dupStack" title="duplicates top of stack"/>
+              <mutation-button image="swap-icon.svg" mutation="swapStack" title="swap top two stack items"/>
+            </div>
+            <div class="button-row">
+              <mutation-button image="union-icon.svg" mutation="union"/>
+              <mutation-button image="difference-icon.svg" mutation="subtract"/>
+              <mutation-button image="intersection-icon.svg" mutation="intersect"/>
+              <mutation-button image="translate-icon.svg" mutation="translate"/>
+              <mutation-button image="scale-icon.svg" mutation="scale"/>
+              <mutation-button image="rotate-icon.svg" mutation="rotate"/>
+              <mutation-button image="align-icon.svg" mutation="align"/>
+            </div>
+            <div class="button-row">
+              <button type="button" :disabled="!isSignedIn" @click="open">open</button>
+              <button type="button" :disabled="!isSignedIn" @click="save">save</button>
+              <button type="button" @click="$store.commit('deleteLogRow')">Del</button>
+              <button type="button" @click="download">download</button>
+            </div>
           </div>
         </div>
-        <div class="command-list-parent">
-          <command-list-viewer class="command-list"/>
-        </div>
+        <command-list-viewer :style="{height: buttonsHeight() + 'px'}" class="command-list"/>
       </div>
     </div>
 </template>
@@ -54,6 +55,9 @@
   import CommandListViewer from './CommandListViewer.vue'
   import MutationButton from './MutationButton'
   import openSave from './openSave.js'
+  import downloader from 'downloadjs'
+  import stlSerializer from '@jscad/stl-serializer'
+
   require('./assets/cube-icon.png')
   require('./assets/cylinder-icon.png')
   require('./assets/torus-icon.png')
@@ -78,8 +82,15 @@
         fullscreen: false,
         editingTitle: false,
         user: {image: 'dist/unknown-user.png'},
-        isSignedIn: false
-      };
+        isSignedIn: false,
+        buttonsHeight() {
+          if (this.$refs.buttons) {
+            return this.$refs.buttons.getBoundingClientRect().height
+          } else {
+            return 30
+          }
+        }
+      }
     },
     created() {
       let self = this;
@@ -144,6 +155,11 @@
       open() {
         openSave.open();
       },
+      download() {
+        const rawData = stlSerializer.serialize(this.$store.state.commandLog.current().stack.item)
+        const blob = new Blob(rawData)
+        downloader(blob, this.$store.state.currentFile.name + '.stl' || 'Untitled', 'application/slb')
+      },
       updateX (e) {
         this.$store.commit('updateX', e.target.value)
       },
@@ -201,27 +217,17 @@
     flex: initial;
     display: flex;
     flex-direction: row;
-    align-items: stretch;
-  }
-  .command-list-parent {
-    flex: .2;
-    border-left: solid #fff 1px;
-    position: relative;
-    overflow: hidden;
-  }
-  .command-list {
-    position: absolute;
-    padding: 2px 5px;
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-    overflow-y: scroll;
   }
   .buttons {
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+  }
+  .command-list {
+    border-left: solid #fff 2px;
+    padding: .2em .3em;
+    overflow: scroll;
+    height: 2em
   }
   .button-row  {
     margin: .1em;
