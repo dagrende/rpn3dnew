@@ -35,15 +35,12 @@ export default {
       front: {type: 'number', defaultValue: 0}, back: {type: 'number', defaultValue: ''},
       down: {type: 'number', defaultValue: 0}, up: {type: 'number', defaultValue: ''}},
     emptyParamSource: {right: 'left', back: 'front', up: 'down'},
-    inItemCount: 0,
+    inItemCount: 1,
     execute(stack, params) {
       const topBB = stack.item.getBounds();
-      console.log('params', params);
-      console.log('topBB',topBB);
       const corners = {
         corner1:[topBB[0].x - +params.left,topBB[0].y - +params.front,topBB[0].z - +params.down],
         corner2:[topBB[1].x + +params.right,topBB[1].y + +params.back,topBB[1].z + +params.up]};
-      console.log('corners',corners);
       let cube = CSG.cube(corners);
       return stack.prev.add(cube);
     }
