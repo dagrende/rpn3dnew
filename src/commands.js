@@ -10,6 +10,14 @@ export default {
       return stack
     }
   },
+  addEnclosingBlock: {
+    title: 'enclosure',
+    inItemCount: 1,
+    execute(stack, params) {
+      const topBB = stack.item.getBounds();
+      return stack.add(CSG.cube({corner1:topBB[0],corner2:topBB[1]}));
+    }
+  },
   addCube: {
     title: 'cube',
     params: {width: {type: 'number', defaultValue: 2}, depth: {type: 'number', defaultValue: ''}, height: {type: 'number', defaultValue: ''}},
@@ -18,6 +26,26 @@ export default {
     execute(stack, params) {
       let cube = CSG.cube({center:[0,0,0],radius:[+params.width / 2, +params.depth / 2, +params.height / 2]});
       return stack.add(cube);
+    }
+  },
+  growBlock: {
+    title: 'grow block',
+    params: {
+      left: {type: 'number', defaultValue: 0}, right: {type: 'number', defaultValue: ''},
+      front: {type: 'number', defaultValue: 0}, back: {type: 'number', defaultValue: ''},
+      down: {type: 'number', defaultValue: 0}, up: {type: 'number', defaultValue: ''}},
+    emptyParamSource: {right: 'left', back: 'front', up: 'down'},
+    inItemCount: 0,
+    execute(stack, params) {
+      const topBB = stack.item.getBounds();
+      console.log('params', params);
+      console.log('topBB',topBB);
+      const corners = {
+        corner1:[topBB[0].x - +params.left,topBB[0].y - +params.front,topBB[0].z - +params.down],
+        corner2:[topBB[1].x + +params.right,topBB[1].y + +params.back,topBB[1].z + +params.up]};
+      console.log('corners',corners);
+      let cube = CSG.cube(corners);
+      return stack.prev.add(cube);
     }
   },
   addCylinder: {
@@ -170,7 +198,6 @@ export default {
         }
     },
     execute(stack, params) {
-      console.log(stack.item.getBounds(), CAG);
       const topBB = stack.item.getBounds();
       const prevBB = stack.prev.item.getBounds();
 

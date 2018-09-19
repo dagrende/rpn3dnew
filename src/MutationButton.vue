@@ -19,7 +19,6 @@ export default {
   computed: {
     disabled() {
       const command = commands[this.mutation];
-      console.log(command);
       return command
         && command.inItemCount != undefined
         && this.$store.state.commandLog.current().stack.depth < command.inItemCount
