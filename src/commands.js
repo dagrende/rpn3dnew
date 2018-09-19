@@ -1,6 +1,7 @@
 import THREE from 'three';
 import {CSG, CAG} from '@jscad/csg';
 import store from './store';
+import stlDeSerializer from '@jscad/stl-deserializer';
 
 export default {
   noop: {
@@ -8,6 +9,19 @@ export default {
     params: {},
     execute(stack, params) {
       return stack
+    }
+  },
+  importStl: {
+    title: 'stl object',
+    inItemCount: 0,
+    params: {file: {type: 'stlFile', defaultValue: ''}},
+    execute(stack, params) {
+      // raw stl content to CSG (if needed) and push on stack
+      var csgData = CSG.cube();
+      if (params.file) {
+        csgData = stlDeSerializer.deserialize(atob(params.file.content), undefined, {output: 'csg'})
+      }
+      return stack.add(csgData);
     }
   },
   addEnclosingBlock: {

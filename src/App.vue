@@ -34,6 +34,7 @@
               <mutation-button image="align-icon.svg" mutation="align"/>
               <mutation-button image="cube-icon.png" mutation="addEnclosingBlock" title="enclosing block"/>
               <mutation-button image="cube-icon.png" mutation="growBlock" title="grow block"/>
+              <mutation-button image="cube-icon.png" mutation="importStl" title="stl object"/>
             </div>
             <div class="button-row">
               <button type="button" :disabled="!isSignedIn" @click="open">open</button>

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@jscad/csg": "github:jscad/csg",
+    "@jscad/stl-deserializer": "^0.3.2",
     "@jscad/stl-serializer": "^0.1.3",
     "downloadjs": "^1.4.7",
     "lodash.debounce": "^4.0.8",

@@ -3,11 +3,8 @@ import store from './store';
 export default {
   open() {
     window.gapi.load('picker', function () {
-      console.log('picker load finished.')
       showPicker().then(function(file) {
-        console.log('picked file', file);
         getFileContents(file.id).then(function(contents) {
-          console.log('contents', contents);
           store.state.commandLog = store.state.commandLog.load(JSON.parse(contents));
           store.state.currentFile = file;
         })
@@ -15,31 +12,31 @@ export default {
           console.log('file read error', err);
           store.state.currentFile.id = undefined;
         })
-      }).catch(err=>{console.log('cancel')})
+      }).catch(err=>{
+        console.log('cancel')
+      })
     });
   },
   save() {
     if (store.state.currentFile.id) {
       saveFile(store.state.currentFile.id, JSON.stringify(store.state.commandLog.saveFormat(), null, '  '))
       .then(function(file) {
-        console.log(file);
+        //console.log(file);
       });
     } else {
       createFile(store.state.currentFile.name, JSON.stringify(store.state.commandLog.saveFormat(), null, '  '))
       .then(function(file) {
-        console.log(file);
+        //console.log(file);
       });
     }
   }
 }
 
 function saveFile(id, data) {
-  console.log('saveFile');
   return writeFile({id, method: 'PATCH'}, data)
 }
 
 function createFile(name, data) {
-  console.log('createFile');
   return writeFile({name, method: 'POST'}, data)
   .then(function(file) {
     store.state.currentFile.id = file.id;

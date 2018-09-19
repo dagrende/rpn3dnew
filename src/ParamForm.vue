@@ -9,6 +9,7 @@
 <script>
 import ParamNumberField from './ParamNumberField.vue';
 import ParamSelectField from './ParamSelectField.vue';
+import ParamStlFileField from './ParamStlFileField.vue'
 import commands from './commands';
 
   export default {
@@ -16,7 +17,8 @@ import commands from './commands';
       return {
         componentByType: {
           number: 'ParamNumberField',
-          select: 'ParamSelectField'
+          select: 'ParamSelectField',
+          stlFile: 'ParamStlFileField'
         }
       }
     },
@@ -46,7 +48,8 @@ import commands from './commands';
     },
     components: {
       ParamNumberField,
-      ParamSelectField
+      ParamSelectField,
+      ParamStlFileField
     }
   }
 </script>
