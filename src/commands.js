@@ -3,12 +3,52 @@ import {CSG, CAG} from '@jscad/csg';
 import store from './store';
 import stlDeSerializer from '@jscad/stl-deserializer';
 
+let namedObjects = {};
+
 export default {
   noop: {
     title: 'noop',
     params: {},
     execute(stack, params) {
       return stack
+    }
+  },
+  center: {
+    title: 'center',
+    inItemCount: 1,
+    execute(stack, params) {
+      const topBB = stack.item.getBounds();
+      return stack.prev.add(stack.item.translate([
+        -(topBB[0].x + topBB[1].x) / 2,
+        -(topBB[0].y + topBB[1].y) / 2,
+        -(topBB[0].z + topBB[1].z) / 2]))
+    }
+  },
+  nameTop: {
+    title: 'name',
+    inItemCount: 0,
+    params: {name: {type: 'text', defaultValue: ''}},
+    execute(stack, params) {
+      return stack
+    }
+  },
+  addNamedObject: {
+    title: 'name',
+    inItemCount: 0,
+    params: {name: {type: 'text', defaultValue: ''}},
+    execute(stack, params) {
+      console.log('addNameObject params.name', params.name);
+      let command = store.state.commandLog.itemByName(params.name);
+      if (command) {
+        console.log('item',command.stack.item);
+        return stack.add(command.stack.item);
+      }
+      // let object = stack.add(namedObjects[params.name]);
+      // console.log('addNameObject object', object);
+      // if (object) {
+      //   return stack.add(object);
+      // };
+      return stack;
     }
   },
   importStl: {

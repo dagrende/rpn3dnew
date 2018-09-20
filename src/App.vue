@@ -35,6 +35,9 @@
               <mutation-button image="cube-icon.png" mutation="addEnclosingBlock" title="enclosing block"/>
               <mutation-button image="cube-icon.png" mutation="growBlock" title="grow block"/>
               <mutation-button image="cube-icon.png" mutation="importStl" title="stl object"/>
+              <mutation-button image="align-icon.svg" mutation="center" title="center"/>
+              <mutation-button image="name-icon.svg" mutation="nameTop" title="name current object"/>
+              <mutation-button image="named-icon.svg" mutation="addNamedObject" title="add named object"/>
             </div>
             <div class="button-row">
               <button type="button" :disabled="!isSignedIn" @click="open">open</button>
@@ -60,6 +63,7 @@
   import downloader from 'downloadjs'
   import stlSerializer from '@jscad/stl-serializer'
 
+  require('./assets/unknown-user.png')
   require('./assets/cube-icon.png')
   require('./assets/cylinder-icon.png')
   require('./assets/torus-icon.png')
@@ -75,7 +79,8 @@
   require('./assets/swap-icon.svg')
   require('./assets/dup-icon.svg')
   require('./assets/align-icon.svg')
-  require('./assets/unknown-user.png')
+  require('./assets/name-icon.svg')
+  require('./assets/named-icon.svg')
 
   export default {
     name: 'app',

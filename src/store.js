@@ -81,6 +81,7 @@ function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIndex = n
       .setCurrentIndex(currentIndex > list.length - 2 ? currentIndex - 1 : currentIndex);
   };
   this.addAfterCurrent = (command) => new CommandLog([...list.slice(0, currentIndex + 1), command, ...list.slice(currentIndex + 1)], currentIndex + 1, currentIndex + 2, errorIndex);
+  this.itemByName = name => list.find(item => item.id == 'nameTop' && item.params.name === name);
 }
 
 function prepareParams(command, params) {

@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import ParamTextField from './ParamTextField.vue';
 import ParamNumberField from './ParamNumberField.vue';
 import ParamSelectField from './ParamSelectField.vue';
 import ParamStlFileField from './ParamStlFileField.vue'
@@ -16,6 +17,7 @@ import commands from './commands';
     data() {
       return {
         componentByType: {
+          text: 'ParamTextField',
           number: 'ParamNumberField',
           select: 'ParamSelectField',
           stlFile: 'ParamStlFileField'
@@ -47,6 +49,7 @@ import commands from './commands';
       }
     },
     components: {
+      ParamTextField,
       ParamNumberField,
       ParamSelectField,
       ParamStlFileField
