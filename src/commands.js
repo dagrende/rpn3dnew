@@ -33,11 +33,11 @@ export default {
     }
   },
   addNamedObject: {
-    title: 'name',
+    title: 'named',
     inItemCount: 0,
     params: {name: {type: 'text', defaultValue: ''}},
     execute(stack, params) {
-      console.log('addNameObject params.name', params.name);
+      console.log('addNamedObject params.name', params.name);
       let command = store.state.commandLog.itemByName(params.name);
       if (command) {
         console.log('item',command.stack.item);
@@ -117,22 +117,21 @@ export default {
       return stack.add(cylinder);
     }
   },
-  // addTorus: {
-  //   title: 'Torus',
-  //   params: {
-  //     ri: {type: 'number', defaultValue: 0.5},
-  //     ro: {type: 'number', defaultValue: 1},
-  //     ni: {type: 'number', defaultValue: 8},
-  //     no: {type: 'number', defaultValue: 16}
-  //   },
-  //   execute(stack, params) {
-  //     return stack.add(torus({
-  //       ro: +params.ro,
-  //       ri: +params.ri,
-  //       fno: +params.no,
-  //       fni: +params.ni}));
-  //   }
-  // },
+  addTorus: {
+    title: 'Torus',
+    params: {
+      ri: {type: 'number', defaultValue: 0.5},
+      ro: {type: 'number', defaultValue: 1},
+      ni: {type: 'number', defaultValue: 16},
+      no: {type: 'number', defaultValue: 32}
+    },
+    inItemCount: 0,
+    execute(stack, params) {
+      return stack.add(CAG.circle({radius: +params.ri, resolution: +params.ni})
+        .translate([+params.ro, 0])
+        .rotateExtrude({resolution: +params.no}));
+    }
+  },
   addSphere: {
     title: 'sphere',
     params: {r: {type: 'number', defaultValue: 1}, n: {type: 'number', defaultValue: 32}},
