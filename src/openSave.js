@@ -1,12 +1,13 @@
-import store from './store';
+import axios from 'axios'
+import {CommandLog, Stack} from './model'
 
 export default {
-  open() {
+  openAction(context) {
     window.gapi.load('picker', function () {
       showPicker().then(function(file) {
         getFileContents(file.id).then(function(contents) {
-          store.state.commandLog = store.state.commandLog.load(JSON.parse(contents));
-          store.state.currentFile = file;
+          console.log('contents',contents);
+          context.commit('loadJson', {commandList: JSON.parse(contents), file});
         })
         .catch(function(err) {
           console.log('file read error', err);
@@ -17,14 +18,30 @@ export default {
       })
     });
   },
-  save() {
-    if (store.state.currentFile.id) {
-      saveFile(store.state.currentFile.id, JSON.stringify(store.state.commandLog.saveFormat(), null, '  '))
+  openHttpAction(context, url) {
+    let match = url.match(/[^/]+$/);
+    let fileName = match ? match[0] : "Untitled";
+    axios.get(url)
+      .then(function (response) {
+        console.log('loaded', response.data);
+        context.commit('loadJson', {commandList: response.data, file: {name: fileName}});
+      })
+      .catch(function (error) {
+        console.log('failed to load:', url, 'error:', error);
+      })
+  },
+  loadJsonMutation(state, {commandList, file}) {
+    state.commandLog = (new CommandLog()).load(commandList);
+    state.currentFile = file;
+  },
+  saveMutation(state) {
+    if (state.currentFile.id) {
+      saveFile(state.currentFile.id, JSON.stringify(state.commandLog.saveFormat(), null, '  '))
       .then(function(file) {
         //console.log(file);
       });
     } else {
-      createFile(store.state.currentFile.name, JSON.stringify(store.state.commandLog.saveFormat(), null, '  '))
+      createFile(state.currentFile.name, JSON.stringify(state.commandLog.saveFormat(), null, '  '))
       .then(function(file) {
         //console.log(file);
       });
@@ -39,7 +56,7 @@ function saveFile(id, data) {
 function createFile(name, data) {
   return writeFile({name, method: 'POST'}, data)
   .then(function(file) {
-    store.state.currentFile.id = file.id;
+    state.currentFile.id = file.id;
     return file
   })
 }

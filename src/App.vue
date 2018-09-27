@@ -21,6 +21,7 @@
               <mutation-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
               <mutation-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
               <mutation-button image="torus-icon.png" mutation="addTorus" title="torus"/>
+              <mutation-button image="named-icon.svg" mutation="addNamedObject" title="add named object"/>
               <mutation-button image="pop-icon.svg" mutation="popStack" title="remove top of stack"/>
               <mutation-button image="dup-icon.svg" mutation="dupStack" title="duplicates top of stack"/>
               <mutation-button image="swap-icon.svg" mutation="swapStack" title="swap top two stack items"/>
@@ -38,9 +39,9 @@
               <mutation-button image="cube-icon.png" mutation="importStl" title="stl object"/>
               <mutation-button image="align-icon.svg" mutation="center" title="center"/>
               <mutation-button image="name-icon.svg" mutation="nameTop" title="name current object"/>
-              <mutation-button image="named-icon.svg" mutation="addNamedObject" title="add named object"/>
             </div>
             <div class="button-row">
+              <button type="button" @click="get">get</button>
               <button type="button" :disabled="!isSignedIn" @click="open">open</button>
               <button type="button" :disabled="!isSignedIn" @click="save">save</button>
               <button type="button" @click="$store.commit('deleteLogRow')">Del</button>
@@ -60,9 +61,9 @@
   import ParamForm from './ParamForm.vue'
   import CommandListViewer from './CommandListViewer.vue'
   import MutationButton from './MutationButton'
-  import openSave from './openSave.js'
   import downloader from 'downloadjs'
   import stlSerializer from '@jscad/stl-serializer'
+  import axios from 'axios'
 
   require('./assets/unknown-user.png')
   require('./assets/cube-icon.png')
@@ -82,6 +83,7 @@
   require('./assets/align-icon.svg')
   require('./assets/name-icon.svg')
   require('./assets/named-icon.svg')
+  require('./assets/test1.json')
 
   export default {
     name: 'app',
@@ -157,11 +159,25 @@
           console.log('logout failure');
         })
       },
-      save() {
-        openSave.save();
+      get() {
+        this.$store.dispatch('openHttp', '/dist/test1.json');
+        // console.log('get!');
+        // axios.get('/dist/test1.json')
+        //   .then(function (response) {
+        //     // handle success
+        //     console.log(response);
+        //   })
+        //   .catch(function (error) {
+        //     // handle error
+        //     console.log(error);
+        //   })
+
       },
       open() {
-        openSave.open();
+        this.$store.dispatch('open');
+      },
+      save() {
+        this.$store.commit('save')
       },
       download() {
         const rawData = stlSerializer.serialize(this.$store.state.commandLog.current().stack.item)
