@@ -6,7 +6,6 @@ export default {
     window.gapi.load('picker', function () {
       showPicker().then(function(file) {
         getFileContents(file.id).then(function(contents) {
-          console.log('contents',contents);
           context.commit('loadJson', {commandList: JSON.parse(contents), file});
         })
         .catch(function(err) {
@@ -23,7 +22,6 @@ export default {
     let fileName = match ? match[0] : "Untitled";
     axios.get(url)
       .then(function (response) {
-        console.log('loaded', response.data);
         context.commit('loadJson', {commandList: response.data, file: {name: fileName}});
       })
       .catch(function (error) {

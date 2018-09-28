@@ -228,11 +228,9 @@
     "params": {}
   },
   {
-    "id": "addCube",
+    "id": "addNamedObject",
     "params": {
-      "width": "5",
-      "depth": "5",
-      "height": "5"
+      "name": "cavity"
     }
   },
   {
@@ -286,11 +284,9 @@
     "params": {}
   },
   {
-    "id": "addCube",
+    "id": "addNamedObject",
     "params": {
-      "width": "5",
-      "depth": "5",
-      "height": "5"
+      "name": "holes"
     }
   },
   {
@@ -458,11 +454,9 @@
     }
   },
   {
-    "id": "addCube",
+    "id": "addNamedObject",
     "params": {
-      "width": "5",
-      "depth": "5",
-      "height": "5"
+      "name": "joint"
     }
   },
   {

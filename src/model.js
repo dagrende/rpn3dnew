@@ -11,12 +11,12 @@ export function Stack(item, prev, depth = 0) {
 
 // list contains command descriptors {id, params, stack}
 // currentIndex is the command whos stack is displayed in the viewer
-// dirtyIndex says that this command has to be executes, for its stack to be valid
+// dirtyIndex says that this command has to be executed, for its stack to be valid
 // errorIndex if !== null says that this command was missing stack items to be executable
 export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIndex = null) {
-  // if (errorIndex !== null && errorIndex >=  dirtyIndex) {
-  //   errorIndex = null;
-  // }
+  if (errorIndex !== null && errorIndex >=  dirtyIndex) {
+    errorIndex = null;
+  }
   const emptyStack = new Stack();
   const stackAt = i => i < 0 || i >=list.length ? emptyStack : list[i].stack;
   // returns a copy of list where item start up to end is replaced by executed items
@@ -26,7 +26,7 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
       if (start <= i && i < end && (errorIndex == null || i < errorIndex)) {
         const command = commands[listItem.id];
         if (prevStack.depth >= command.inItemCount) {
-          const stack = command.execute(prevStack, prepareParams(command, listItem.params));
+          const stack = command.execute(prevStack, prepareParams(command, listItem.params), this);
           prevStack = stack;
           return {id: listItem.id, params: listItem.params, stack}
         } else {
@@ -53,13 +53,13 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
   // returns an object suitable for storing
   this.saveFormat = ()=>list.map(item=>({id: item.id, params: item.params}));
   // returns a new CommandLog set from content that is loaded from a file storage
-  this.load = content=>new CommandLog(content, 0, errorIndex).setCurrentIndex(content.length - 1);
+  this.load = content=>new CommandLog(content, -1, 0, null).setCurrentIndex(content.length - 1);
   this.deleteCurrent = ()=>{
     return new CommandLog([...list.slice(0, currentIndex, errorIndex), ...list.slice(currentIndex + 1)], currentIndex, currentIndex)
       .setCurrentIndex(currentIndex > list.length - 2 ? currentIndex - 1 : currentIndex);
   };
   this.addAfterCurrent = (command) => new CommandLog([...list.slice(0, currentIndex + 1), command, ...list.slice(currentIndex + 1)], currentIndex + 1, currentIndex + 2, errorIndex);
-  this.itemByName = name => list.find(item => item.id == 'nameTop' && item.params.name === name);
+  this.commandByName = name => list.find(item => item.id == 'nameTop' && item.params.name === name);
 }
 
 function prepareParams(command, params) {

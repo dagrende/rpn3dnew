@@ -29,6 +29,7 @@ export default {
     inItemCount: 0,
     params: {name: {type: 'text', defaultValue: ''}},
     execute(stack, params) {
+      params.item = stack.item;
       return stack
     }
   },
@@ -36,15 +37,12 @@ export default {
     title: 'named',
     inItemCount: 0,
     params: {name: {type: 'text', defaultValue: ''}},
-    execute(stack, params) {
-      console.log('addNamedObject params.name', params.name);
-return stack.add(CSG.cube({corner1:[-1, -1, -1],corner2:[1, 1, 1]}));
-      // let command = store.state.commandLog.itemByName(params.name);
-      // if (command) {
-      //   console.log('item',command.stack.item);
-      //   return stack.add(command.stack.item);
-      // }
-      // return stack;
+    execute(stack, params, commandLog) {
+      let command = commandLog.commandByName(params.name);
+      if (command && command.params.item) {
+        return stack.add(command.params.item);
+      }
+      return stack;
     }
   },
   importStl: {

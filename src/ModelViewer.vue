@@ -87,7 +87,7 @@
     },
     watch: {
       currentLogItem (newLogItem, oldLogItem) {
-        if (newLogItem) {
+        if (newLogItem && newLogItem.stack) {
           let i = +this.stackIndex;
           let stack = newLogItem.stack;
           while (stack.item && i-- > 0) {
