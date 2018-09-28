@@ -208,58 +208,89 @@ export default {
     title: 'Align',
     inItemCount: 2,
     params: {
-      x: {
+      x0: {
         type: 'select',
         defaultValue: 0,
         options: [
           {title: 'none', value: 0},
-          {title: 'left of', value: 1},
-          {title: 'left', value: 2},
-          {title: 'center', value: 3},
-          {title: 'right', value: 4},
-          {title: 'right of', value: 5}]
+          {title: 'left', value: 1},
+          {title: 'center', value: 2},
+          {title: 'right', value: 3}
+        ]
         },
-      y: {
+      y0: {
         type: 'select',
         defaultValue: 0,
         options: [
           {title: 'none', value: 0},
-          {title: 'in front of', value: 1},
-          {title: 'front', value: 2},
-          {title: 'center', value: 3},
-          {title: 'back', value: 4},
-          {title: 'behind', value: 5}]
+          {title: 'front', value: 1},
+          {title: 'center', value: 2},
+          {title: 'back', value: 3}
+        ]
         },
-      z: {
+      z0: {
         type: 'select',
         defaultValue: 0,
         options: [
           {title: 'none', value: 0},
-          {title: 'under', value: 1},
-          {title: 'bottom', value: 2},
-          {title: 'center', value: 3},
-          {title: 'top', value: 4},
-          {title: 'on top of', value: 5}]
+          {title: 'top', value: 3}
+          {title: 'center', value: 2},
+          {title: 'bottom', value: 1},
+        ]
+        },
+      x1: {
+        type: 'select',
+        defaultValue: 0,
+        options: [
+          {title: '0', value: 0},
+          {title: 'left', value: 1},
+          {title: 'center', value: 2},
+          {title: 'right', value: 3}
+        ]
+        },
+      y1: {
+        type: 'select',
+        defaultValue: 0,
+        options: [
+          {title: '0', value: 0},
+          {title: 'front', value: 1},
+          {title: 'center', value: 2},
+          {title: 'back', value: 3}
+        ]
+        },
+      z1: {
+        type: 'select',
+        defaultValue: 0,
+        options: [
+          {title: '0', value: 0},
+          {title: 'top', value: 3},
+          {title: 'center', value: 2},
+          {title: 'bottom', value: 1}
+        ]
         }
     },
     execute(stack, params) {
-      const topBB = stack.item.getBounds();
-      const prevBB = stack.prev.item.getBounds();
+      const bb0 = stack.item.getBounds()
+      const bb1 = stack.prev.item.getBounds();
 
       let d = {x: 0, y: 0, z: 0};
       for (let key in d) {  // for each axis
-        let aligmentType = params[key]; //
-        if (aligmentType == 1) { // before
-          d[key] = prevBB[0][key] - topBB[1][key];
-        } else if (aligmentType == 2) { // start
-          d[key] = prevBB[0][key] - topBB[0][key];
-        } else if (aligmentType == 3) { // center
-          d[key] = (prevBB[0][key] + prevBB[1][key]) / 2
-                  - (topBB[0][key] + topBB[1][key]) / 2;
-        } else if (aligmentType == 4) { // end
-          d[key] = prevBB[1][key] - topBB[1][key];
-        } else if (aligmentType == 5) { // after
-          d[key] = prevBB[1][key] - topBB[0][key];
+        let aligmentType1 = params[key + '1'];
+        if (aligmentType1 == 1) { // start
+          d[key] = bb1[0][key];
+        } else if (aligmentType1 == 2) { // center
+          d[key] = (bb1[0][key] + bb1[1][key]) / 2;
+        } else if (aligmentType1 == 3) { // end
+          d[key] = bb1[1][key];
+        }
+
+        let aligmentType0 = params[key + '0'];
+        if (aligmentType0 == 1) { // start
+          d[key] -= bb0[0][key];
+        } else if (aligmentType0 == 2) { // center
+          d[key] -= (bb0[0][key] + bb0[1][key]) / 2;
+        } else if (aligmentType0 == 3) { // end
+          d[key] -= bb0[1][key];
         }
       }
       return stack.prev.add(stack.item.translate([d.x, d.y, d.z]))
