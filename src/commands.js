@@ -29,6 +29,7 @@ export default {
     inItemCount: 0,
     params: {name: {type: 'text', defaultValue: ''}},
     execute(stack, params) {
+      params.item = stack.item;
       return stack
     }
   },
@@ -36,18 +37,11 @@ export default {
     title: 'named',
     inItemCount: 0,
     params: {name: {type: 'text', defaultValue: ''}},
-    execute(stack, params) {
-      console.log('addNamedObject params.name', params.name);
-      let command = store.state.commandLog.itemByName(params.name);
-      if (command) {
-        console.log('item',command.stack.item);
-        return stack.add(command.stack.item);
+    execute(stack, params, commandLog) {
+      let command = commandLog.commandByName(params.name);
+      if (command && command.params.item) {
+        return stack.add(command.params.item);
       }
-      // let object = stack.add(namedObjects[params.name]);
-      // console.log('addNameObject object', object);
-      // if (object) {
-      //   return stack.add(object);
-      // };
       return stack;
     }
   },
@@ -56,6 +50,7 @@ export default {
     inItemCount: 0,
     params: {file: {type: 'stlFile', defaultValue: ''}},
     execute(stack, params) {
+// return stack.add(CSG.cube({corner1:[-1, -1, -1],corner2:[1, 1, 1]}));
       // raw stl content to CSG (if needed) and push on stack
       var csgData = CSG.cube();
       if (params.file) {
