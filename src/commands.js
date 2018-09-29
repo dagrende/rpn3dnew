@@ -69,12 +69,35 @@ export default {
   },
   addCube: {
     title: 'cube',
-    params: {width: {type: 'number', defaultValue: 2}, depth: {type: 'number', defaultValue: ''}, height: {type: 'number', defaultValue: ''}},
+    params: {width: {type: 'number', defaultValue: 2}, depth: {type: 'number', defaultValue: ''}, height: {type: 'number', defaultValue: ''},
+      rx: {type: 'number', defaultValue: '0'}, ry: {type: 'number', defaultValue: '0'}, rz: {type: 'number', defaultValue: '0'}, resolution: {type: 'number', defaultValue: '16'}},
     emptyParamSource: {depth: 'width', height: 'width'},
     inItemCount: 0,
     execute(stack, params) {
-      let cube = CSG.cube({center:[0,0,0],radius:[+params.width / 2, +params.depth / 2, +params.height / 2]});
+      let cube = flexiCube([+params.width, +params.depth, +params.height], [+params.rx, +params.ry, +params.rz], +params.resolution);
       return stack.add(cube);
+
+      function flexiCube(size, edgeRadius = [0, 0, 0], resolution = 8) {
+        let n012 = [0, 1, 2];
+        let boxRadius = [size[0] / 2, size[1] / 2, size[2] / 2];
+        var cube = CSG.cube({center: [0, 0, 0], radius: boxRadius});
+        let cylinderOut = n012.map(i => boxRadius[i] - edgeRadius[i]);
+        n012.forEach(axis => {
+          if (edgeRadius[axis] > 0) {
+            let cornerBox = CSG.cube({center: [0, 0, 0], radius: n012.map(i => i == axis ? boxRadius[axis] : edgeRadius[axis])});
+            let cornerCylinder = CSG.cylinder({start: n012.map(i => i == axis ? -boxRadius[i] : 0),
+              end: n012.map(i => i == axis ? boxRadius[i] : 0), radius: edgeRadius[axis], resolution});
+            [0,1,2,3].forEach(combinationBits => {
+              let combin = i => {let j = i > axis ? i - 1 : i; return (combinationBits >> j) & 1 ? 1 : -1};
+              let cornerBoxTranslated = cornerBox.translate(n012.map(i => i == axis ? 0 : combin(i) * boxRadius[i]));
+              let cornerCylinderTranslated = cornerCylinder.translate(n012.map(i => i == axis ? 0 : combin(i) * (boxRadius[i] - edgeRadius[axis])));
+              cube = cube.subtract(cornerBoxTranslated.subtract(cornerCylinderTranslated))
+            });
+          }
+        });
+        return cube;
+      }
+
     }
   },
   growBlock: {
@@ -206,7 +229,7 @@ export default {
     // translate object along each axis to get the same start, center or
     // end coordinate, or be placed before or after the object in stack.prev
     title: 'Align',
-    inItemCount: 2,
+    inItemCount: 1,
     params: {
       x0: {
         type: 'select',
@@ -233,9 +256,9 @@ export default {
         defaultValue: 0,
         options: [
           {title: 'none', value: 0},
-          {title: 'top', value: 3}
+          {title: 'top', value: 3},
           {title: 'center', value: 2},
-          {title: 'bottom', value: 1},
+          {title: 'bottom', value: 1}
         ]
         },
       x1: {
@@ -271,7 +294,7 @@ export default {
     },
     execute(stack, params) {
       const bb0 = stack.item.getBounds()
-      const bb1 = stack.prev.item.getBounds();
+      const bb1 = stack.prev.item ? stack.prev.item.getBounds() : [[0, 0, 0], [0, 0, 0]];
 
       let d = {x: 0, y: 0, z: 0};
       for (let key in d) {  // for each axis
