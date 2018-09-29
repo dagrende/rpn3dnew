@@ -16,7 +16,7 @@ export default {
     if (command.buttonClick) {
       logItem.stack = command.buttonClick(logItem.stack, logItem.params);
     } else {
-      logItem.stack = command.execute(logItem.stack, prepareParams(command, logItem.params))
+      logItem.stack = command.execute(logItem.stack, prepareParams(command, logItem.params), state.commandLog)
     }
     state.commandLog = state.commandLog.addAfterCurrent(logItem);
   },
