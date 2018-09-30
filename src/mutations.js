@@ -9,22 +9,13 @@ import commands from './commands';
 
 export default {
   buttonCommand(state, commandId) {
-    // a command button has been clicked - find the associated command, prepare the param form and execute it
-    let command = commands[commandId];
-    let params = mapValues(command.params, v=>v.defaultValue);
-    let logItem = {id: commandId, params, stack: state.commandLog.current().stack};
-    if (command.buttonClick) {
-      logItem.stack = command.buttonClick(logItem.stack, logItem.params);
-    } else {
-      logItem.stack = command.execute(logItem.stack, prepareParams(command, logItem.params), state.commandLog)
-    }
-    state.commandLog = state.commandLog.addAfterCurrent(logItem);
+    // add the clicked command to commandSlog and execute it with default params
+    state.commandLog = state.commandLog.addAfterCurrent({id: commandId, params: getDefaultParamValues(commands[commandId])}).executeCurrent();
   },
   updateField(state, {path, value}) {
+    // a command parameter has been edited - store its new value and execute the command
     state.commandLog.current().params[path] = value;
-    let f = ()=>{
-      state.commandLog = state.commandLog.executeCurrent();
-    };
+    let f = ()=>state.commandLog = state.commandLog.executeCurrent();
     debounce(f, 600)();
   },
   setCommandLogIndex(state, i) {
@@ -35,14 +26,11 @@ export default {
   }
 }
 
-function prepareParams(command, params) {
-  if (!params || !command.emptyParamSource) {
-    return params;
-  }
-  let p = Object.assign({}, params);
-  for (let key in params) {
-    if (p[key] === '') {
-      p[key] = p[command.emptyParamSource[key]];
+function getDefaultParamValues(command) {
+  let p = {};
+  for (let key in command.params) {
+    if (p[key] === '' || p[key] === undefined) {
+      p[key] = command.params[key].defaultValue;
     }
   }
   return p;

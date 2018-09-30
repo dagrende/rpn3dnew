@@ -62,15 +62,28 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
   this.commandByName = name => list.find(item => item.id == 'nameTop' && item.params.name === name);
 }
 
-function prepareParams(command, params) {
-  if (!params || !command.emptyParamSource) {
-    return params;
-  }
-  let p = Object.assign({}, params);
-  for (let key in params) {
-    if (p[key] === '') {
-      p[key] = p[command.emptyParamSource[key]];
+export function prepareParams(command, actualParams) {
+  let p = {};
+  if (command.params) {
+    for (let key in command.params) {
+      p[key] = getParamValue(key, command, actualParams);
     }
   }
   return p;
+}
+
+export function getParamValue(key, command, actualParams, redirectionsLeft = 10) {
+  if (redirectionsLeft > 0) {
+    if (actualParams[key] == undefined || actualParams[key] == '') {
+      let redirectedKey = command.emptyParamSource && command.emptyParamSource[key];
+      if (redirectedKey) {
+        return getParamValue(redirectedKey, command, actualParams, redirectionsLeft - 1);
+      }
+      return command.params[key].defaultValue;
+    } else {
+      return actualParams[key];
+    }
+  } else {
+    throw 'Circular reference in emptyParamSource for command ' + command.title + ' param ' + key
+  }
 }

@@ -50,8 +50,6 @@ export default {
     inItemCount: 0,
     params: {file: {type: 'stlFile', defaultValue: ''}},
     execute(stack, params) {
-// return stack.add(CSG.cube({corner1:[-1, -1, -1],corner2:[1, 1, 1]}));
-      // raw stl content to CSG (if needed) and push on stack
       var csgData = CSG.cube();
       if (params.file) {
         csgData = stlDeSerializer.deserialize(atob(params.file.content), undefined, {output: 'csg'})
@@ -104,9 +102,9 @@ export default {
     title: 'grow block',
     params: {
       left: {type: 'number', defaultValue: 0}, right: {type: 'number', defaultValue: ''},
-      front: {type: 'number', defaultValue: 0}, back: {type: 'number', defaultValue: ''},
-      down: {type: 'number', defaultValue: 0}, up: {type: 'number', defaultValue: ''}},
-    emptyParamSource: {right: 'left', back: 'front', up: 'down'},
+      front: {type: 'number', defaultValue: ''}, back: {type: 'number', defaultValue: ''},
+      down: {type: 'number', defaultValue: ''}, up: {type: 'number', defaultValue: ''}},
+    emptyParamSource: {right: 'left', back: 'front', up: 'down', front: 'left', down: 'left'},
     inItemCount: 1,
     execute(stack, params) {
       const topBB = stack.item.getBounds();
@@ -123,15 +121,21 @@ export default {
       rbottom: {type: 'number', defaultValue: 1},
       rtop: {type: 'number', defaultValue: ''},
       height: {type: 'number', defaultValue: 2},
-      sides: {type: 'number', defaultValue: 32}},
+      sides: {type: 'number', defaultValue: 32},
+      roundRadiusTop: {type: 'number', defaultValue: '0'},
+      roundRadiusBottom: {type: 'number', defaultValue: '0'},
+      roundResolution: {type: 'number', defaultValue: '32'}},
     emptyParamSource: {rtop: 'rbottom'},
     inItemCount: 0,
     execute(stack, params) {
-      let cylinder = CSG.cylinder({
+      let cylParams = {
           radiusStart: +params.rbottom,
           radiusEnd: +params.rtop,
           start: [0, 0, -+params.height / 2],
-          end: [0, 0, +params.height / 2], resolution: +params.sides});
+          end: [0, 0, +params.height / 2], resolution: +params.sides};
+
+      let cylinder = CSG.cylinder(cylParams);
+
       return stack.add(cylinder);
     }
   },
@@ -269,7 +273,8 @@ export default {
           {title: 'left', value: 1},
           {title: 'center', value: 2},
           {title: 'right', value: 3}
-        ]
+        ],
+        emptyParamSource: {x1: 'x0'}
         },
       y1: {
         type: 'select',
@@ -279,7 +284,8 @@ export default {
           {title: 'front', value: 1},
           {title: 'center', value: 2},
           {title: 'back', value: 3}
-        ]
+        ],
+        emptyParamSource: {y1: 'y0'}
         },
       z1: {
         type: 'select',
@@ -289,7 +295,8 @@ export default {
           {title: 'top', value: 3},
           {title: 'center', value: 2},
           {title: 'bottom', value: 1}
-        ]
+        ],
+        emptyParamSource: {z1: 'z0'}
         }
     },
     execute(stack, params) {

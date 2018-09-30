@@ -1,6 +1,6 @@
 <template lang="html">
   <input
-      :value="$store.state.commandLog.current().params[paramKey]"
+      :value="fieldValue(paramKey)"
       @input="inputChanged($event, paramKey)"
       type="number"
       @click="fieldClick"
@@ -9,6 +9,7 @@
 
 <script>
   import commands from './commands';
+  import {getParamValue} from './model'
 
   export default {
     props: {
@@ -19,6 +20,9 @@
       }
     },
     methods: {
+      fieldValue(paramKey) {
+        return this.$store.state.commandLog.current().params[paramKey]
+      },
       fieldClick(ev) {
         ev.target.select();
       },
