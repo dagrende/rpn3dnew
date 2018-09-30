@@ -21,6 +21,7 @@
               <mutation-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
               <mutation-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
               <mutation-button image="torus-icon.png" mutation="addTorus" title="torus"/>
+              <mutation-button image="cube-icon.png" mutation="importStl" title="stl object"/>
               <mutation-button image="named-icon.svg" mutation="addNamedObject" title="add named object"/>
               <mutation-button image="pop-icon.svg" mutation="popStack" title="remove top of stack"/>
               <mutation-button image="dup-icon.svg" mutation="dupStack" title="duplicates top of stack"/>
@@ -36,15 +37,13 @@
               <mutation-button image="align-icon.svg" mutation="align"/>
               <mutation-button image="cube-icon.png" mutation="addEnclosingBlock" title="enclosing block"/>
               <mutation-button image="cube-icon.png" mutation="growBlock" title="grow block"/>
-              <mutation-button image="cube-icon.png" mutation="importStl" title="stl object"/>
-              <mutation-button image="align-icon.svg" mutation="center" title="center"/>
               <mutation-button image="name-icon.svg" mutation="nameTop" title="name current object"/>
             </div>
             <div class="button-row">
-              <button type="button" @click="get">get</button>
+              <!-- <button type="button" @click="get">get</button> -->
               <button type="button" :disabled="!isSignedIn" @click="open">open</button>
               <button type="button" :disabled="!isSignedIn" @click="save">save</button>
-              <button type="button" @click="$store.commit('deleteLogRow')">Del</button>
+              <button type="button" @click="$store.commit('deleteLogRow')">delete</button>
               <button type="button" @click="download">download</button>
             </div>
           </div>

@@ -13,17 +13,6 @@ export default {
       return stack
     }
   },
-  center: {
-    title: 'center',
-    inItemCount: 1,
-    execute(stack, params) {
-      const topBB = stack.item.getBounds();
-      return stack.prev.add(stack.item.translate([
-        -(topBB[0].x + topBB[1].x) / 2,
-        -(topBB[0].y + topBB[1].y) / 2,
-        -(topBB[0].z + topBB[1].z) / 2]))
-    }
-  },
   nameTop: {
     title: 'name',
     inItemCount: 0,
@@ -123,7 +112,7 @@ export default {
       height: {type: 'number', defaultValue: 2},
       sides: {type: 'number', defaultValue: 32},
       roundRadiusTop: {type: 'number', defaultValue: '0'},
-      roundRadiusBottom: {type: 'number', defaultValue: '.2'},
+      roundRadiusBottom: {type: 'number', defaultValue: '0'},
       roundResolution: {type: 'number', defaultValue: '32'}},
     emptyParamSource: {rtop: 'rbottom'},
     inItemCount: 0,
