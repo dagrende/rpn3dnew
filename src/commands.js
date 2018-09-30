@@ -123,7 +123,7 @@ export default {
       height: {type: 'number', defaultValue: 2},
       sides: {type: 'number', defaultValue: 32},
       roundRadiusTop: {type: 'number', defaultValue: '0'},
-      roundRadiusBottom: {type: 'number', defaultValue: '0'},
+      roundRadiusBottom: {type: 'number', defaultValue: '.2'},
       roundResolution: {type: 'number', defaultValue: '32'}},
     emptyParamSource: {rtop: 'rbottom'},
     inItemCount: 0,
@@ -132,10 +132,28 @@ export default {
           radiusStart: +params.rbottom,
           radiusEnd: +params.rtop,
           start: [0, 0, -+params.height / 2],
-          end: [0, 0, +params.height / 2], resolution: +params.sides};
+          end: [0, 0, +params.height / 2],
+          resolution: +params.sides};
+      let roundRadiusBottom = +params.roundRadiusBottom;
+      let roundRadiusTop = +params.roundRadiusTop;
+      let roundResolution = +params.roundResolution;
 
       let cylinder = CSG.cylinder(cylParams);
 
+      if (roundRadiusBottom > 0) {
+        let edgeRemoval = CAG.rectangle({center: [0, 0], radius: [roundRadiusBottom, roundRadiusBottom]})
+          .subtract(CAG.circle({center: [-roundRadiusBottom, roundRadiusBottom], radius: roundRadiusBottom, resolution: roundResolution}))
+          .translate([cylParams.radiusStart, cylParams.start[2]])
+          .rotateExtrude({resolution: cylParams.resolution});
+          cylinder = cylinder.subtract(edgeRemoval);
+      }
+      if (roundRadiusTop > 0) {
+        let edgeRemoval = CAG.rectangle({center: [0, 0], radius: [roundRadiusTop, roundRadiusTop]})
+          .subtract(CAG.circle({center: [-roundRadiusTop, -roundRadiusTop], radius: roundRadiusTop, resolution: roundResolution}))
+          .translate([cylParams.radiusEnd, cylParams.end[2]])
+          .rotateExtrude({resolution: cylParams.resolution});
+          cylinder = cylinder.subtract(edgeRemoval);
+      }
       return stack.add(cylinder);
     }
   },
