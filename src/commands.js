@@ -56,32 +56,74 @@ export default {
   },
   addCube: {
     title: 'cube',
-    params: {width: {type: 'number', defaultValue: 2}, depth: {type: 'number', defaultValue: ''}, height: {type: 'number', defaultValue: ''},
-      rx: {type: 'number', defaultValue: '0'}, ry: {type: 'number', defaultValue: '0'}, rz: {type: 'number', defaultValue: '0'}, resolution: {type: 'number', defaultValue: '16'}},
+    params: {
+      width: {type: 'number', defaultValue: 2},
+      depth: {type: 'number', defaultValue: ''},
+      height: {type: 'number', defaultValue: ''},
+      rx: {type: 'number', defaultValue: '0.3'},
+      ry: {type: 'number', defaultValue: '0.3'},
+      rz: {type: 'number', defaultValue: '0.3'},
+      resolution: {type: 'number', defaultValue: '16'}
+    },
     emptyParamSource: {depth: 'width', height: 'width'},
     inItemCount: 0,
     execute(stack, params) {
       let cube = flexiCube([+params.width, +params.depth, +params.height], [+params.rx, +params.ry, +params.rz], +params.resolution);
       return stack.add(cube);
 
-      function flexiCube(size, edgeRadius = [0, 0, 0], resolution = 8) {
-        let n012 = [0, 1, 2];
+      function flexiCube(size, edgeRadius = [0, 0, 0], resolution = 16) {
+        let axes012 = [0, 1, 2];
         let boxRadius = [size[0] / 2, size[1] / 2, size[2] / 2];
         var cube = CSG.cube({center: [0, 0, 0], radius: boxRadius});
-        let cylinderOut = n012.map(i => boxRadius[i] - edgeRadius[i]);
-        n012.forEach(axis => {
+        let cylinderOut = axes012.map(i => boxRadius[i] - edgeRadius[i]);
+
+        // draw all necessary edge radiuses
+        axes012.forEach(axis => {
+          // axis is 0,1,2 for x,y,z
           if (edgeRadius[axis] > 0) {
-            let cornerBox = CSG.cube({center: [0, 0, 0], radius: n012.map(i => i == axis ? boxRadius[axis] : edgeRadius[axis])});
-            let cornerCylinder = CSG.cylinder({start: n012.map(i => i == axis ? -boxRadius[i] : 0),
-              end: n012.map(i => i == axis ? boxRadius[i] : 0), radius: edgeRadius[axis], resolution});
-            [0,1,2,3].forEach(combinationBits => {
-              let combin = i => {let j = i > axis ? i - 1 : i; return (combinationBits >> j) & 1 ? 1 : -1};
-              let cornerBoxTranslated = cornerBox.translate(n012.map(i => i == axis ? 0 : combin(i) * boxRadius[i]));
-              let cornerCylinderTranslated = cornerCylinder.translate(n012.map(i => i == axis ? 0 : combin(i) * (boxRadius[i] - edgeRadius[axis])));
-              cube = cube.subtract(cornerBoxTranslated.subtract(cornerCylinderTranslated))
+            // this is a rounded axis
+            let cornerBox = CSG.cube({center: [0, 0, 0], radius: axes012.map(i => i == axis ? boxRadius[axis] : edgeRadius[axis])});
+            let edgeCylinder = CSG.cylinder({start: axes012.map(i => i == axis ? -boxRadius[i] : 0),
+              end: axes012.map(i => i == axis ? boxRadius[i] : 0), radius: edgeRadius[axis], resolution});
+            // iterate over edges
+            [0,1,2,3].forEach(edgeNumber => {  // iterate over four rounded edges for an axis: edgeNumber bit 0 is upper/lower, bit 1 is left/right
+              // combin(i)
+              let combin = i => {let j = i > axis ? i - 1 : i; return (edgeNumber >> j) & 1 ? 1 : -1};
+              let edgeBoxTranslated = cornerBox.translate(axes012.map(i => i == axis ? 0 : combin(i) * boxRadius[i]));
+              let edgeCylinderTranslated = edgeCylinder.translate(axes012.map(i => i == axis ? 0 : combin(i) * (boxRadius[i] - edgeRadius[axis])));
+              cube = cube.subtract(edgeBoxTranslated.subtract(edgeCylinderTranslated))
             });
           }
         });
+
+        // classify edge radiuses
+        let sortedNonZeroRadiuses = edgeRadius.filter(r => r > 0).sort().filter((element, index, array) => index == 0 || element !== array[index - 1]);
+        // the list of axes for each radius
+        let axisByRadius = sortedNonZeroRadiuses.map(r => [0, 1, 2].filter(i => edgeRadius[i] == r));
+
+        // improve corners in two special cases
+        if (sortedNonZeroRadiuses.length == 1 && axisByRadius[0].length == 3) {
+          // three equal radiuses - form spherical corners
+          let r = edgeRadius[0];
+          let sphere8th = CAG.rectangle({center: [r / 2, r / 2], radius: [r / 2, r / 2]})
+            .subtract(CAG.circle({center: [0, 0], radius: r, resolution: resolution}))
+            .rotateExtrude({angle: 90, resolution: resolution / 4}).rotateX(180);
+          let sphere8thTranslated = sphere8th.translate(axes012.map(i => -(boxRadius[i] - r)));
+
+          // iterate over corners
+          [0, 1, 2, 3, 4, 5, 6, 7].forEach(cornerNumber => {
+            let bit = i => (cornerNumber >> i) & 1;
+            let mirroredSphere8th = ['mirroredX','mirroredY','mirroredZ']
+              .reduce((ack, f, i) => bit(i) ? ack[f]() : ack, sphere8thTranslated)
+            cube = cube.subtract(mirroredSphere8th)
+          });
+        } else if (sortedNonZeroRadiuses.length == 2 && axisByRadius[0].length == 2) {
+          // two small and one large radius - form torical corners
+
+          // same as for spherical, but from the axis with large radius
+        } else {
+          console.log('no special corners');
+        }
         return cube;
       }
 
