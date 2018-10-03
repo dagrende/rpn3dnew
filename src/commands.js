@@ -60,12 +60,12 @@ export default {
       width: {type: 'number', defaultValue: 2},
       depth: {type: 'number', defaultValue: ''},
       height: {type: 'number', defaultValue: ''},
-      rx: {type: 'number', defaultValue: '0.3'},
-      ry: {type: 'number', defaultValue: '0.3'},
-      rz: {type: 'number', defaultValue: '0.3'},
+      rx: {type: 'number', defaultValue: '0'},
+      ry: {type: 'number', defaultValue: ''},
+      rz: {type: 'number', defaultValue: ''},
       resolution: {type: 'number', defaultValue: '16'}
     },
-    emptyParamSource: {depth: 'width', height: 'width'},
+    emptyParamSource: {depth: 'width', height: 'width', ry: 'rx', rz: 'rx'},
     inItemCount: 0,
     execute(stack, params) {
       let cube = flexiCube([+params.width, +params.depth, +params.height], [+params.rx, +params.ry, +params.rz], +params.resolution);
@@ -121,6 +121,31 @@ export default {
           // two small and one large radius - form torical corners
 
           // same as for spherical, but from the axis with large radius
+          let largeAxis = axisByRadius[1][0];
+          let oneSmallAxis = axisByRadius[0][0];
+
+          let rl = edgeRadius[largeAxis];
+          let r = edgeRadius[oneSmallAxis];
+          let rlmr = rl - r;
+          let sphere8th = CAG.rectangle({center: [r / 2 + rlmr, r / 2], radius: [r / 2, r / 2]})
+            .subtract(CAG.circle({center: [rlmr, 0], radius: r, resolution: resolution}))
+            .rotateExtrude({angle: 90, resolution: resolution / 4});
+            if (largeAxis == 0) {
+              sphere8th = sphere8th.rotateY(90);
+            } else if (largeAxis == 1) {
+              sphere8th = sphere8th.rotateX(90).rotateZ(180);
+            } else if (largeAxis == 2) {
+              sphere8th = sphere8th.rotateZ(-90);
+            }
+          let sphere8thTranslated = sphere8th.translate(axes012.map(i => boxRadius[i] - (i == largeAxis ? r : rl)));
+
+          // iterate over corners
+          [0, 1, 2, 3, 4, 5, 6, 7].forEach(cornerNumber => {
+            let bit = i => (cornerNumber >> i) & 1;
+            let mirroredSphere8th = ['mirroredX','mirroredY','mirroredZ']
+              .reduce((ack, f, i) => bit(i) ? ack[f]() : ack, sphere8thTranslated)
+            cube = cube.subtract(mirroredSphere8th)
+          });
         } else {
           console.log('no special corners');
         }
