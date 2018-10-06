@@ -36,15 +36,24 @@ export default {
     state.currentFile = file;
   },
   saveMutation(state) {
-    if (state.currentFile.id) {
+    console.log('state.currentFile.origName',state.currentFile.origName);
+    console.log('state.currentFile.name',state.currentFile.name);
+    if (state.currentFile.id && state.currentFile.name === state.currentFile.origName) {
+      console.log('saveFile');
       saveFile(state.currentFile.id, JSON.stringify({format: currentFormat, contents: state.commandLog.saveFormat()}, null, '  '))
       .then(function(file) {
-        //console.log(file);
+        console.log('saved successfully', file);
+      })
+      .catch(function (error) {
+        console.log('save error:', url, 'error:', error);
       });
     } else {
+      console.log('createFile');
+      state.currentFile.origName = state.currentFile.name;
       createFile(state.currentFile.name, JSON.stringify({format: currentFormat, contents: state.commandLog.saveFormat()}, null, '  '))
       .then(function(file) {
-        //console.log(file);
+        state.currentFile.id = file.id;
+        console.log('created successfully', file);
       });
     }
   }
@@ -56,10 +65,6 @@ function saveFile(id, data) {
 
 function createFile(name, data) {
   return writeFile({name, method: 'POST'}, data)
-  .then(function(file) {
-    state.currentFile.id = file.id;
-    return file
-  })
 }
 
 function writeFile(options, data) {
