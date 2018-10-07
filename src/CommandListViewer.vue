@@ -1,8 +1,8 @@
 <template>
-  <div :hidden="$store.state.commandLog.isEmpty()">
+  <div :hidden="$store.state.commandLog.isEmpty()" @cut="cut" @copy="copy" @paste="paste">
     <div v-for="(command, i) in $store.state.commandLog.list()"
       class="command-log-item"
-      :class="{selected: i == $store.state.commandLog.currentIndex(), error: $store.state.commandLog.errorIndex() !== null && i >= $store.state.commandLog.errorIndex()}"
+      :class="{selected: $store.state.commandLog.selection().indexOf(i) != -1, error: $store.state.commandLog.errorIndex() !== null && i >= $store.state.commandLog.errorIndex()}"
       @click="click($event, i)">{{commands[command.id].title}}</div>
   </div>
 </template>
@@ -16,8 +16,21 @@
       };
     },
     methods: {
+      cut(e) {
+        console.log(e);
+      },
+      copy(e) {
+        console.log(e);
+      },
+      paste(e) {
+        console.log(e);
+      },
       click(event, i) {
-        this.$store.commit('setCommandLogIndex', i)
+        if (event.shiftKey) {
+
+        } else {
+          this.$store.commit('setCommandLogIndex', i)
+        }
       }
     }
   }

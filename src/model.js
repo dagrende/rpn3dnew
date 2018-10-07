@@ -10,10 +10,10 @@ export function Stack(item, prev, depth = 0) {
 }
 
 // list contains command descriptors {id, params, stack}
-// currentIndex is the command whos stack is displayed in the viewer
+// selection is the selected command indices in increasing order - the last is executed and result put on stack
 // dirtyIndex says that this command has to be executed, for its stack to be valid
 // errorIndex if !== null says that this command was missing stack items to be executable
-export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIndex = null) {
+export function CommandLog(list = [], selection = [], dirtyIndex = 0, errorIndex = null) {
   if (errorIndex !== null && errorIndex >=  dirtyIndex) {
     errorIndex = null;
   }
@@ -38,27 +38,42 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
       }
     })
   }
+  function getLastSelected(s = selection) {
+    return s.length > 0 ? selection[s.length - 1] : -1;
+  }
   this.last = ()=>list[list.length - 1];
-  this.add = (command)=>new CommandLog([...list, command], currentIndex + 1, dirtyIndex + 1, errorIndex);
-  this.replaceIndex = (command, i)=>new CommandLog([...list.slice(0, i), command, ...list.slice(i + 1)], currentIndex, i + 1, errorIndex);
+  this.add = (command)=>new CommandLog([...list, command], [list.length], dirtyIndex + 1, errorIndex);
+  this.replaceIndex = (command, i)=>new CommandLog([...list.slice(0, i), command, ...list.slice(i + 1)], [i], i + 1, errorIndex);
   this.isEmpty = ()=>list.length == 0;
   this.list = ()=>list;
-  this.prev = ()=>currentIndex > 0 ? list[currentIndex - 1] : {id: 'noop', params: {}, stack: new Stack()};
-  this.current = ()=>currentIndex > -1 ? list[currentIndex] : {id: 'noop', params: {}, stack: new Stack()};
-  this.currentIndex = ()=>currentIndex;
+  this.prev = ()=>selection.length > 0 && selection[0] > 0 ? list[selection[0] - 1] : {id: 'noop', params: {}, stack: new Stack()};
+  this.current = ()=>selection.length == 1 ? list[selection[0]] : {id: 'noop', params: {}, stack: new Stack()};
+  this.selection = ()=>{console.log('selection',selection);return selection};
   this.errorIndex = ()=>errorIndex;
-  this.setCurrentIndex = (i)=>new CommandLog(executeSlice(dirtyIndex, i + 1), i, i + 1, errorIndex);
+  this.setSelection = (s)=>{
+    let i = getLastSelected(s);
+    return new CommandLog(executeSlice(dirtyIndex, i + 1), s, i + 1, errorIndex)
+  };
   this.dirtyIndex = ()=>dirtyIndex
-  this.executeCurrent = () => new CommandLog(executeSlice(currentIndex, currentIndex + 1), currentIndex, currentIndex + 1, errorIndex);
+  this.executeCurrent = () => {
+    let i = getLastSelected();
+    return new CommandLog(executeSlice(i, i + 1), [i], i + 1, errorIndex)
+  };
   // returns an object suitable for storing
   this.saveFormat = ()=>list.map(item=>({id: item.id, params: item.params}));
   // returns a new CommandLog set from content that is loaded from a file storage
-  this.load = content=>new CommandLog(content, -1, 0, null).setCurrentIndex(content.length - 1);
-  this.deleteCurrent = ()=>{
-    return new CommandLog([...list.slice(0, currentIndex, errorIndex), ...list.slice(currentIndex + 1)], currentIndex, currentIndex)
-      .setCurrentIndex(currentIndex > list.length - 2 ? currentIndex - 1 : currentIndex);
+  this.load = content=>new CommandLog(content, [], 0, null).setSelection([content.length - 1]);
+  this.deleteSelected = ()=>{
+    if (selection.length > 0) {
+      return new CommandLog([...list.slice(0, selection[0]), ...list.slice(selection[selection.length - 1] + 1)], [selection[0]], selection[0])
+      .setSelection(list.length > 0 ? [selection[0]] : []);
+    } else {
+      return this;
+    }
   };
-  this.addAfterCurrent = (command) => new CommandLog([...list.slice(0, currentIndex + 1), command, ...list.slice(currentIndex + 1)], currentIndex + 1, currentIndex + 2, errorIndex);
+  this.addAfterSelected = (command) => {
+    let i = getLastSelected();
+    return new CommandLog([...list.slice(0, i + 1), command, ...list.slice(i + 1)], [i + 1], i + 2, errorIndex)};
   this.commandByName = name => list.find(item => item.id == 'nameTop' && item.params.name === name);
 }
 

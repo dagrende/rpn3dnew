@@ -10,7 +10,7 @@ import commands from './commands';
 export default {
   buttonCommand(state, commandId) {
     // add the clicked command to commandSlog and execute it with default params
-    state.commandLog = state.commandLog.addAfterCurrent({id: commandId, params: getDefaultParamValues(commands[commandId])}).executeCurrent();
+    state.commandLog = state.commandLog.addAfterSelected({id: commandId, params: getDefaultParamValues(commands[commandId])}).executeCurrent();
   },
   updateField(state, {path, value}) {
     // a command parameter has been edited - store its new value and execute the command
@@ -19,10 +19,13 @@ export default {
     debounce(f, 600)();
   },
   setCommandLogIndex(state, i) {
-    state.commandLog = state.commandLog.setCurrentIndex(i);
+    state.commandLog = state.commandLog.setSelection([i]);
+  },
+  addCommandLogIndex(state, i) {
+    state.commandLog = state.commandLog.addToSelectionInterval(i);
   },
   deleteLogRow(state) {
-    state.commandLog = state.commandLog.deleteCurrent();
+    state.commandLog = state.commandLog.deleteSelected();
   }
 }
 
