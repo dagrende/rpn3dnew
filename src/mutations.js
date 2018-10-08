@@ -10,7 +10,7 @@ import commands from './commands';
 export default {
   buttonCommand(state, commandId) {
     // add the clicked command to commandSlog and execute it with default params
-    state.commandLog = state.commandLog.addAfterCurrent({id: commandId, params: getDefaultParamValues(commands[commandId])}).executeCurrent();
+    state.commandLog = state.commandLog.addAfterCurrent([{id: commandId, params: getDefaultParamValues(commands[commandId])}]).executeCurrent();
   },
   updateField(state, {path, value}) {
     // a command parameter has been edited - store its new value and execute the command
@@ -23,6 +23,12 @@ export default {
   },
   deleteLogRow(state) {
     state.commandLog = state.commandLog.deleteCurrent();
+  },
+  pasteCommandList(state, commands) {
+    console.log('mutation pasteCommandList', commands);
+    
+    state.commandLog = state.commandLog.addAfterCurrent(commands).setCurrentIndex();
+
   }
 }
 

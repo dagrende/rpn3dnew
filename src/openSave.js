@@ -34,6 +34,7 @@ export default {
     let convertedDocument = convertFormat(currentFormat, document);
     state.commandLog = (new CommandLog()).load(convertedDocument.contents);
     state.currentFile = file;
+    state.currentFile.origName = file.name;
   },
   saveMutation(state) {
     console.log('state.currentFile.origName',state.currentFile.origName);
@@ -52,6 +53,7 @@ export default {
       state.currentFile.origName = state.currentFile.name;
       createFile(state.currentFile.name, JSON.stringify({format: currentFormat, contents: state.commandLog.saveFormat()}, null, '  '))
       .then(function(file) {
+
         state.currentFile.id = file.id;
         console.log('created successfully', file);
       });

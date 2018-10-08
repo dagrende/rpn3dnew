@@ -58,7 +58,7 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
     return new CommandLog([...list.slice(0, currentIndex, errorIndex), ...list.slice(currentIndex + 1)], currentIndex, currentIndex)
       .setCurrentIndex(currentIndex > list.length - 2 ? currentIndex - 1 : currentIndex);
   };
-  this.addAfterCurrent = (command) => new CommandLog([...list.slice(0, currentIndex + 1), command, ...list.slice(currentIndex + 1)], currentIndex + 1, currentIndex + 2, errorIndex);
+  this.addAfterCurrent = (commands) => new CommandLog([...list.slice(0, currentIndex + 1), ...commands, ...list.slice(currentIndex + commands.length)], currentIndex + commands.length, currentIndex + 1, errorIndex);
   this.commandByName = name => list.find(item => item.id == 'nameTop' && item.params.name === name);
 }
 
