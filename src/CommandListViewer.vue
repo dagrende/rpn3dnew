@@ -9,6 +9,7 @@
 </template>
 <script>
   import commands from './commands';
+  import { mapGetters } from 'vuex'
 
   export default {
     data() {
@@ -17,9 +18,6 @@
         firstSelected: null,
         lastSelected: null
       };
-    },
-    created() {
-      // document.body.onmouseup(this.focusHiddenArea);
     },
     methods: {
       copy(event) {
@@ -45,8 +43,12 @@
         }
       },
       isSelected(i) {
+        let currentIndex = this.$store.state.commandLog.currentIndex();
+        if (currentIndex < this.firstSelected || this.lastSelected < currentIndex) {
+          this.firstSelected = currentIndex;
+          this.lastSelected = currentIndex;
+        }
         return this.firstSelected !== null && this.firstSelected <= i && i <= this.lastSelected
-        // return i == this.$store.state.commandLog.currentIndex()
       },
       click(event, i) {
         this.select(event, i);
@@ -68,6 +70,11 @@
         // console.log('focusHiddenInput');
         // this.$refs.hiddenInput.val(' ');
         // this.$refs.hiddenInput.focus().select();
+      }
+    },
+    watch: {
+      firstName: function (val) {
+        this.fullName = val + ' ' + this.lastName
       }
     }
   }

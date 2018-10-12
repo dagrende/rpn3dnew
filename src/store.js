@@ -20,6 +20,7 @@ export default new Vuex.Store({
   },
   getters: {
     getField,
+    getCommandLog: state => state.commandLog
   },
   actions: {
     openHttp: openSave.openHttpAction,

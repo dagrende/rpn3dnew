@@ -40,6 +40,8 @@
       light.position.set(0, -5, 0);
       scene.add(light);
 
+      scene.add(new THREE.AxisHelper( 500 ));
+
       const material = new THREE.MeshPhongMaterial({ color: 0xdddddd, specular: 0x080808, shininess: 60, shading: THREE.FlatShading });
 
       function adjustForCanvasContainerSize(){

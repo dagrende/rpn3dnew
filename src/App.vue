@@ -160,17 +160,6 @@
       },
       get() {
         this.$store.dispatch('openHttp', '/dist/test1.json');
-        // console.log('get!');
-        // axios.get('/dist/test1.json')
-        //   .then(function (response) {
-        //     // handle success
-        //     console.log(response);
-        //   })
-        //   .catch(function (error) {
-        //     // handle error
-        //     console.log(error);
-        //   })
-
       },
       open() {
         this.$store.dispatch('open');

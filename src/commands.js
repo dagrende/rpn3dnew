@@ -147,7 +147,7 @@ export default {
             cube = cube.subtract(mirroredSphere8th)
           });
         } else {
-          console.log('no special corners');
+          // no special corners
         }
         return cube;
       }
