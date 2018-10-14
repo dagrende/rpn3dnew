@@ -16,11 +16,15 @@ export default new Vuex.Store({
     // stack is after command execution
     // viewer should show stack of last log item
     commandLog: new CommandLog(),
+    firstSelected: 1,
+    lastSelected: 2,
     currentFile: {name: undefined, id: undefined}
   },
   getters: {
     getField,
-    getCommandLog: state => state.commandLog
+    getCommandLog: state => state.commandLog,
+    getFirstSelected: state => state.firstSelected,
+    getLastSelected: state => state.lastSelected,
   },
   actions: {
     openHttp: openSave.openHttpAction,

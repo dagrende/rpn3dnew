@@ -3,22 +3,12 @@ import {CSG, CAG} from '@jscad/csg';
 import store from './store';
 import stlDeSerializer from '@jscad/stl-deserializer';
 
-let namedObjects = {};
-
 export default {
-  noop: {
-    title: 'noop',
-    params: {},
-    execute(stack, params) {
-      return stack
-    }
-  },
   nameTop: {
     title: 'name',
     inItemCount: 0,
     params: {name: {type: 'text', defaultValue: ''}},
     execute(stack, params) {
-      params.item = stack.item;
       return stack
     }
   },
@@ -26,12 +16,82 @@ export default {
     title: 'named',
     inItemCount: 0,
     params: {name: {type: 'text', defaultValue: ''}},
-    execute(stack, params, commandLog) {
-      let command = commandLog.commandByName(params.name);
-      if (command && command.params.item) {
-        return stack.add(command.params.item);
+    execute(stack, params, commandList) {
+      let command = commandList.find(command => command.id === 'nameTop' && params.name === command.params.name);
+      if (command) {
+        return stack.add(command.stack.item);
       }
       return stack;
+    }
+  },
+  comment: {
+    title: '#',
+    inItemCount: 0,
+    params: {
+      text: {type: 'text', defaultValue: ''}
+    },
+    execute(stack, params) {
+      return stack;
+    }
+  },
+  mirror: {
+    title: 'mirror',
+    inItemCount: 1,
+    params: {
+      x: {
+        type: 'select',
+        defaultValue: 0,
+        options: [
+          {title: 'none', value: 0},
+          {title: '0', value: 1},
+          {title: 'left', value: 2},
+          {title: 'center', value: 3},
+          {title: 'right', value: 4},
+        ],
+      },
+      y: {
+        type: 'select',
+        defaultValue: 0,
+        options: [
+          {title: 'none', value: 0},
+          {title: '0', value: 1},
+          {title: 'front', value: 2},
+          {title: 'center', value: 3},
+          {title: 'back', value: 4},
+        ],
+      },
+      z: {
+        type: 'select',
+        defaultValue: 0,
+        options: [
+          {title: 'none', value: 0},
+          {title: '0', value: 1},
+          {title: 'top', value: 4},
+          {title: 'center', value: 3},
+          {title: 'bottom', value: 2},
+        ],
+      }
+    },
+    execute(stack, params) {
+      const bb = stack.item.getBounds()
+      let mirroredItem = stack.item;
+      let d = {x: 0, y: 0, z: 0};
+      for (let key in d) {  // for each axis
+        let aligmentType = params[key];
+        if (aligmentType == 1) { // start
+          d[key] = 0;
+        } else if (aligmentType == 2) { // end
+          d[key] = bb[0][key];
+        } else if (aligmentType == 3) { // center
+          d[key] = (bb[0][key] + bb[1][key]) / 2;
+        } else if (aligmentType == 4) { // end
+          d[key] = bb[1][key];
+        }
+        if (aligmentType > 0) {
+          mirroredItem = mirroredItem.translate([-d.x, -d.y, -d.z])['mirrored' + key.toUpperCase()]().translate([d.x, d.y, d.z])
+        }
+      }
+      return stack.prev.add(mirroredItem)
     }
   },
   importStl: {
@@ -398,6 +458,13 @@ export default {
         }
       }
       return stack.prev.add(stack.item.translate([d.x, d.y, d.z]))
+    }
+  },
+  noop: {
+    title: 'noop',
+    params: {},
+    execute(stack, params) {
+      return stack
     }
   }
 }

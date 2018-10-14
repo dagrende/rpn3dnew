@@ -20,43 +20,48 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
   const emptyStack = new Stack();
   const stackAt = i => i < 0 || i >=list.length ? emptyStack : list[i].stack;
   // returns a copy of list where item start up to end is replaced by executed items
-  const executeSlice = (start, end)=>{
+  const executeSlice = (start, end) => {
     let prevStack = stackAt(start - 1);
-    return list.map((listItem, i)=>{
+    let newList = list.slice();
+    for (let i = 0; i < newList.length; i++) {
+      let listItem = newList[i];
       if (start <= i && i < end && (errorIndex == null || i < errorIndex)) {
         const command = commands[listItem.id];
         if (prevStack.depth >= command.inItemCount) {
-          const stack = command.execute(prevStack, prepareParams(command, listItem.params), this);
+          const stack = command.execute(prevStack, prepareParams(command, listItem.params), newList);
           prevStack = stack;
-          return {id: listItem.id, params: listItem.params, stack}
+          listItem = {id: listItem.id, params: listItem.params, stack}
         } else {
           errorIndex = i;
-          return listItem;
         }
-      } else {
-        return listItem;
       }
-    })
+      newList[i] = listItem;
+    }
+    return newList;
   }
-  this.last = ()=>list[list.length - 1];
-  this.add = (command)=>new CommandLog([...list, command], currentIndex + 1, dirtyIndex + 1, errorIndex);
-  this.replaceIndex = (command, i)=>new CommandLog([...list.slice(0, i), command, ...list.slice(i + 1)], currentIndex, i + 1, errorIndex);
-  this.isEmpty = ()=>list.length == 0;
-  this.list = ()=>list;
-  this.prev = ()=>currentIndex > 0 ? list[currentIndex - 1] : {id: 'noop', params: {}, stack: new Stack()};
-  this.current = ()=>currentIndex > -1 ? list[currentIndex] : {id: 'noop', params: {}, stack: new Stack()};
-  this.currentIndex = ()=>currentIndex;
-  this.errorIndex = ()=>errorIndex;
-  this.setCurrentIndex = (i)=>new CommandLog(executeSlice(dirtyIndex, i + 1), i, i + 1, errorIndex);
-  this.dirtyIndex = ()=>dirtyIndex
+  this.last = () => list[list.length - 1];
+  this.add = (command) => new CommandLog([...list, command], currentIndex + 1, dirtyIndex + 1, errorIndex);
+  this.replaceIndex = (command, i) => new CommandLog([...list.slice(0, i), command, ...list.slice(i + 1)], currentIndex, i + 1, errorIndex);
+  this.isEmpty = () => list.length == 0;
+  this.list = () => list;
+  this.prev = () => currentIndex > 0 ? list[currentIndex - 1] : {id: 'noop', params: {}, stack: new Stack()};
+  this.current = () => currentIndex > -1 ? list[currentIndex] : {id: 'noop', params: {}, stack: new Stack()};
+  this.currentIndex = () => currentIndex;
+  this.errorIndex = () => errorIndex;
+  this.setCurrentIndex = (i) => new CommandLog(executeSlice(dirtyIndex, i + 1), i, i + 1, errorIndex);
+  this.dirtyIndex = () => dirtyIndex
   this.executeCurrent = () => new CommandLog(executeSlice(currentIndex, currentIndex + 1), currentIndex, currentIndex + 1, errorIndex);
   // returns an object suitable for storing
-  this.saveFormat = ()=>list.map(item=>({id: item.id, params: item.params}));
+  this.saveFormat = () => list.map(item=>({id: item.id, params: item.params}));
   // returns a new CommandLog set from content that is loaded from a file storage
   this.load = content=>new CommandLog(content, -1, 0, null).setCurrentIndex(content.length - 1);
-  this.deleteCurrent = ()=>{
+  this.deleteCurrent = () => {
     return new CommandLog([...list.slice(0, currentIndex, errorIndex), ...list.slice(currentIndex + 1)], currentIndex, currentIndex)
       .setCurrentIndex(currentIndex > list.length - 2 ? currentIndex - 1 : currentIndex);
+  };
+  this.deleteFromTo = (from, to) => {
+    return new CommandLog([...list.slice(0, from), ...list.slice(to + 1)], from, from)
+      .setCurrentIndex(from);
   };
   this.addAfterCurrent = (commands) => new CommandLog([...list.slice(0, currentIndex + 1), ...commands, ...list.slice(currentIndex + commands.length)], currentIndex + commands.length, currentIndex + 1, errorIndex);
   this.commandByName = name => list.find(item => item.id == 'nameTop' && item.params.name === name);

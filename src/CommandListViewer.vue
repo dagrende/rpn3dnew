@@ -15,9 +15,17 @@
     data() {
       return {
         commands,
-        firstSelected: null,
-        lastSelected: null
+        // firstSelected: null,
+        // lastSelected: null
       };
+    },
+    computed: {
+      firstSelected () {
+        return this.$store.getters.getFirstSelected
+      },
+      lastSelected () {
+        return this.$store.getters.getLastSelected
+      }
     },
     methods: {
       copy(event) {
@@ -45,8 +53,8 @@
       isSelected(i) {
         let currentIndex = this.$store.state.commandLog.currentIndex();
         if (currentIndex < this.firstSelected || this.lastSelected < currentIndex) {
-          this.firstSelected = currentIndex;
-          this.lastSelected = currentIndex;
+          this.$store.state.firstSelected = currentIndex;
+          this.$store.state.lastSelected = currentIndex;
         }
         return this.firstSelected !== null && this.firstSelected <= i && i <= this.lastSelected
       },
@@ -57,24 +65,14 @@
       select(event, i) {
         if (event.shiftKey && this.firstSelected !== null) {
           if (i < this.firstSelected) {
-            this.firstSelected = i;
+            this.$store.state.firstSelected = i;
           } if (i > this.lastSelected) {
-            this.lastSelected = i;
+            this.$store.state.lastSelected = i;
           }
         } else {
-          this.firstSelected = i;
-          this.lastSelected = i;
+          this.$store.state.firstSelected = i;
+          this.$store.state.lastSelected = i;
         }
-      },
-      focusHiddenArea() {
-        // console.log('focusHiddenInput');
-        // this.$refs.hiddenInput.val(' ');
-        // this.$refs.hiddenInput.focus().select();
-      }
-    },
-    watch: {
-      firstName: function (val) {
-        this.fullName = val + ' ' + this.lastName
       }
     }
   }

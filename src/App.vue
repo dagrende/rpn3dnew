@@ -35,9 +35,11 @@
               <mutation-button image="scale-icon.svg" mutation="scale"/>
               <mutation-button image="rotate-icon.svg" mutation="rotate"/>
               <mutation-button image="align-icon.svg" mutation="align"/>
+              <mutation-button image="mirror-icon.svg" mutation="mirror"/>
               <mutation-button image="cube-icon.png" mutation="addEnclosingBlock" title="enclosing block"/>
               <mutation-button image="cube-icon.png" mutation="growBlock" title="grow block"/>
               <mutation-button image="name-icon.svg" mutation="nameTop" title="name current object"/>
+              <mutation-button image="comment-icon.svg" mutation="comment" title="#"/>
             </div>
             <div class="button-row">
               <!-- <button type="button" @click="get">get</button> -->
@@ -83,6 +85,8 @@
   require('./assets/name-icon.svg')
   require('./assets/named-icon.svg')
   require('./assets/test1.json')
+  require('./assets/mirror-icon.svg')
+  require('./assets/comment-icon.svg')
 
   export default {
     name: 'app',

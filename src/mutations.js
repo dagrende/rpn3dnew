@@ -22,11 +22,13 @@ export default {
     state.commandLog = state.commandLog.setCurrentIndex(i);
   },
   deleteLogRow(state) {
-    state.commandLog = state.commandLog.deleteCurrent();
+    if (state.firstSelected != -1) {
+      state.commandLog = state.commandLog.deleteFromTo(state.firstSelected, state.lastSelected);
+    }
   },
   pasteCommandList(state, commands) {
     console.log('mutation pasteCommandList', commands);
-    
+
     state.commandLog = state.commandLog.addAfterCurrent(commands).setCurrentIndex();
 
   }

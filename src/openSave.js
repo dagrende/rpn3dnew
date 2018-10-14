@@ -161,6 +161,7 @@ const formatConverters = {
     let newCommands = [];
     document.contents.forEach(function(command) {
       if (command.id === 'align' && command.params.x != undefined) {
+        // change align params to new style
         // params was x, y, z
         // x was none: 0, left of: 1, left: 2, center: 3, right: 4, right of: 5
         // is x0, y0, z0, x1, y1, z1
@@ -173,6 +174,9 @@ const formatConverters = {
         });
         command.params = newParams;
         newCommands.push(command);
+      } else if (command.id === 'center') {
+        // replace center command with align
+        newCommands.push({id: 'align', params: {x0: 2, y0: 2, z0: 2}});
       } else {
         newCommands.push(command);
       }
