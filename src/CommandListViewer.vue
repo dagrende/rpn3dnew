@@ -2,6 +2,7 @@
   <div class="command-log" :hidden="$store.state.commandLog.isEmpty()" @copy="copy" @paste="paste">
     <div v-for="(command, i) in $store.state.commandLog.list()"
       class="command-log-item"
+      :ref="'cmd' + i"
       :class="{selected: isSelected(i), error: $store.state.commandLog.errorIndex() !== null && i >= $store.state.commandLog.errorIndex()}"
       @click="click($event, i)">{{commands[command.id].title}}</div>
     <!-- <input ref="hidden-input" class="hidden" type="text" value=""/> -->
@@ -9,14 +10,11 @@
 </template>
 <script>
   import commands from './commands';
-  import { mapGetters } from 'vuex'
 
   export default {
     data() {
       return {
         commands,
-        // firstSelected: null,
-        // lastSelected: null
       };
     },
     computed: {
@@ -25,6 +23,16 @@
       },
       lastSelected () {
         return this.$store.getters.getLastSelected
+      }
+    },
+    watch: {
+      lastSelected(newValue) {
+        // scrollIntoView
+        let cmdElement = this.$refs['cmd' + newValue];
+        if (cmdElement) {
+          console.log('cmd' + newValue, cmdElement);
+          cmdElement[0].scrollIntoView()
+        }
       }
     },
     methods: {
