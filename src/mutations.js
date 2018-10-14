@@ -28,8 +28,8 @@ export default {
   },
   pasteCommandList(state, commands) {
     console.log('mutation pasteCommandList', commands);
-
-    state.commandLog = state.commandLog.addAfterCurrent(commands).setCurrentIndex();
+    let prevIndex = state.commandLog.currentIndex();
+    state.commandLog = state.commandLog.addAfterCurrent(commands).setCurrentIndex(prevIndex + commands.length);
 
   }
 }

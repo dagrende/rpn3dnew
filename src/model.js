@@ -61,7 +61,7 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
   };
   this.deleteFromTo = (from, to) => {
     return new CommandLog([...list.slice(0, from), ...list.slice(to + 1)], from, from)
-      .setCurrentIndex(from);
+      .setCurrentIndex(from >= list.length - (to - from) - 1 ? from - 1 : from);
   };
   this.addAfterCurrent = (commands) => new CommandLog([...list.slice(0, currentIndex + 1), ...commands, ...list.slice(currentIndex + commands.length)], currentIndex + commands.length, currentIndex + 1, errorIndex);
   this.commandByName = name => list.find(item => item.id == 'nameTop' && item.params.name === name);
