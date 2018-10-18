@@ -48,7 +48,13 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
   this.current = () => currentIndex > -1 ? list[currentIndex] : {id: 'noop', params: {}, stack: new Stack()};
   this.currentIndex = () => currentIndex;
   this.errorIndex = () => errorIndex;
-  this.setCurrentIndex = (i) => new CommandLog(executeSlice(dirtyIndex, i + 1), i, i + 1, errorIndex);
+  this.setCurrentIndex = (i) => {
+    if (i != currentIndex && 0 <= i && i < list.length) {
+      return new CommandLog(executeSlice(dirtyIndex, i + 1), i, i + 1, errorIndex)
+    } else {
+      return this;
+    }
+  };
   this.dirtyIndex = () => dirtyIndex
   this.executeCurrent = () => new CommandLog(executeSlice(currentIndex, currentIndex + 1), currentIndex, currentIndex + 1, errorIndex);
   // returns an object suitable for storing

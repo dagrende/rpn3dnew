@@ -32,6 +32,7 @@
       var renderer = new THREE.WebGLRenderer({antialias: true});
       renderer.setClearColor(0xdddddd);
       const controls = new OrbitControls(camera, canvasContainer);
+      controls.enablePan = false;
 
       const ambientLight = new THREE.AmbientLight( 0x555555 );
       scene.add( ambientLight );

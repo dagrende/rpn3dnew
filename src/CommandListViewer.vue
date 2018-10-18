@@ -10,12 +10,20 @@
 </template>
 <script>
   import commands from './commands';
+  import store from './store';
 
   export default {
     data() {
       return {
         commands,
       };
+    },
+    created() {
+      window.addEventListener( 'keydown', keyEventListener, false);
+    },
+    destroyed() {
+      window.removeEventListener( 'keydown', keyEventListener, false);
+
     },
     computed: {
       firstSelected () {
@@ -28,14 +36,20 @@
     watch: {
       lastSelected(newValue) {
         // scrollIntoView
-        let cmdElement = this.$refs['cmd' + newValue];
+        let refId = 'cmd' + newValue;
+        let cmdElement = this.$refs[refId];
         if (cmdElement) {
-          console.log('cmd' + newValue, cmdElement);
-          cmdElement[0].scrollIntoView()
+          let el = cmdElement[0];
+          if (!isFullyVisible(el)) {
+            el.parentNode.scrollTop = el.offsetTop - el.parentNode.offsetTop - el.parentNode.clientHeight / 2;
+          }
         }
       }
     },
     methods: {
+      keyUp() {
+        console.log('keyUp');
+      },
       copy(event) {
         console.log(event);
         event.preventDefault();
@@ -83,6 +97,30 @@
         }
       }
     }
+  }
+
+  function keyEventListener(e) {
+    const moveSelection = d => {
+      store.state.commandLog = store.state.commandLog.setCurrentIndex(store.state.commandLog.currentIndex() + d)
+    };
+
+
+    if (e.key === 'ArrowUp') {
+      moveSelection(-1)
+      e.preventDefault();
+    } else if (e.key === 'ArrowDown') {
+      moveSelection(1);
+      e.preventDefault();
+    }
+  }
+
+  function isFullyVisible(el) {
+      let parentRect = el.parentNode.getBoundingClientRect();
+      let rect = el.getBoundingClientRect();
+      return rect.top >= parentRect.top &&
+        rect.left   >= parentRect.left &&
+        rect.bottom <= parentRect.bottom &&
+        rect.right  <= parentRect.right;
   }
 </script>
 <style>
