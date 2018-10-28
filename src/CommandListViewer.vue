@@ -1,5 +1,5 @@
 <template>
-  <div class="command-log" :hidden="$store.state.commandLog.isEmpty()" @copy="copy" @paste="paste">
+  <div ref="cl" class="command-log" :hidden="$store.state.commandLog.isEmpty()" @copy="copy" @paste="paste">
     <div v-for="(command, i) in $store.state.commandLog.list()"
       class="command-log-item"
       :ref="'cmd' + i"
@@ -19,14 +19,10 @@
       };
     },
     created() {
-      console.log('created');
       window.addEventListener( 'keydown', keyEventListener, false);
-      window.addEventListener( 'scroll', scrollEventListener, false);
-
     },
     destroyed() {
       window.removeEventListener( 'keydown', keyEventListener, false);
-      window.removeEventListener( 'scroll', scrollEventListener, false);
     },
     computed: {
       firstSelected () {
@@ -102,15 +98,10 @@
     }
   }
 
-  function scrollEventListener(e) {
-    console.log('scroll', e);
-  }
-
   function keyEventListener(e) {
     const moveSelection = d => {
       store.state.commandLog = store.state.commandLog.setCurrentIndex(store.state.commandLog.currentIndex() + d)
     };
-console.log(e);
     if (e.key === 'ArrowUp') {
       moveSelection(-1)
       e.preventDefault();

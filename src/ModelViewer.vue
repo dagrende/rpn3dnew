@@ -4,7 +4,7 @@
 
 <script>
   import THREE from 'three';
-  const OrbitControls = require('three-orbit-controls')(THREE);
+  const OrbitControls = require('./three-orbit-controls')(THREE);
   import { toCSG, fromCSG } from 'three-2-csg';
   import store from './store';
 
@@ -80,7 +80,11 @@
       controls.addEventListener('change', render);
       render();
 
-      store.commit('buttonCommand', 'addSphere')
+      // for (let i = 0; i < 10; i++) {
+      //   store.commit('buttonCommand', 'addCube')
+      //   store.commit('buttonCommand', 'addCylinder')
+      //   store.commit('buttonCommand', 'addSphere')
+      // }
     },
     computed: {
       currentLogItem () {
@@ -107,7 +111,7 @@
 <style>
 canvas {
   position: absolute;
-  z-index: -1;
+  z-index: -100;
 }
 
 </style>

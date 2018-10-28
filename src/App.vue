@@ -1,6 +1,8 @@
 <template>
     <div ref="fullscreen" id="app">
-      <model-viewer stackIndex="0" class="model-viewer top"/>
+      <!-- <div class="viewer-parent"> -->
+        <model-viewer ref="viewerCanvas" stackIndex="0" class="model-viewer top"/>
+      <!-- </div> -->
       <div class="top-row">
         <button class="fs" type="button" @click="toggleFullscreen"></button>
         <span class="title" :hidden="editingTitle" @click.stop="editTitle">{{$store.state.currentFile.name || 'Untitled'}}</span>
@@ -9,7 +11,7 @@
       </div>
       <div class="main">
         <div class="left-fill">
-          <div class="viewer">
+          <div ref="viewer" class="viewer">
           </div>
           <div class="buttons">
               <param-form class="field-row"/>
@@ -112,6 +114,20 @@
           });
         })
       })
+    },
+    mounted() {
+      // let self = this;
+      // console.log(this.$refs.viewer);
+      // this.$refs.viewer.addEventListener('mousedown', events, true);
+      // this.$refs.viewer.addEventListener('mousemove', events, true);
+      // this.$refs.viewer.addEventListener('mouseup', events, true);
+      // this.$refs.viewer.addEventListener('scroll', events, true);
+      // function events(e) {
+      //   console.log(e);
+      //   // self.$refs.viewerCanvas.dispatchEvent(e);
+      //   e.preventDefault();
+      //
+      // }
     },
     methods: {
       adjustSignedInStatus(googleAuth) {
@@ -248,7 +264,13 @@
     flex: 1;
     overflow: hidden;
     min-height: 0;
-    pointer-events: none;
+    /* pointer-events: none; */
+  }
+  .viewer-parent {
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
   }
   .buttons {
     background-color: #ffffff40;
@@ -256,6 +278,6 @@
   .right {
     overflow: scroll;
     background-color: #ffffff40;
-
+    z-index: 100;
   }
 </style>
