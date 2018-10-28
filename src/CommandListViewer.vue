@@ -19,11 +19,14 @@
       };
     },
     created() {
+      console.log('created');
       window.addEventListener( 'keydown', keyEventListener, false);
+      window.addEventListener( 'scroll', scrollEventListener, false);
+
     },
     destroyed() {
       window.removeEventListener( 'keydown', keyEventListener, false);
-
+      window.removeEventListener( 'scroll', scrollEventListener, false);
     },
     computed: {
       firstSelected () {
@@ -99,12 +102,15 @@
     }
   }
 
+  function scrollEventListener(e) {
+    console.log('scroll', e);
+  }
+
   function keyEventListener(e) {
     const moveSelection = d => {
       store.state.commandLog = store.state.commandLog.setCurrentIndex(store.state.commandLog.currentIndex() + d)
     };
-
-
+console.log(e);
     if (e.key === 'ArrowUp') {
       moveSelection(-1)
       e.preventDefault();
@@ -127,12 +133,16 @@
 /* .command-log {
   user-select: none;
 } */
+.command-log-item {
+  padding: 0 .5em;
+}
 .command-log-item.selected {
   background-color: white;
 }
 .command-log-item.error {
   background-color: red;
 }
+/*
 .hidden {
 	position:	absolute;
 	bottom:		0;
@@ -150,6 +160,6 @@
 	resize:		none;
 	outline:	none;
 	-webkit-user-select: text;
-	user-select: text; /* Because for user-select:none, Safari won't allow input */
-}
+	user-select: text;
+} */
 </style>
