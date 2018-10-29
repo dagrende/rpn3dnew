@@ -44,10 +44,9 @@
 
       const material = new THREE.MeshPhongMaterial({ color: 0xdddddd, specular: 0x080808, shininess: 60, shading: THREE.FlatShading });
 
+      // see https://stackoverflow.com/questions/30229536/how-to-make-a-html5-canvas-fit-dynamic-parent-flex-box-container
       function adjustForCanvasContainerSize(){
         renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
-        // canvas.width = canvasContainer.clientWidth;
-        // canvas.height = canvasContainer.clientHeight;
         camera.aspect = canvasContainer.clientWidth / canvasContainer.clientHeight;
         camera.updateProjectionMatrix();
         render();
@@ -80,7 +79,7 @@
       controls.addEventListener('change', render);
       render();
 
-      // for (let i = 0; i < 10; i++) {
+      // for (let i = 0; i < 20; i++) {
       //   store.commit('buttonCommand', 'addCube')
       //   store.commit('buttonCommand', 'addCylinder')
       //   store.commit('buttonCommand', 'addSphere')

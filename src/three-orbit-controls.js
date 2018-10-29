@@ -638,6 +638,7 @@ module.exports = function(THREE) {
 		}
 
 		function touchstart( event ) {
+      if (event.target.className !== 'viewer') return;
 
 			if ( scope.enabled === false ) return;
 
@@ -684,6 +685,7 @@ module.exports = function(THREE) {
 		}
 
 		function touchmove( event ) {
+      if (event.target.className !== 'viewer') return;
 
 			if ( scope.enabled === false ) return;
 
@@ -763,6 +765,7 @@ module.exports = function(THREE) {
 		}
 
 		function touchend( /* event */ ) {
+      if (event.target.className !== 'viewer') return;
 
 			if ( scope.enabled === false ) return;
 
