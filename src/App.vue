@@ -259,6 +259,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-width: 0;
   }
   .viewer {
     flex: 1;
@@ -274,6 +275,19 @@
   }
   .buttons {
     background-color: #ffffff40;
+  }
+  .button-row {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  ::-webkit-scrollbar {
+    height: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
+  }
+
+  .mutation-button {
+    flex: 0 0 auto;
   }
   .right {
     overflow: scroll;

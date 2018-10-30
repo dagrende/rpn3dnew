@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      div {
+        border: solid black 1px;
+      }
+      .page {
+        display: flex;
+        flex-direction: column;
+        max-height: calc(100vh - 2px);
+      }
+      .title {
+      }
+      .top-row {
+
+      }
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        min-height: 0;
+      }
+      .left-fill {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+
+      }
+      .viewer {
+        flex: 1;
+        overflow: hidden;
+        min-height: 0;
+      }
+      .buttons {
+        flex: 0 0 auto;
+      }
+      .right {
+        overflow: scroll;
+      }
+      // https://codeburst.io/how-to-create-horizontal-scrolling-containers-d8069651e9c6
+      // lös problemet med högersidan: https://itnext.io/horizontal-overflow-with-flexbox-css-64f530495303
+      .scrolling-wrapper {
+        display: block;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        white-space: nowrap;
+      }
+      .scrolling-wrapper .card{
+        display: inline-block;
+      }
+      .scrolling-wrapper-flexbox {
+        /* flex: 0 0 auto; */
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+      }
+      .scrolling-wrapper-flexbox .card {
+        flex: 0 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="top-row">title</div>
+      <div class="main">
+        <div class="left-fill">
+          <div class="viewer">viewer</div>
+          <div class="buttons">
+            <div class="scrolling-wrapper-flexbox">
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+              <div class="card"><h2>Card</h2></div>
+            </div>
+          </div>
+        </div>
+        <div class="right command-log">
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>perpendicular cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+          <div>cube</div>
+          <div>cylinder</div>
+          <div>sphere</div>
+          <div>torus</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
