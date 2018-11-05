@@ -39,6 +39,7 @@
                 <mutation-button image="cube-icon.png" mutation="growBlock" title="grow block"/>
                 <mutation-button image="name-icon.svg" mutation="nameTop" title="name current object"/>
                 <mutation-button image="comment-icon.svg" mutation="comment" title="#"/>
+                <mutation-button image="repeat-icon.svg" mutation="repeat" title="repeat"/>
               </div>
               <div class="button-row">
                 <!-- <button type="button" @click="get">get</button> -->
@@ -86,6 +87,7 @@
   require('./assets/test1.json')
   require('./assets/mirror-icon.svg')
   require('./assets/comment-icon.svg')
+  require('./assets/repeat-icon.svg')
 
   export default {
     name: 'app',

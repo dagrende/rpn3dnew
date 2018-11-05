@@ -1,9 +1,56 @@
 import THREE from 'three';
 import {CSG, CAG} from '@jscad/csg';
-import store from './store';
 import stlDeSerializer from '@jscad/stl-deserializer';
 
 export default {
+  // duplicate top ov stack n times along a circle or line
+  repeat: {
+    title: 'repeat',
+    inItemCount: 1,
+    params: {
+      n: {type: 'number', defaultValue: 5},
+      path: {
+        type: 'select',
+        defaultValue: 0,
+        options: [
+          {title: 'circle', value: 0},
+          {title: 'line', value: 1}
+        ]
+      },
+      plane: {
+        type: 'select',
+        defaultValue: 2,
+        options: [
+          {title: 'x', value: 0},
+          {title: 'y', value: 1},
+          {title: 'z', value: 2}
+        ]
+      },
+      length: {type: 'number', defaultValue: 360}
+    },
+    execute(stack, params) {
+      let n = +params.n;
+      let length = +params.length;
+      if (n > 0 && length > 0) {
+        console.log('n',n,'length',length);
+        let result = stack.item;
+        for (let i = 1; i < n; i++) {
+          let d = i * length / n;
+          if (params.path === 0) {
+            result = result.union(stack.item['rotate' + ['X', 'Y', 'Z'][+params.plane]](d))
+          } else {
+            let movement = [0, 0, 0];
+            movement[params.plane] = d;
+            result = result.union(stack.item.translate(movement))
+          }
+        }
+      //   return stack.add(stack.item.union(dups[0]));
+        return stack.prev.add(result);
+      } else {
+        return stack;
+      }
+    }
+  },
   nameTop: {
     title: 'name',
     inItemCount: 0,
