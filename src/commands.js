@@ -164,13 +164,13 @@ export default {
   addCube: {
     title: 'cube',
     params: {
-      width: {type: 'number', defaultValue: 2},
-      depth: {type: 'number', defaultValue: ''},
-      height: {type: 'number', defaultValue: ''},
+      width: {type: 'number', defaultValue: 2, label: 'w'},
+      depth: {type: 'number', defaultValue: '', label: 'd'},
+      height: {type: 'number', defaultValue: '', label: 'h'},
       rx: {type: 'number', defaultValue: '0'},
       ry: {type: 'number', defaultValue: ''},
       rz: {type: 'number', defaultValue: ''},
-      resolution: {type: 'number', defaultValue: '16'}
+      resolution: {type: 'number', defaultValue: '16', label: 'rres'}
     },
     emptyParamSource: {depth: 'width', height: 'width', ry: 'rx', rz: 'rx'},
     inItemCount: 0,
@@ -264,10 +264,9 @@ export default {
   growBlock: {
     title: 'grow block',
     params: {
-      left: {type: 'number', defaultValue: 0}, right: {type: 'number', defaultValue: ''},
-      front: {type: 'number', defaultValue: ''}, back: {type: 'number', defaultValue: ''},
-      down: {type: 'number', defaultValue: ''}, up: {type: 'number', defaultValue: ''}},
-    emptyParamSource: {right: 'left', back: 'front', up: 'down', front: 'left', down: 'left'},
+      left: {type: 'number', defaultValue: 0}, right: {type: 'number', defaultValue: '0'},
+      front: {type: 'number', defaultValue: '0'}, back: {type: 'number', defaultValue: '0'},
+      down: {type: 'number', defaultValue: '0', label: 'bottom'}, up: {type: 'number', defaultValue: '0', label: 'top'}},
     inItemCount: 1,
     execute(stack, params) {
       const topBB = stack.item.getBounds();
@@ -281,14 +280,14 @@ export default {
   addCylinder: {
     title: 'cylinder',
     params: {
-      rbottom: {type: 'number', defaultValue: 1},
-      rtop: {type: 'number', defaultValue: ''},
-      height: {type: 'number', defaultValue: 2},
-      sides: {type: 'number', defaultValue: 32},
-      roundRadiusTop: {type: 'number', defaultValue: '0'},
-      roundRadiusBottom: {type: 'number', defaultValue: '0'},
-      roundResolution: {type: 'number', defaultValue: '32'}},
-    emptyParamSource: {rtop: 'rbottom'},
+      rtop: {type: 'number', defaultValue: '1'},
+      rbottom: {type: 'number', defaultValue: '', label: 'rbot'},
+      height: {type: 'number', defaultValue: 2, label: 'h'},
+      sides: {type: 'number', defaultValue: 32, label: 'res'},
+      roundRadiusTop: {type: 'number', defaultValue: '0', label: 'rrtop'},
+      roundRadiusBottom: {type: 'number', defaultValue: '0', label: 'rrbot'},
+      roundResolution: {type: 'number', defaultValue: '32', label: 'rres'}},
+    emptyParamSource: {rbottom: 'rtop'},
     inItemCount: 0,
     execute(stack, params) {
       let cylParams = {
@@ -337,7 +336,7 @@ export default {
   },
   addSphere: {
     title: 'sphere',
-    params: {r: {type: 'number', defaultValue: 1}, n: {type: 'number', defaultValue: 32}},
+    params: {r: {type: 'number', defaultValue: 1}, n: {type: 'number', defaultValue: 32, label: 'res'}},
     inItemCount: 0,
     execute(stack, params) {
       return stack.add(CSG.sphere({radius: +params.r, resolution:+params.n}));
@@ -395,7 +394,9 @@ export default {
   },
   scale: {
     title: 'scale',
-    params: {x: {type: 'number', defaultValue: 1}, y: {type: 'number', defaultValue: ''}, z: {type: 'number', defaultValue: ''}},
+    params: {x: {type: 'number', defaultValue: 1},
+      y: {type: 'number', defaultValue: ''},
+      z: {type: 'number', defaultValue: ''}},
     emptyParamSource: {y: 'x', z: 'x'},
     inItemCount: 1,
     execute(stack, params) {
@@ -405,7 +406,9 @@ export default {
   rotate: {
     title: 'rotate',
     inItemCount: 1,
-    params: {x: {type: 'number', defaultValue: 0}, y: {type: 'number', defaultValue: 0}, z: {type: 'number', defaultValue: 0}},
+    params: {x: {type: 'number', defaultValue: 0},
+      y: {type: 'number', defaultValue: 0},
+      z: {type: 'number', defaultValue: 0}},
     execute(stack, params) {
       return stack.prev.add(stack.item.rotateX(+params.x).rotateY(+params.y).rotateZ(+params.z))
     }
