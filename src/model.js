@@ -1,4 +1,5 @@
 import commands from './commands';
+import {compileCode} from './compilecode';
 
 export function Stack(item, prev, depth = 0) {
   this.item = item;
@@ -73,6 +74,7 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
   this.commandByName = name => list.find(item => item.id == 'nameTop' && item.params.name === name);
 }
 
+// returns an object with all effective param values, after handling any redirect for empty params
 export function prepareParams(command, actualParams) {
   let p = {};
   if (command.params) {
@@ -83,6 +85,19 @@ export function prepareParams(command, actualParams) {
   return p;
 }
 
+let context = {
+  sqrt: Math.sqrt,
+  sqr: x => x * x,
+  sin: degrees => Math.sin(degrees * Math.PI / 180),
+  cos: degrees => Math.cos(degrees * Math.PI / 180),
+  tan: degrees => Math.tan(degrees * Math.PI / 180),
+  asin: x => Math.asin(x) / Math.PI * 180,
+  acos: x => Math.acos(x) / Math.PI * 180,
+  atan: x => Math.atan(x) / Math.PI * 180,
+  atan2: (y, x) => Math.atan2(y, x) / Math.PI * 180,
+};
+
+// returns the value of param key, and redirect to other param if it is empty and there is a redirection
 export function getParamValue(key, command, actualParams, redirectionsLeft = 10) {
   if (redirectionsLeft > 0) {
     if (actualParams[key] == undefined || actualParams[key] == '') {
@@ -92,7 +107,15 @@ export function getParamValue(key, command, actualParams, redirectionsLeft = 10)
       }
       return command.params[key].defaultValue;
     } else {
-      return actualParams[key];
+      let expr = actualParams[key];
+      if (command.params[key].type === 'text') {
+        return expr;
+      }
+      let compiledParam = compileCode("return " + expr);
+      let result = compiledParam(context);
+      console.log(key,'=',expr,result);
+      return result;
+      // return expr;
     }
   } else {
     throw 'Circular reference in emptyParamSource for command ' + command.title + ' param ' + key

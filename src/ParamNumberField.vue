@@ -2,8 +2,6 @@
   <input
       :value="fieldValue(paramKey)"
       @input="inputChanged($event, paramKey)"
-      type="number"
-      step="any"
       @click="fieldClick"
       :placeholder="emptyReplacement(paramKey)">
 </template>

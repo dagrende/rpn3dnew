@@ -40,12 +40,6 @@ import commands from './commands';
       },
       inputChanged(event, key) {
         this.$store.commit('updateField', {path: key, value: event.target.value})
-      },
-      emptyReplacement(key) {
-        let command = this.$store.state.commandLog.last().command
-        if (command && command.emptyParamSource) {
-          return this.$store.state.params[command.emptyParamSource[key]]
-        }
       }
     },
     components: {
