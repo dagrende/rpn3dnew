@@ -2,7 +2,24 @@ import THREE from 'three';
 import {CSG, CAG} from '@jscad/csg';
 import stlDeSerializer from '@jscad/stl-deserializer';
 
+let constants = {};
+
 export default {
+  constants,
+  const: {
+    title: 'const',
+    inItemCount: 0,
+    params: {
+      name: {type: 'text', defaultValue: ''},
+      value: {type: 'number', defaultValue: ''},
+    },
+    execute(stack, params) {
+      if (params.name !== '' && params.value !== undefined) {
+        constants[params.name] = params.value;
+      }
+      return stack;
+    }
+  },
   // duplicate top ov stack n times along a circle or line
   repeat: {
     title: 'repeat',

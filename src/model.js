@@ -20,6 +20,7 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
   }
   const emptyStack = new Stack();
   const stackAt = i => i < 0 || i >=list.length ? emptyStack : list[i].stack;
+
   // returns a copy of list where item start up to end is replaced by executed items
   const executeSlice = (start, end) => {
     let prevStack = stackAt(start - 1);
@@ -29,7 +30,7 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
       if (start <= i && i < end && (errorIndex == null || i < errorIndex)) {
         const command = commands[listItem.id];
         if (prevStack.depth >= command.inItemCount) {
-          const stack = command.execute(prevStack, prepareParams(command, listItem.params), newList);
+          const stack = command.execute(prevStack, prepareParams(command, listItem.params, prevStack), newList);
           prevStack = stack;
           listItem = {id: listItem.id, params: listItem.params, stack}
         } else {
@@ -75,40 +76,43 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
 }
 
 // returns an object with all effective param values, after handling any redirect for empty params
-export function prepareParams(command, actualParams) {
+export function prepareParams(command, actualParams, prevStack) {
+  let s1Bounds = prevStack.item ? prevStack.item.getBounds(): [{x:0,y:0,z:0},{x:0,y:0,z:0}];
+  let context = {
+    sqrt: Math.sqrt,
+    sqr: x => x * x,
+    sin: degrees => Math.sin(degrees * Math.PI / 180),
+    cos: degrees => Math.cos(degrees * Math.PI / 180),
+    tan: degrees => Math.tan(degrees * Math.PI / 180),
+    asin: x => Math.asin(x) / Math.PI * 180,
+    acos: x => Math.acos(x) / Math.PI * 180,
+    atan: x => Math.atan(x) / Math.PI * 180,
+    atan2: (y, x) => Math.atan2(y, x) / Math.PI * 180,
+    s1: {w: s1Bounds[1].x - s1Bounds[0].x, d: s1Bounds[1].y - s1Bounds[0].y, h: s1Bounds[1].z - s1Bounds[0].z},
+    ...commands.constants
+  };
   let p = {};
   if (command.params) {
     for (let key in command.params) {
-      p[key] = getParamValue(key, command, actualParams);
+      p[key] = getParamValue(key, command, actualParams, context);
     }
   }
   return p;
 }
 
-let context = {
-  sqrt: Math.sqrt,
-  sqr: x => x * x,
-  sin: degrees => Math.sin(degrees * Math.PI / 180),
-  cos: degrees => Math.cos(degrees * Math.PI / 180),
-  tan: degrees => Math.tan(degrees * Math.PI / 180),
-  asin: x => Math.asin(x) / Math.PI * 180,
-  acos: x => Math.acos(x) / Math.PI * 180,
-  atan: x => Math.atan(x) / Math.PI * 180,
-  atan2: (y, x) => Math.atan2(y, x) / Math.PI * 180,
-};
 
 // returns the value of param key, and redirect to other param if it is empty and there is a redirection
-export function getParamValue(key, command, actualParams, redirectionsLeft = 10) {
+export function getParamValue(key, command, actualParams, context, redirectionsLeft = 10) {
   if (redirectionsLeft > 0) {
     if (actualParams[key] == undefined || actualParams[key] == '') {
       let redirectedKey = command.emptyParamSource && command.emptyParamSource[key];
       if (redirectedKey) {
-        return getParamValue(redirectedKey, command, actualParams, redirectionsLeft - 1);
+        return getParamValue(redirectedKey, command, actualParams, context, redirectionsLeft - 1);
       }
       return command.params[key].defaultValue;
     } else {
       let expr = actualParams[key];
-      if (command.params[key].type === 'text') {
+      if (command.params[key].type !== 'number') {
         return expr;
       }
       let compiledParam = compileCode("return " + expr);
