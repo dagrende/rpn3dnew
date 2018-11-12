@@ -284,6 +284,7 @@ export default {
       rbottom: {type: 'number', defaultValue: '', label: 'rbot'},
       height: {type: 'number', defaultValue: 2, label: 'h'},
       sides: {type: 'number', defaultValue: 32, label: 'res'},
+      angle: {type: 'number', defaultValue: 360, label: 'v'},
       roundRadiusTop: {type: 'number', defaultValue: '0', label: 'rrtop'},
       roundRadiusBottom: {type: 'number', defaultValue: '0', label: 'rrbot'},
       roundResolution: {type: 'number', defaultValue: '32', label: 'rres'}},
@@ -295,7 +296,8 @@ export default {
           radiusEnd: +params.rtop,
           start: [0, 0, -+params.height / 2],
           end: [0, 0, +params.height / 2],
-          resolution: +params.sides};
+          resolution: +params.sides,
+          sectorAngle: +params.angle};
       let roundRadiusBottom = +params.roundRadiusBottom;
       let roundRadiusTop = +params.roundRadiusTop;
       let roundResolution = +params.roundResolution;

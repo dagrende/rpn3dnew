@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {CommandLog, Stack} from './model'
 
-const currentFormat = 1;  // format saved by this code - increment when releasing incompatible changes
+const currentFormat = 2;  // format saved by this code - increment when releasing incompatible changes
 
 export default {
   openAction(context) {
@@ -156,10 +156,24 @@ function getFileContents(fileId) {
 
 // each function converts fromitoj returns a document in format j
 const formatConverters = {
-  from0to1(fromFormat, toFormat, document) {
-    console.log('from0to1(', fromFormat, ', ', toFormat, ', ', document, ')');
-    let newCommands = [];
-    document.contents.forEach(function(command) {
+    from1to2(fromFormat, toFormat, document) {
+      console.log('from1to2(', fromFormat, ', ', toFormat, ', ', document, ')');
+      let newCommands = [];
+      document.contents.forEach(function(command) {
+        if (command.id === 'addCylinder' && (command.params.rtop === '' && command.params.rbottom !== '')) {
+          command.params.rtop = command.params.rbottom;
+          command.params.rbottom = undefined;
+          newCommands.push(command);
+        } else {
+          newCommands.push(command);
+        }
+      });
+      return {format: toFormat, contents: newCommands};
+    },
+    from0to1(fromFormat, toFormat, document) {
+      console.log('from0to1(', fromFormat, ', ', toFormat, ', ', document, ')');
+      let newCommands = [];
+      document.contents.forEach(function(command) {
       if (command.id === 'align' && command.params.x != undefined) {
         // change align params to new style
         // params was x, y, z
