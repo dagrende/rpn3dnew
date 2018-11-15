@@ -308,34 +308,101 @@ export default {
     emptyParamSource: {rbottom: 'rtop'},
     inItemCount: 0,
     execute(stack, params) {
-      let cylParams = {
-          radiusStart: +params.rbottom,
-          radiusEnd: +params.rtop,
-          start: [0, 0, -+params.height / 2],
-          end: [0, 0, +params.height / 2],
-          resolution: +params.sides,
-          sectorAngle: +params.angle};
-      let roundRadiusBottom = +params.roundRadiusBottom;
-      let roundRadiusTop = +params.roundRadiusTop;
-      let roundResolution = +params.roundResolution;
+      // http://www.rasmus.is/uk/t/F/Su55k02.htm
+      let rbot = +params.rbottom,
+        rtop = +params.rtop,
+        height = +params.height,
+        resolution = +params.sides,
+        sectorAngle = +params.angle,
+        roundRadiusBottom = +params.roundRadiusBottom,
+        roundRadiusTop = +params.roundRadiusTop,
+        roundResolution = +params.roundResolution,
+        EPS = 0.00000000000001;
 
-      let cylinder = CSG.cylinder(cylParams);
+      // let v = atan2()
 
+      let path = new CSG.Path2D();
+      if (rbot + EPS > roundRadiusBottom) {
+        path = path.appendPoint([0, -height / 2])
+      }
       if (roundRadiusBottom > 0) {
-        let edgeRemoval = CAG.rectangle({center: [0, 0], radius: [roundRadiusBottom, roundRadiusBottom]})
-          .subtract(CAG.circle({center: [-roundRadiusBottom, roundRadiusBottom], radius: roundRadiusBottom, resolution: roundResolution}))
-          .translate([cylParams.radiusStart, cylParams.start[2]])
-          .rotateExtrude({resolution: cylParams.resolution});
-          cylinder = cylinder.subtract(edgeRemoval);
+        // add circle segment for bottom rounding
+        let arc = CSG.Path2D.arc({
+          center: [rbot - roundRadiusBottom, -height / 2 + roundRadiusBottom, 0],
+          radius: roundRadiusBottom,
+          startangle: -90,
+          endangle: 0,
+          resolution: roundResolution,
+        });
+        path = path.concat(arc);
+      } else {
+        path = path.appendPoint([rbot, -height / 2]);
       }
       if (roundRadiusTop > 0) {
-        let edgeRemoval = CAG.rectangle({center: [0, 0], radius: [roundRadiusTop, roundRadiusTop]})
-          .subtract(CAG.circle({center: [-roundRadiusTop, -roundRadiusTop], radius: roundRadiusTop, resolution: roundResolution}))
-          .translate([cylParams.radiusEnd, cylParams.end[2]])
-          .rotateExtrude({resolution: cylParams.resolution});
-          cylinder = cylinder.subtract(edgeRemoval);
+        // add circle segment for the top rounding
+        let arc = CSG.Path2D.arc({
+          center: [rtop - roundRadiusTop, height / 2 - roundRadiusTop, 0],
+          radius: roundRadiusTop,
+          startangle: 0,
+          endangle: 90,
+          resolution: roundResolution,
+        });
+        path = path.concat(arc);
+      } else {
+        path = path.appendPoint([rtop, height / 2]);
       }
-      return stack.add(cylinder);
+      if (rtop + EPS > roundRadiusTop) {
+        path = path.appendPoint([0, height / 2])
+      }
+      path = path.appendPoint([0, height / 2]);
+
+      console.log('path', path);
+
+      let polygons = [];
+      function pushTriangle(p1, p2, p3) {
+        polygons.push(new CSG.Polygon([
+          new CSG.Vertex(new CSG.Vector3D(p1[0], p1[1], p1[2])),
+          new CSG.Vertex(new CSG.Vector3D(p2[0], p2[1], p2[2])),
+          new CSG.Vertex(new CSG.Vector3D(p3[0], p3[1], p3[2]))
+        ]));
+      }
+
+      let prevPoints = path.points.map(p => [p.x, 0, p.y]);
+      let angleStep = 2 * Math.PI / resolution;
+      if (sectorAngle != 360) {
+        angleStep = sectorAngle * Math.PI / 180 / resolution;
+
+        // add sector sides
+        let origin = [0, 0, 0]
+        let axisV = CSG.Vector3D.Create(0, 1, 0)
+        let normalV = [0, 0, 1]
+        let connS = new CSG.Connector(origin, axisV.rotateZ(180), normalV)
+        polygons = polygons.concat(
+                  path.close().innerToCAG()._toPlanePolygons({toConnector: connS, flipped: true}))
+        let connE = new CSG.Connector(origin, axisV.rotateZ(180 - sectorAngle), normalV)
+        polygons = polygons.concat(
+                  path.close().innerToCAG()._toPlanePolygons({toConnector: connE, flipped: false}))
+      }
+      console.log('prevPoints', prevPoints);
+      for (let i = 1; i <= resolution; i++) {
+        let v = -i * angleStep;
+        let cosv = Math.cos(v);
+        let sinv = Math.sin(v);
+        let points = path.points.map(p => [p.x * cosv, p.x * sinv, p.y]);
+        console.log('points',i,points, prevPoints);
+
+
+        pushTriangle(prevPoints[0], prevPoints[1], points[1]);
+        for (let j = 1; j < points.length - 2; j++) {
+          pushTriangle(prevPoints[j], prevPoints[j + 1], points[j + 1]);
+          pushTriangle(prevPoints[j], points[j + 1], points[j]);
+        }
+        pushTriangle(prevPoints[points.length - 2], points[points.length - 1], points[points.length - 2]);
+
+        prevPoints = points;
+      }
+
+      return stack.add(CSG.fromPolygons(polygons));
     }
   },
   addTorus: {
