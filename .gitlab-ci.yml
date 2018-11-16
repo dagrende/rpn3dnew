@@ -20,9 +20,9 @@ pages:
 
   stage: deploy
   script:
-  - npm install
-  - npm run build
   - mkdir -p public
+  - npm install
+  - npm run deploydev
   artifacts:
     paths:
     - public
