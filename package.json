@@ -10,7 +10,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "deploystable": "npm run build && sed 's#/dist#dist#' index.html | ssh dev.find-out.se 'cat >public_html/rpn3d/index.html' && scp -r dist src dev.find-out.se:public_html/rpn3d && rm -rf dist",
     "deploynext": "npm run build && sed 's#/dist#dist#' index.html | ssh dev.find-out.se 'cat >public_html/rpn3dnext/index.html' && scp -r dist src dev.find-out.se:public_html/rpn3dnext && rm -rf dist",
-    "deploydev": "npm run build && sed 's#/dist#dist#' index.html >public/index.html' && cp -r dist public && rm -rf dist"
+    "deploydev": "npm run build && sed 's#/dist#dist#' index.html >public/index.html && cp -r dist public && rm -rf dist"
   },
   "dependencies": {
     "@jscad/csg": "github:jscad/csg",
