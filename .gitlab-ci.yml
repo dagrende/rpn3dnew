@@ -12,3 +12,20 @@ cache:
 test:
   script:
    - npm install
+
+pages:
+  cache:
+    paths:
+    - node_modules/
+
+  stage: deploy
+  script:
+  - npm install
+  - npm run build
+  - mkdir -p public
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
+  - pages
