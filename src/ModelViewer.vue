@@ -28,7 +28,7 @@
       var camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
       camera.position.set(2, 2, -5);
 
-      var renderer = new THREE.WebGLRenderer({antialias: true, canvas: canvas, antialiasHint: true});
+      var renderer = new THREE.WebGLRenderer({antialias: true, canvas: canvas});
       renderer.setClearColor(0xdddddd);
       const controls = new OrbitControls(camera, canvasContainer);
       controls.enablePan = false;
