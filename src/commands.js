@@ -316,7 +316,7 @@ export default {
         sectorAngle = +params.angle,
         roundRadiusBottom = +params.roundRadiusBottom,
         roundRadiusTop = +params.roundRadiusTop,
-        roundResolution = +params.roundResolution,
+        roundResolution = +params.roundResolution;
 
       let v = Math.atan2(height, rtop - rbot);
 
