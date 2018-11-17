@@ -317,21 +317,21 @@ export default {
         roundRadiusBottom = +params.roundRadiusBottom,
         roundRadiusTop = +params.roundRadiusTop,
         roundResolution = +params.roundResolution,
-        EPS = 0.00000000000001;
 
-      // let v = atan2()
+      let v = Math.atan2(height, rtop - rbot);
 
       let path = new CSG.Path2D();
-      if (rbot + EPS > roundRadiusBottom) {
+      if (rbot + roundRadiusBottom) {
         path = path.appendPoint([0, -height / 2])
       }
       if (roundRadiusBottom > 0) {
         // add circle segment for bottom rounding
+        let vh = (Math.PI - v) / 2;
         let arc = CSG.Path2D.arc({
-          center: [rbot - roundRadiusBottom, -height / 2 + roundRadiusBottom, 0],
+          center: [rbot - roundRadiusBottom / Math.tan(vh), -height / 2 + roundRadiusBottom, 0],
           radius: roundRadiusBottom,
           startangle: -90,
-          endangle: 0,
+          endangle: v / Math.PI * 180 - 90,
           resolution: roundResolution,
         });
         path = path.concat(arc);
@@ -340,10 +340,11 @@ export default {
       }
       if (roundRadiusTop > 0) {
         // add circle segment for the top rounding
+        let vh = v / 2;
         let arc = CSG.Path2D.arc({
-          center: [rtop - roundRadiusTop, height / 2 - roundRadiusTop, 0],
+          center: [rtop - roundRadiusTop / Math.tan(vh), height / 2 - roundRadiusTop, 0],
           radius: roundRadiusTop,
-          startangle: 0,
+          startangle: v / Math.PI * 180 - 90,
           endangle: 90,
           resolution: roundResolution,
         });
@@ -351,12 +352,10 @@ export default {
       } else {
         path = path.appendPoint([rtop, height / 2]);
       }
-      if (rtop + EPS > roundRadiusTop) {
+      if (rtop + roundRadiusTop) {
         path = path.appendPoint([0, height / 2])
       }
       path = path.appendPoint([0, height / 2]);
-
-      console.log('path', path);
 
       let polygons = [];
       function pushTriangle(p1, p2, p3) {
@@ -383,14 +382,11 @@ export default {
         polygons = polygons.concat(
                   path.close().innerToCAG()._toPlanePolygons({toConnector: connE, flipped: false}))
       }
-      console.log('prevPoints', prevPoints);
       for (let i = 1; i <= resolution; i++) {
         let v = -i * angleStep;
         let cosv = Math.cos(v);
         let sinv = Math.sin(v);
         let points = path.points.map(p => [p.x * cosv, p.x * sinv, p.y]);
-        console.log('points',i,points, prevPoints);
-
 
         pushTriangle(prevPoints[0], prevPoints[1], points[1]);
         for (let j = 1; j < points.length - 2; j++) {

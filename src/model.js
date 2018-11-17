@@ -117,9 +117,7 @@ export function getParamValue(key, command, actualParams, context, redirectionsL
       }
       let compiledParam = compileCode("return " + expr);
       let result = compiledParam(context);
-      console.log(key,'=',expr,result);
       return result;
-      // return expr;
     }
   } else {
     throw 'Circular reference in emptyParamSource for command ' + command.title + ' param ' + key
