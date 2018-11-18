@@ -30,9 +30,13 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
       if (start <= i && i < end && (errorIndex == null || i < errorIndex)) {
         const command = commands[listItem.id];
         if (prevStack.depth >= command.inItemCount) {
-          const stack = command.execute(prevStack, prepareParams(command, listItem.params, prevStack), newList);
-          prevStack = stack;
-          listItem = {id: listItem.id, params: listItem.params, stack}
+          try {
+            const stack = command.execute(prevStack, prepareParams(command, listItem.params, prevStack), newList);
+            prevStack = stack;
+            listItem = {id: listItem.id, params: listItem.params, stack}
+          } catch(err) {
+            console.error(i,command.id,err);
+          }
         } else {
           errorIndex = i;
         }
@@ -62,7 +66,7 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
   // returns an object suitable for storing
   this.saveFormat = () => list.map(item=>({id: item.id, params: item.params}));
   // returns a new CommandLog set from content that is loaded from a file storage
-  this.load = content=>new CommandLog(content, -1, 0, null).setCurrentIndex(content.length - 1);
+  this.load = content=>new CommandLog(content, -1, 0, null).setCurrentIndex(0);//content.length - 1);
   this.deleteCurrent = () => {
     return new CommandLog([...list.slice(0, currentIndex, errorIndex), ...list.slice(currentIndex + 1)], currentIndex, currentIndex)
       .setCurrentIndex(currentIndex > list.length - 2 ? currentIndex - 1 : currentIndex);
