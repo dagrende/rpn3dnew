@@ -304,7 +304,7 @@ export default {
       angle: {type: 'number', defaultValue: 360, label: 'v'},
       roundRadiusTop: {type: 'number', defaultValue: '0', label: 'rrtop'},
       roundRadiusBottom: {type: 'number', defaultValue: '0', label: 'rrbot'},
-      roundResolution: {type: 'number', defaultValue: '32', label: 'rres'}},
+      roundResolution: {type: 'number', defaultValue: '8', label: 'rres'}},
     emptyParamSource: {rbottom: 'rtop'},
     inItemCount: 0,
     execute(stack, params) {
@@ -316,7 +316,8 @@ export default {
         sectorAngle = +params.angle,
         roundRadiusBottom = +params.roundRadiusBottom,
         roundRadiusTop = +params.roundRadiusTop,
-        roundResolution = +params.roundResolution;
+        roundResolution = 4 * +params.roundResolution - 4;
+      function todeg(rad) {return rad / Math.PI * 180};
 
       let v = Math.atan2(height, rtop - rbot);
 
@@ -324,31 +325,44 @@ export default {
       if (rbot + roundRadiusBottom) {
         path = path.appendPoint([0, -height / 2])
       }
-      if (roundRadiusBottom > 0) {
-        // add circle segment for bottom rounding
-        let vh = (Math.PI - v) / 2;
-        let arc = CSG.Path2D.arc({
-          center: [rbot - roundRadiusBottom / Math.tan(vh), -height / 2 + roundRadiusBottom, 0],
-          radius: roundRadiusBottom,
+      function getRoundRadiusBottomArc(vhbase, roundRadius, endAngleOffset) {
+        let vh = vhbase / 2;
+        let c = [rbot - roundRadius / Math.tan(vh), -height / 2 + Math.abs(roundRadius), 0];
+        return CSG.Path2D.arc({
+          center: c,
+          radius: Math.abs(roundRadius),
           startangle: -90,
-          endangle: v / Math.PI * 180 - 90,
+          endangle: v / Math.PI * 180 - endAngleOffset,
           resolution: roundResolution,
         });
-        path = path.concat(arc);
+      }
+      if (roundRadiusBottom > 0) {
+        // add in-going circle segment for bottom rounding
+        path = path.concat(getRoundRadiusBottomArc(Math.PI - v, roundRadiusBottom, 90));
+      } else if (roundRadiusBottom < 0) {
+        // add outgoing circle segment for bottom flange
+        path = path.concat(getRoundRadiusBottomArc(v, roundRadiusBottom, 270));
       } else {
         path = path.appendPoint([rbot, -height / 2]);
       }
-      if (roundRadiusTop > 0) {
-        // add circle segment for the top rounding
-        let vh = v / 2;
-        let arc = CSG.Path2D.arc({
-          center: [rtop - roundRadiusTop / Math.tan(vh), height / 2 - roundRadiusTop, 0],
-          radius: roundRadiusTop,
-          startangle: v / Math.PI * 180 - 90,
+
+      function getRoundRadiusTopArc(vhbase, startAngleOffset) {
+        let vh = vhbase / 2;
+        let c = [rtop - roundRadiusTop / Math.tan(vh), height / 2 - Math.abs(roundRadiusTop), 0];
+        return CSG.Path2D.arc({
+          center: c,
+          radius: Math.abs(roundRadiusTop),
+          startangle: v / Math.PI * 180 - startAngleOffset,
           endangle: 90,
           resolution: roundResolution,
         });
-        path = path.concat(arc);
+      }
+      if (roundRadiusTop > 0) {
+        // add ingoing circle segment for top rounding
+        path = path.concat(getRoundRadiusTopArc(v, 90));
+      } else if (roundRadiusTop < 0) {
+        // add outgoing circle segment for top flange
+        path = path.concat(getRoundRadiusTopArc(Math.PI - v, -90));
       } else {
         path = path.appendPoint([rtop, height / 2]);
       }
