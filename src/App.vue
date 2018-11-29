@@ -62,7 +62,7 @@
   import ModelViewer from './ModelViewer.vue'
   import ParamForm from './ParamForm.vue'
   import CommandListViewer from './CommandListViewer.vue'
-  import MutationButton from './MutationButton'
+  import MutationButton from './MutationButton.vue'
   import downloader from 'downloadjs'
   import stlSerializer from '@jscad/stl-serializer'
   import axios from 'axios'

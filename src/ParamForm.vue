@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="field-row">
     <template v-for="(v, k) in params">
       <span>{{v.label || k}}</span><component :is='componentByType[v.type]' :paramKey="k"/>

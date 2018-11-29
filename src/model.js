@@ -89,7 +89,7 @@ export function prepareParams(command, actualParams, prevStack) {
     atan: x => Math.atan(x) / Math.PI * 180,
     atan2: (y, x) => Math.atan2(y, x) / Math.PI * 180,
     s1: {w: s1Bounds[1].x - s1Bounds[0].x, d: s1Bounds[1].y - s1Bounds[0].y, h: s1Bounds[1].z - s1Bounds[0].z},
-    ...commands.constants
+    // ...commands.constants
   };
   let p = {};
   if (command.params) {

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <select
       :value="$store.state.commandLog.current().params[paramKey]"
       @input="inputChanged($event, paramKey)">

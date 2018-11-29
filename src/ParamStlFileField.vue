@@ -1,6 +1,6 @@
 // let user upload a stl file
 // upload code inspired by https://codepen.io/Atinux/pen/qOvawK
-<template lang="html">
+<template>
   <span><input type="file" @change="onFileChange" accept=".stl" value=""></span>
 </template>
 

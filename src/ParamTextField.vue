@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <input
       :value="$store.state.commandLog.current().params[paramKey]"
       @input="inputChanged($event, paramKey)"

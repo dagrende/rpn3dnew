@@ -1,7 +1,7 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 import { getField, updateField } from 'vuex-map-fields';
-import commandExecutor from './commandExecutor'
+import commandExecutor from './commandExecutor';
 import mutations from './mutations';
 import commands from './commands';
 import openSave from './openSave.js'
@@ -31,7 +31,11 @@ export default new Vuex.Store({
     open: openSave.openAction
   },
   mutations: {
-    ...mutations,
+    buttonCommand: mutations.buttonCommand,
+    updateField: mutations.updateField,
+    setCommandLogIndex: mutations.setCommandLogIndex,
+    deleteLogRow: mutations.deleteLogRow,
+    pasteCommandList: mutations.pasteCommandList,
     loadJson: openSave.loadJsonMutation,
     save: openSave.saveMutation
   }

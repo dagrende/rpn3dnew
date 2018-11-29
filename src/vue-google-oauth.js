@@ -1,12 +1,4 @@
-;(function (global, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define([], factory)
-  } else if (typeof exports === 'object') {
-    module.exports = factory()
-  } else {
-    global.Index = factory()
-  }
-}(this, function () {
+export default (function () {
   var config = null
   var directAccess = false
   var gapiUrl = 'https://apis.google.com/js/api:client.js'
@@ -95,4 +87,4 @@
   }
 
   return gAuth
-}))
+})();

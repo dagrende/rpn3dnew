@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <input
       :value="fieldValue(paramKey)"
       @input="inputChanged($event, paramKey)"
