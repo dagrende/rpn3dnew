@@ -1,5 +1,5 @@
 <template>
-  <button class="mutation-button" :style="'background:url(dist/'+ image + ') center / contain no-repeat'" :disabled="disabled"
+  <button class="mutation-button" :style="'background:url(src/assets/'+ image + ') center / contain no-repeat'" :disabled="disabled"
       @click="$store.commit('buttonCommand', mutation)"
       :title="title || mutation">
     <span>{{text}}</span>

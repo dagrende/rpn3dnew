@@ -19,6 +19,7 @@
       };
     },
     created() {
+      console.log('CommandListViewer created');
       window.addEventListener( 'keydown', keyEventListener, false);
     },
     destroyed() {
