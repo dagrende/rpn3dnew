@@ -32,7 +32,11 @@ export default {
   },
   loadJsonMutation(state, {document, file}) {
     let convertedDocument = convertFormat(currentFormat, document);
-    state.commandLog = (new CommandLog()).load(convertedDocument.contents);
+    try {
+      state.commandLog = new CommandLog().load(convertedDocument.contents)
+    } catch(err) {
+      console.error(err);
+    }
     state.currentFile = file;
     state.currentFile.origName = file.name;
   },
