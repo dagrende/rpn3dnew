@@ -9,10 +9,6 @@ cache:
   paths:
   - node_modules/
 
-test:
-  script:
-   - npm install
-
 pages:
   cache:
     paths:
