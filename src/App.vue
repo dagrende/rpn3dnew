@@ -67,29 +67,29 @@
   import stlSerializer from '@jscad/stl-serializer'
   import axios from 'axios'
 
-  require('./assets/unknown-user.png')
-  require('./assets/cube-icon.png')
-  require('./assets/cylinder-icon.png')
-  require('./assets/torus-icon.png')
-  require('./assets/sphere-icon.png')
-  require('./assets/union-icon.svg')
-  require('./assets/difference-icon.svg')
-  require('./assets/intersection-icon.svg')
-  require('./assets/translate-icon.svg')
-  require('./assets/scale-icon.svg')
-  require('./assets/rotate-icon.svg')
-  require('./assets/fullscreen-icon.svg')
-  require('./assets/pop-icon.svg')
-  require('./assets/swap-icon.svg')
-  require('./assets/dup-icon.svg')
-  require('./assets/align-icon.svg')
-  require('./assets/name-icon.svg')
-  require('./assets/named-icon.svg')
-  require('./assets/test1.json')
-  require('./assets/mirror-icon.svg')
-  require('./assets/comment-icon.svg')
-  require('./assets/repeat-icon.svg')
-  require('./assets/const-icon.svg')
+  import './assets/unknown-user.png'
+  import './assets/cube-icon.png'
+  import './assets/cylinder-icon.png'
+  import './assets/torus-icon.png'
+  import './assets/sphere-icon.png'
+  import './assets/union-icon.svg'
+  import './assets/difference-icon.svg'
+  import './assets/intersection-icon.svg'
+  import './assets/translate-icon.svg'
+  import './assets/scale-icon.svg'
+  import './assets/rotate-icon.svg'
+  import './assets/fullscreen-icon.svg'
+  import './assets/pop-icon.svg'
+  import './assets/swap-icon.svg'
+  import './assets/dup-icon.svg'
+  import './assets/align-icon.svg'
+  import './assets/name-icon.svg'
+  import './assets/named-icon.svg'
+  import './assets/test1.json'
+  import './assets/mirror-icon.svg'
+  import './assets/comment-icon.svg'
+  import './assets/repeat-icon.svg'
+  import './assets/const-icon.svg'
 
   export default {
     name: 'app',

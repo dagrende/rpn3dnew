@@ -23,6 +23,7 @@ pages:
   - mkdir -p public
   - npm install
   - npm run deploydev
+  - cp public/index.html public/404.html
   artifacts:
     paths:
     - public
