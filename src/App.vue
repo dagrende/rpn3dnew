@@ -16,31 +16,31 @@
           <div class="buttons">
               <param-form class="field-row"/>
               <div class="button-row">
-                <mutation-button image="cube-icon.png" mutation="addCube" title="cube"/>
-                <mutation-button image="cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
-                <mutation-button image="sphere-icon.png" mutation="addSphere" title="sphere"/>
-                <mutation-button image="torus-icon.png" mutation="addTorus" title="torus"/>
-                <mutation-button image="cube-icon.png" mutation="importStl" title="stl object"/>
-                <mutation-button image="named-icon.svg" mutation="addNamedObject" title="add named object"/>
-                <mutation-button image="pop-icon.svg" mutation="popStack" title="remove top of stack"/>
-                <mutation-button image="dup-icon.svg" mutation="dupStack" title="duplicates top of stack"/>
-                <mutation-button image="swap-icon.svg" mutation="swapStack" title="swap top two stack items"/>
+                <mutation-button image="/dist/cube-icon.png" mutation="addCube" title="cube"/>
+                <mutation-button image="/dist/cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
+                <mutation-button image="/dist/sphere-icon.png" mutation="addSphere" title="sphere"/>
+                <mutation-button image="/dist/torus-icon.png" mutation="addTorus" title="torus"/>
+                <mutation-button image="/dist/cube-icon.png" mutation="importStl" title="stl object"/>
+                <mutation-button image="/dist/named-icon.svg" mutation="addNamedObject" title="add named object"/>
+                <mutation-button image="/dist/pop-icon.svg" mutation="popStack" title="remove top of stack"/>
+                <mutation-button image="/dist/dup-icon.svg" mutation="dupStack" title="duplicates top of stack"/>
+                <mutation-button image="/dist/swap-icon.svg" mutation="swapStack" title="swap top two stack items"/>
               </div>
               <div class="button-row">
-                <mutation-button image="union-icon.svg" mutation="union"/>
-                <mutation-button image="difference-icon.svg" mutation="subtract"/>
-                <mutation-button image="intersection-icon.svg" mutation="intersect"/>
-                <mutation-button image="translate-icon.svg" mutation="translate"/>
-                <mutation-button image="scale-icon.svg" mutation="scale"/>
-                <mutation-button image="rotate-icon.svg" mutation="rotate"/>
-                <mutation-button image="align-icon.svg" mutation="align"/>
-                <mutation-button image="mirror-icon.svg" mutation="mirror"/>
-                <mutation-button image="cube-icon.png" mutation="addEnclosingBlock" title="enclosing block"/>
-                <mutation-button image="cube-icon.png" mutation="growBlock" title="grow block"/>
-                <mutation-button image="name-icon.svg" mutation="nameTop" title="name current object"/>
-                <mutation-button image="comment-icon.svg" mutation="comment" title="#"/>
-                <mutation-button image="repeat-icon.svg" mutation="repeat" title="repeat"/>
-                <mutation-button image="const-icon.svg" mutation="const" title="const"/>
+                <mutation-button image="/dist/union-icon.svg" mutation="union"/>
+                <mutation-button image="/dist/difference-icon.svg" mutation="subtract"/>
+                <mutation-button image="/dist/intersection-icon.svg" mutation="intersect"/>
+                <mutation-button image="/dist/translate-icon.svg" mutation="translate"/>
+                <mutation-button image="/dist/scale-icon.svg" mutation="scale"/>
+                <mutation-button image="/dist/rotate-icon.svg" mutation="rotate"/>
+                <mutation-button image="/dist/align-icon.svg" mutation="align"/>
+                <mutation-button image="/dist/mirror-icon.svg" mutation="mirror"/>
+                <mutation-button image="/dist/cube-icon.png" mutation="addEnclosingBlock" title="enclosing block"/>
+                <mutation-button image="/dist/cube-icon.png" mutation="growBlock" title="grow block"/>
+                <mutation-button image="/dist/name-icon.svg" mutation="nameTop" title="name current object"/>
+                <mutation-button image="/dist/comment-icon.svg" mutation="comment" title="#"/>
+                <mutation-button image="/dist/repeat-icon.svg" mutation="repeat" title="repeat"/>
+                <mutation-button image="/dist/const-icon.svg" mutation="const" title="const"/>
               </div>
               <div class="button-row">
                 <!-- <button type="button" @click="get">get</button> -->
@@ -97,7 +97,7 @@
       return {
         fullscreen: false,
         editingTitle: false,
-        user: {image: 'dist/unknown-user.png'},
+        user: {image: '/dist/unknown-user.png'},
         isSignedIn: false,
         buttonsHeight() {
           if (this.$refs.buttons) {
