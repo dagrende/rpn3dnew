@@ -19,7 +19,8 @@ pages:
   - mkdir -p public
   - npm install
   - sed -i 's#/dist/#/rpn3d/dist/#' src/App.vue
-  - npm run deploydev
+  - npm run build
+  - cp -r dist public
   - sed 's#/dist#/rpn3d/dist#' index.html >public/index.html
   - cp public/index.html public/404.html
   artifacts:

@@ -97,7 +97,7 @@
       return {
         fullscreen: false,
         editingTitle: false,
-        user: {image: 'dist/unknown-user.png'},
+        user: {image: '/dist/unknown-user.png'},
         isSignedIn: false,
         buttonsHeight() {
           if (this.$refs.buttons) {
