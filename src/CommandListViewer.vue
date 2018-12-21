@@ -1,5 +1,5 @@
 <template>
-  <div ref="cl" class="command-log" :hidden="$store.state.commandLog.isEmpty()" @copy="copy" @paste="paste">
+  <div ref="cl" class="command-log" @copy="copy" @paste="paste">
     <div v-for="(command, i) in $store.state.commandLog.list()"
       class="command-log-item"
       :ref="'cmd' + i"
@@ -121,9 +121,9 @@
   }
 </script>
 <style>
-/* .command-log {
-  user-select: none;
-} */
+.command-log {
+  min-width: 2em;
+}
 .command-log-item {
   padding: 0 .5em;
 }
