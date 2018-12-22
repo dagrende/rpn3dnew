@@ -120,18 +120,6 @@
       })
     },
     mounted() {
-      // let self = this;
-      // console.log(this.$refs.viewer);
-      // this.$refs.viewer.addEventListener('mousedown', events, true);
-      // this.$refs.viewer.addEventListener('mousemove', events, true);
-      // this.$refs.viewer.addEventListener('mouseup', events, true);
-      // this.$refs.viewer.addEventListener('scroll', events, true);
-      // function events(e) {
-      //   console.log(e);
-      //   // self.$refs.viewerCanvas.dispatchEvent(e);
-      //   e.preventDefault();
-      //
-      // }
     },
     methods: {
       adjustSignedInStatus(googleAuth) {

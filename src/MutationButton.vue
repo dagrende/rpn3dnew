@@ -21,6 +21,7 @@ export default {
       const command = commands[this.mutation];
       return command
         && command.inItemCount != undefined
+        && this.$store.state.commandLog.current()
         && this.$store.state.commandLog.current().stack
         && this.$store.state.commandLog.current().stack.depth < command.inItemCount
     }
