@@ -21,10 +21,10 @@
                 <mutation-button image="/dist/sphere-icon.png" mutation="addSphere" title="sphere"/>
                 <mutation-button image="/dist/torus-icon.png" mutation="addTorus" title="torus"/>
                 <mutation-button image="/dist/cube-icon.png" mutation="importStl" title="stl object"/>
-                <mutation-button image="/dist/named-icon.svg" mutation="addNamedObject" title="add named object"/>
-                <mutation-button image="/dist/pop-icon.svg" mutation="popStack" title="remove top of stack"/>
-                <mutation-button image="/dist/dup-icon.svg" mutation="dupStack" title="duplicates top of stack"/>
-                <mutation-button image="/dist/swap-icon.svg" mutation="swapStack" title="swap top two stack items"/>
+                <mutation-button :image="svgTextIcon('RCL')" mutation="addNamedObject" title="add named object"/>
+                <mutation-button :image="svgTextIcon('POP')" mutation="popStack" title="remove top of stack"/>
+                <mutation-button :image="svgTextIcon('DUP')" mutation="dupStack" title="duplicates top of stack"/>
+                <mutation-button :image="svgTextIcon('SWAP')" mutation="swapStack" title="swap top two stack items"/>
               </div>
               <div class="button-row">
                 <mutation-button image="/dist/union-icon.svg" mutation="union"/>
@@ -33,14 +33,14 @@
                 <mutation-button image="/dist/translate-icon.svg" mutation="translate"/>
                 <mutation-button image="/dist/scale-icon.svg" mutation="scale"/>
                 <mutation-button image="/dist/rotate-icon.svg" mutation="rotate"/>
-                <mutation-button image="/dist/align-icon.svg" mutation="align"/>
-                <mutation-button image="/dist/mirror-icon.svg" mutation="mirror"/>
+                <mutation-button :image="svgTextIcon('ALGN')" mutation="align"/>
+                <mutation-button :image="svgTextIcon('MIRR')" mutation="mirror"/>
                 <mutation-button image="/dist/cube-icon.png" mutation="addEnclosingBlock" title="enclosing block"/>
                 <mutation-button image="/dist/cube-icon.png" mutation="growBlock" title="grow block"/>
-                <mutation-button image="/dist/name-icon.svg" mutation="nameTop" title="name current object"/>
-                <mutation-button image="/dist/comment-icon.svg" mutation="comment" title="#"/>
-                <mutation-button image="/dist/repeat-icon.svg" mutation="repeat" title="repeat"/>
-                <mutation-button image="/dist/const-icon.svg" mutation="const" title="const"/>
+                <mutation-button :image="svgTextIcon('STO')" mutation="nameTop" title="name current object"/>
+                <mutation-button :image="svgTextIcon('#')" mutation="comment" title="#"/>
+                <mutation-button :image="svgTextIcon('RPT')" mutation="repeat" title="repeat"/>
+                <mutation-button :image="svgTextIcon('CNST')" mutation="const" title="const"/>
               </div>
               <div class="button-row">
                 <!-- <button type="button" @click="get">get</button> -->
@@ -79,17 +79,7 @@
   import './assets/scale-icon.svg'
   import './assets/rotate-icon.svg'
   import './assets/fullscreen-icon.svg'
-  import './assets/pop-icon.svg'
-  import './assets/swap-icon.svg'
-  import './assets/dup-icon.svg'
-  import './assets/align-icon.svg'
-  import './assets/name-icon.svg'
-  import './assets/named-icon.svg'
   import './assets/test1.json'
-  import './assets/mirror-icon.svg'
-  import './assets/comment-icon.svg'
-  import './assets/repeat-icon.svg'
-  import './assets/const-icon.svg'
 
   export default {
     name: 'app',
@@ -122,6 +112,9 @@
     mounted() {
     },
     methods: {
+      svgTextIcon(text) {
+        return `data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3C%21DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11.dtd%22%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%0A%20%20version%3D%221.1%22%20baseProfile%3D%22full%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%2024.00%2024.00%22%20enable-background%3D%22new%200%200%2024.00%2024.00%22%20xml%3Aspace%3D%22preserve%22%3E%0A%20%20%3Ctext%20x%3D%225%22%20y%3D%2216%22%20font-family%3D%22Verdana%22%20font-size%3D%227%22%20%20stroke%3D%22none%22%20fill%3D%22black%22%3E${text}%3C%2Ftext%3E%0A%3C%2Fsvg%3E%0A`
+      },
       adjustSignedInStatus(googleAuth) {
         this.isSignedIn = googleAuth.currentUser.get().isSignedIn();
         console.log('signeIn', this.isSignedIn);
@@ -201,6 +194,7 @@
   body {
     padding: 0;
     margin: 0;
+    font-family: helvetica, arial, sans-serif;
   }
   div {
     /* border: solid black 1px; */
