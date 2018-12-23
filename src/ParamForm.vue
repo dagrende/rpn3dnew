@@ -35,12 +35,6 @@ import commands from './commands';
       }
     },
     methods: {
-      fieldClick(ev) {
-        ev.target.select();
-      },
-      inputChanged(event, key) {
-        this.$store.commit('updateField', {path: key, value: event.target.value})
-      }
     },
     components: {
       ParamTextField,

@@ -47,6 +47,8 @@
                 <button type="button" :disabled="!isSignedIn" @click="open">open</button>
                 <button type="button" :disabled="!isSignedIn" @click="save">save</button>
                 <button type="button" @click="$store.commit('deleteLogRow')">delete</button>
+                <button type="button" :disabled="!$store.getters.canUndo" @click="$store.commit('undo')">undo</button>
+                <button type="button" :disabled="!$store.getters.canRedo" @click="$store.commit('redo')">redo</button>
                 <button type="button" @click="download">download</button>
               </div>
           </div>

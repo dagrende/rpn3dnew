@@ -9,6 +9,7 @@
 <script>
   import commands from './commands';
   import {getParamValue} from './model'
+  import debounce  from 'lodash.debounce';
 
   export default {
     props: {
@@ -26,7 +27,7 @@
         ev.target.select();
       },
       inputChanged(event, key) {
-        this.$store.commit('updateField', {path: key, value: event.target.value})
+        this.$store.dispatch('changeCommandField', {[key]: event.target.value})
       },
       emptyReplacement(key) {
         let command = commands[this.$store.state.commandLog.current().id]

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { getField, updateField } from 'vuex-map-fields';
 import commandExecutor from './commandExecutor'
-import mutations from './mutations';
+import {actions, mutations} from './actionsMutations';
 import commands from './commands';
 import openSave from './openSave.js'
 import {CommandLog, Stack} from './model'
@@ -16,6 +16,8 @@ export default new Vuex.Store({
     // stack is after command execution
     // viewer should show stack of last log item
     commandLog: new CommandLog(),
+    undoStack: [new CommandLog()],
+    undoIndex: 1,
     firstSelected: 1,
     lastSelected: 2,
     currentFile: {name: undefined, id: undefined}
@@ -23,12 +25,15 @@ export default new Vuex.Store({
   getters: {
     getField,
     getCommandLog: state => state.commandLog,
+    canUndo: state => state.undoIndex > 1,
+    canRedo: state => state.undoIndex < state.undoStack.length,
     getFirstSelected: state => state.firstSelected,
     getLastSelected: state => state.lastSelected,
   },
   actions: {
     openHttp: openSave.openHttpAction,
-    open: openSave.openAction
+    open: openSave.openAction,
+    ...actions
   },
   mutations: {
     ...mutations,

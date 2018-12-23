@@ -61,12 +61,18 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
       return this;
     }
   };
+  this.setCurrentParam = (keyValue) => {
+    let cmd  = list[currentIndex];
+    let newParams = Object.assign({}, cmd.params, keyValue);
+    console.log('keyValue', keyValue, 'newParams',newParams);
+    return this.replaceIndex(Object.assign({}, cmd, {params: newParams}), currentIndex)
+  };
   this.dirtyIndex = () => dirtyIndex
   this.executeCurrent = () => new CommandLog(executeSlice(currentIndex, currentIndex + 1), currentIndex, currentIndex + 1, errorIndex);
   // returns an object suitable for storing
   this.saveFormat = () => list.map(item=>({id: item.id, params: item.params}));
   // returns a new CommandLog set from content that is loaded from a file storage
-  this.load = content=>new CommandLog(content, -1, 0, null).setCurrentIndex(0);//content.length - 1);
+  this.load = content=>new CommandLog(content, -1, 0, null).setCurrentIndex(content.length - 1);
   this.deleteCurrent = () => {
     return new CommandLog([...list.slice(0, currentIndex, errorIndex), ...list.slice(currentIndex + 1)], currentIndex, currentIndex)
       .setCurrentIndex(currentIndex > list.length - 2 ? currentIndex - 1 : currentIndex);

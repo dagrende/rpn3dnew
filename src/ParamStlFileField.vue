@@ -33,7 +33,7 @@
         var reader = new FileReader();
 
         reader.onload = (e) => {
-          this.$store.commit('updateField', {path: this.paramKey, value: {name: file.name, content: btoa(e.target.result)}})
+          this.$store.dispatch('changeCommandField', {[this.paramKey]: {name: file.name, content: btoa(e.target.result)}})
         };
         reader.readAsBinaryString(file);
       },

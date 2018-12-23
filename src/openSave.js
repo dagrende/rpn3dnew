@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {CommandLog, Stack} from './model'
+import {mutations} from './actionsMutations'
 
 const currentFormat = 2;  // format saved by this code - increment when releasing incompatible changes
 
@@ -33,7 +34,9 @@ export default {
   loadJsonMutation(state, {document, file}) {
     let convertedDocument = convertFormat(currentFormat, document);
     try {
-      state.commandLog = new CommandLog().load(convertedDocument.contents)
+      state.commandLog = new CommandLog().load(convertedDocument.contents);
+      state.undoStack = [state.commandLog];
+      state.undoIndex = 1;
     } catch(err) {
       console.error(err);
     }

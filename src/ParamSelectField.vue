@@ -24,7 +24,7 @@
     },
     methods: {
       inputChanged(event, key) {
-        this.$store.commit('updateField', {path: key, value: event.target.value})
+        this.$store.dispatch('changeCommandField', {[key]: event.target.value})        
       }
     }
   }
