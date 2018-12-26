@@ -1,5 +1,5 @@
 <template>
-  <canvas ref="canvas"></canvas>
+  <canvas ref="canvas" @click=""></canvas>
 </template>
 
 <script>
@@ -25,7 +25,7 @@
       scene.rotateY(-Math.PI);
       scene.rotateX(-Math.PI);
 
-      var camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+      var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
       camera.position.set(2, 2, -5);
 
       var renderer = new THREE.WebGLRenderer({antialias: true, canvas: canvas});
@@ -56,6 +56,30 @@
 
       let prevObj = null;
       let stackIndex = this.stackIndex;
+
+      canvasContainer.addEventListener( 'dblclick', onMouseDown, false );
+
+      function onMouseDown(e) {
+        if (prevObj) {
+          ScaleIntoView(prevObj.geometry)
+          render();
+        }
+      }
+
+      function ScaleIntoView(geom) {
+        geom.computeBoundingSphere();
+        let bs = geom.boundingSphere;
+        let pos = camera.position;
+        let dist = pos.distanceTo(bs.center);
+        let d = dist * Math.sin(50/2 / 180 * Math.PI);
+        let factor = bs.radius * 3;
+        let cp = camera.position;
+        let cplen = cp.length();
+        cp.set(factor * cp.x / cplen, factor * cp.y / cplen, factor * cp.z / cplen);
+        camera.updateProjectionMatrix();
+      }
+
+
       this.setObject = function(obj) {
         if (prevObj) {
           scene.remove(prevObj);
@@ -65,12 +89,12 @@
           newMesh.geometry.computeVertexNormals();
           scene.add(newMesh);
           prevObj = newMesh;
+
+          // ScaleIntoView(newMesh.geometry);
         }
         render();
-
       }
 
-      const cameraLightOffset = new THREE.Vector3(0, 0, 0);
       // render model initially and on camera movement
       function render() {
         light.position.set(-camera.position.x, camera.position.z, camera.position.y + 1);
@@ -79,11 +103,7 @@
       controls.addEventListener('change', render);
       render();
 
-      // for (let i = 0; i < 20; i++) {
-      //   store.commit('buttonCommand', 'addCube')
-      //   store.commit('buttonCommand', 'addCylinder')
-      //   store.commit('buttonCommand', 'addSphere')
-      // }
+      // store.commit('buttonCommand', 'addCube')
     },
     computed: {
       currentLogItem () {

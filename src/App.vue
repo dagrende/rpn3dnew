@@ -119,7 +119,6 @@
     },
     methods: {
       keyListener(e) {
-        console.log(e);
         if (e.ctrlKey && e.key === 'z') {
           this.$store.commit('undo');
           e.preventDefault();
