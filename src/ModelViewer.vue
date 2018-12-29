@@ -72,7 +72,7 @@
         let pos = camera.position;
         let dist = pos.distanceTo(bs.center);
         let d = dist * Math.sin(50/2 / 180 * Math.PI);
-        let factor = bs.radius * 3;
+        let factor = bs.radius * 3 + bs.center.length();
         let cp = camera.position;
         let cplen = cp.length();
         cp.set(factor * cp.x / cplen, factor * cp.y / cplen, factor * cp.z / cplen);
