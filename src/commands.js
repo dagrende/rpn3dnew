@@ -5,9 +5,58 @@ import stlDeSerializer from '@jscad/stl-deserializer';
 let constants = {};
 
 export default {
+  transformVertices: {
+    title: 'trf',
+    inItemCount: 1,
+    params: {
+      f: {type: 'text', defaultValue: ''}
+    },
+    execute(stack, params) {
+      // transform: function (matrix4x4) {
+      //   let ismirror = matrix4x4.isMirroring()
+      //   let transformedvertices = {}
+      //   let transformedplanes = {}
+      //   let newpolygons = this.polygons.map(function (p) {
+      //     let newplane
+      //     let plane = p.plane
+      //     let planetag = plane.getTag()
+      //     if (planetag in transformedplanes) {
+      //       newplane = transformedplanes[planetag]
+      //     } else {
+      //       newplane = plane.transform(matrix4x4)
+      //       transformedplanes[planetag] = newplane
+      //     }
+      //     let newvertices = p.vertices.map(function (v) {
+      //       let newvertex
+      //       let vertextag = v.getTag()
+      //       if (vertextag in transformedvertices) {
+      //         newvertex = transformedvertices[vertextag]
+      //       } else {
+      //         newvertex = v.transform(matrix4x4)
+      //         transformedvertices[vertextag] = newvertex
+      //       }
+      //       return newvertex
+      //     })
+      //     if (ismirror) newvertices.reverse()
+      //     return new Polygon(newvertices, p.shared, newplane)
+      //   })
+      //   let result = fromPolygons(newpolygons)
+      //   result.properties = this.properties._transform(matrix4x4)
+      //   result.isRetesselated = this.isRetesselated
+      //   result.isCanonicalized = this.isCanonicalized
+      //   return result
+      // }
+
+      function trf(obj) {
+        console.log('trf', obj);
+        return obj;
+      }
+      return stack.prev.add(trf(stack.item));
+    }
+  },
   constants,
   const: {
-    title: 'const',
+    title(params) {return params.name + '=' + params.value},
     inItemCount: 0,
     params: {
       name: {type: 'text', defaultValue: ''},
@@ -69,7 +118,7 @@ export default {
     }
   },
   nameTop: {
-    title: 'name',
+    title: (params) => 'sto ' + params.name,
     inItemCount: 0,
     params: {name: {type: 'text', defaultValue: ''}},
     execute(stack, params) {
@@ -77,7 +126,7 @@ export default {
     }
   },
   addNamedObject: {
-    title: 'named',
+    title: (params) => 'rcl ' + params.name,
     inItemCount: 0,
     params: {name: {type: 'text', defaultValue: ''}},
     execute(stack, params, commandList) {
@@ -89,7 +138,7 @@ export default {
     }
   },
   comment: {
-    title: '#',
+    title(params) {return '# ' + params.text},
     inItemCount: 0,
     params: {
       text: {type: 'text', defaultValue: ''}

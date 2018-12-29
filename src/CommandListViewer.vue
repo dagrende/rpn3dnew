@@ -4,7 +4,7 @@
       class="command-log-item"
       :ref="'cmd' + i"
       :class="{selected: isSelected(i), error: $store.state.commandLog.errorIndex() !== null && i >= $store.state.commandLog.errorIndex()}"
-      @click="click($event, i)">{{commands[command.id].title}}</div>
+      @click="click($event, i)">{{getText(command)}}</div>
     <!-- <input ref="hidden-input" class="hidden" type="text" value=""/> -->
   </div>
 </template>
@@ -46,6 +46,13 @@
       }
     },
     methods: {
+      getText(cmd) {
+        let title = commands[cmd.id].title;
+        if (typeof title === "function") {
+          return title(cmd.params)
+        }
+        return title;
+      },
       keyUp() {
         console.log('keyUp');
       },
