@@ -47,9 +47,10 @@
     },
     methods: {
       getText(cmd) {
-        let title = commands[cmd.id].title;
+        let command = commands[cmd.id];
+        let title = command.title;
         if (typeof title === "function") {
-          return title(cmd.params)
+          return title(cmd.params, command)
         }
         return title;
       },

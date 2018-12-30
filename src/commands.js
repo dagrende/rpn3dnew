@@ -71,7 +71,7 @@ export default {
   },
   // duplicate top ov stack n times along a circle or line
   repeat: {
-    title: 'repeat',
+    title: params => 'repeat ' + params.n + [' around ', ' along '][params.path] + ['x', 'y', 'z'][params.plane],
     inItemCount: 1,
     params: {
       n: {type: 'number', defaultValue: 5},
@@ -228,7 +228,7 @@ export default {
     }
   },
   addCube: {
-    title: 'cube',
+    title: params => 'cube w' + params.width + 'd' + params.depth + 'h' + params.height,
     params: {
       width: {type: 'number', defaultValue: 2, label: 'w'},
       depth: {type: 'number', defaultValue: '', label: 'd'},
@@ -344,7 +344,7 @@ export default {
     }
   },
   addCylinder: {
-    title: 'cylinder',
+    title: params => 'cylinder' + ifNotEmpty(' rtop', params.rtop) + ifNotEmpty(' rbot', params.rbottom),
     params: {
       rtop: {type: 'number', defaultValue: '1'},
       rbottom: {type: 'number', defaultValue: '', label: 'rbot'},
@@ -465,7 +465,7 @@ export default {
     }
   },
   addTorus: {
-    title: 'Torus',
+    title: params => 'torus',
     params: {
       ri: {type: 'number', defaultValue: 0.5},
       ro: {type: 'number', defaultValue: 1},
@@ -480,7 +480,7 @@ export default {
     }
   },
   addSphere: {
-    title: 'sphere',
+    title: params => 'sphere ' + params.r,
     params: {r: {type: 'number', defaultValue: 1}, n: {type: 'number', defaultValue: 32, label: 'res'}},
     inItemCount: 0,
     execute(stack, params) {
@@ -530,7 +530,7 @@ export default {
     }
   },
   translate: {
-    title: 'translate',
+    title: params => 'translate' + ifNotValue(' x', params.x, 0) + ifNotValue(' y', params.y, 0) + ifNotValue(' z', params.z, 0),
     inItemCount: 1,
     params: {x: {type: 'number', defaultValue: 0}, y: {type: 'number', defaultValue: 0}, z: {type: 'number', defaultValue: 0}},
     execute(stack, params) {
@@ -538,7 +538,7 @@ export default {
     }
   },
   scale: {
-    title: 'scale',
+    title: params => 'scale' + ifNotValue(' x', params.x, 1) + ifNotValue(' y', params.y, 1) + ifNotValue(' z', params.z, 1),
     params: {x: {type: 'number', defaultValue: 1},
       y: {type: 'number', defaultValue: ''},
       z: {type: 'number', defaultValue: ''}},
@@ -549,7 +549,7 @@ export default {
     }
   },
   rotate: {
-    title: 'rotate',
+    title: params => 'rotate' + ifNotValue(' x', params.x, 0) + ifNotValue(' y', params.y, 0) + ifNotValue(' z', params.z, 0),
     inItemCount: 1,
     params: {x: {type: 'number', defaultValue: 0},
       y: {type: 'number', defaultValue: 0},
@@ -561,7 +561,13 @@ export default {
   align: {
     // translate object along each axis to get the same start, center or
     // end coordinate, or be placed before or after the object in stack.prev
-    title: 'Align',
+    title: params => 'Align ' +
+      ['x', 'y', 'z']
+        .filter(axis => params[axis + '0'] !== 0)
+        .map(axis =>
+            ['', axis, axis + axis.toUpperCase(), axis.toUpperCase()][params[axis + '0']]
+             + '-' + ['0', axis, axis + axis.toUpperCase(), axis.toUpperCase()][params[axis + '1']])
+        .join(' '),
     inItemCount: 1,
     params: {
       x0: {
@@ -662,4 +668,13 @@ export default {
       return stack
     }
   }
+}
+
+function ifNotEmpty(title, x) {
+  return x !== '' && x !== undefined ? title + x : ''
+}
+
+function ifNotValue(title, x, value) {
+  return String(x) !== String(value) && x !== '' ? title + x : ''
+
 }
