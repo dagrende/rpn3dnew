@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="field-row">
     <template v-for="(v, k) in params">
-      <span>{{v.label || k}}</span><component :is='componentByType[v.type]' :paramKey="k"/>
+      <span>{{v.label || k}}</span><component :is='componentByType[v.type]' :paramKey="k" ref="field"/>
     </template>
   </div>
 </template>
@@ -33,6 +33,16 @@ import commands from './commands';
           return {}
         }
       }
+    },
+    updated: function () {
+      this.$nextTick(function () {
+        let fields = this.$refs.field;
+        if (fields) {
+          let el = fields[0].$el;
+          el.focus();
+          el.select();
+        }
+      })
     },
     methods: {
     },

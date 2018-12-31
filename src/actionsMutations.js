@@ -14,7 +14,6 @@ let changeCommandFieldDebounced = debounce(f, 600);
 export let actions = {
   changeCommandField(context, pathValue) {
     Object.assign(pathValueCollection, pathValue);
-    console.log('pathValueCollection', pathValueCollection);
     changeCommandFieldDebounced(context, pathValueCollection)
   }
 }
@@ -52,7 +51,6 @@ export let mutations = {
     }
   },
   pasteCommandList(state, commands) {
-    console.log('mutation pasteCommandList', commands);
     let prevIndex = state.commandLog.currentIndex();
     setCommandLogUndoable(state, state.commandLog.addAfterCurrent(commands).setCurrentIndex(prevIndex + commands.length));
   }

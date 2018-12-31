@@ -64,7 +64,6 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
   this.setCurrentParam = (keyValue) => {
     let cmd  = list[currentIndex];
     let newParams = Object.assign({}, cmd.params, keyValue);
-    console.log('keyValue', keyValue, 'newParams',newParams);
     return this.replaceIndex(Object.assign({}, cmd, {params: newParams}), currentIndex)
   };
   this.dirtyIndex = () => dirtyIndex
