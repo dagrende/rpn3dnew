@@ -34,16 +34,16 @@ import commands from './commands';
         }
       }
     },
-    updated: function () {
-      this.$nextTick(function () {
-        let fields = this.$refs.field;
-        if (fields) {
-          let el = fields[0].$el;
-          el.focus();
-          el.select();
-        }
-      })
-    },
+    // updated: function () {
+    //   this.$nextTick(function () {
+    //     let fields = this.$refs.field;
+    //     if (fields) {
+    //       let el = fields[0].$el;
+    //       el.focus();
+    //       el.select();
+    //     }
+    //   })
+    // },
     methods: {
     },
     components: {
