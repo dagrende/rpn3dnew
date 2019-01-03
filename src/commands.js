@@ -663,6 +663,7 @@ export default {
   },
   noop: {
     title: 'noop',
+    inItemCount: 0,
     params: {},
     execute(stack, params) {
       return stack

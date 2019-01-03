@@ -1,5 +1,6 @@
 import commands from './commands';
 import {compileCode} from './compilecode';
+import specialFunctions from './specialFunctions';
 
 export function Stack(item, prev, depth = 0) {
   this.item = item;
@@ -10,6 +11,9 @@ export function Stack(item, prev, depth = 0) {
   return this;
 }
 
+const emptyStack = new Stack();
+const noopCommand = {id: 'noop', params: {}, stack: emptyStack};
+
 // list contains command descriptors {id, params, stack}
 // currentIndex is the command whos stack is displayed in the viewer
 // dirtyIndex says that this command has to be executed, for its stack to be valid
@@ -18,7 +22,6 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
   if (errorIndex !== null && errorIndex >=  dirtyIndex) {
     errorIndex = null;
   }
-  const emptyStack = new Stack();
   const stackAt = i => i < 0 || i >=list.length ? emptyStack : list[i].stack;
 
   // returns a copy of list where item start up to end is replaced by executed items
@@ -86,17 +89,28 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
 // returns an object with all effective param values, after handling any redirect for empty params
 export function prepareParams(command, actualParams, prevStack) {
   let s1Bounds = prevStack.item ? prevStack.item.getBounds(): [{x:0,y:0,z:0},{x:0,y:0,z:0}];
+  let toRadians = degrees => degrees * Math.PI / 180;
+  let toDegrees = radians => radians / Math.PI * 180;
+
   let context = {
+    // standard functions and constants
     sqrt: Math.sqrt,
+    PI: Math.PI,
     sqr: x => x * x,
-    sin: degrees => Math.sin(degrees * Math.PI / 180),
-    cos: degrees => Math.cos(degrees * Math.PI / 180),
-    tan: degrees => Math.tan(degrees * Math.PI / 180),
-    asin: x => Math.asin(x) / Math.PI * 180,
-    acos: x => Math.acos(x) / Math.PI * 180,
-    atan: x => Math.atan(x) / Math.PI * 180,
-    atan2: (y, x) => Math.atan2(y, x) / Math.PI * 180,
+    sin: degrees => Math.sin(toRadians(degrees)),
+    cos: degrees => Math.cos(toRadians(degrees)),
+    tan: degrees => Math.tan(toRadians(degrees)),
+    asin: x => toDegrees(Math.asin(x)),
+    acos: x => toDegrees(Math.acos(x)),
+    atan: x => toDegrees(Math.atan(x)),
+    atan2: (y, x) => toDegrees(Math.atan2(y, x)),
+
+    ...specialFunctions,
+
+    // bounds of object on stack below current object
     s1: {w: s1Bounds[1].x - s1Bounds[0].x, d: s1Bounds[1].y - s1Bounds[0].y, h: s1Bounds[1].z - s1Bounds[0].z},
+
+    // user defined constants
     ...commands.constants
   };
   let p = {};
