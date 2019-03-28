@@ -89,6 +89,9 @@ function writeFile(options, data) {
         'name': options.name,
         'mimeType': contentType
       };
+      if (!options.id) {
+        metadata.parents = ['1gKI3Hw2ZzIu1pYJ9OCcfaScHNfK3__mQ']
+      }
 
       var multipartRequestBody =
           delimiter +
