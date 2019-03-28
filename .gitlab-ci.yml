@@ -17,7 +17,7 @@ pages:
   stage: deploy
   script:
   - mkdir -p public
-  - npm install
+  - npm ci
   - sed -i 's#/dist/#/rpn3d/dist/#' src/App.vue
   - npm run build
   - cp -r dist public
