@@ -1,6 +1,6 @@
 import THREE from 'three';
 import {CSG, CAG} from '@jscad/csg';
-import stlDeSerializer from '@jscad/stl-deserializer';
+import stlDeSerializer from './stl-deserializer';
 
 let constants = {};
 
