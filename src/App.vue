@@ -21,6 +21,7 @@
                 <mutation-button image="/dist/sphere-icon.png" mutation="addSphere" title="sphere"/>
                 <mutation-button image="/dist/torus-icon.png" mutation="addTorus" title="torus"/>
                 <mutation-button image="/dist/cube-icon.png" mutation="importStl" title="stl object"/>
+                <mutation-button image="/dist/gear-icon.png" mutation="gear"/>
                 <mutation-button :image="svgTextIcon('RCL')" mutation="addNamedObject" title="add named object"/>
                 <mutation-button :image="svgTextIcon('POP')" mutation="popStack" title="remove top of stack"/>
                 <mutation-button :image="svgTextIcon('DUP')" mutation="dupStack" title="duplicates top of stack"/>
