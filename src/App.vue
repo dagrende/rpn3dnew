@@ -20,8 +20,8 @@
                 <mutation-button image="/dist/cylinder-icon.png" mutation="addCylinder" title="cylinder"/>
                 <mutation-button image="/dist/sphere-icon.png" mutation="addSphere" title="sphere"/>
                 <mutation-button image="/dist/torus-icon.png" mutation="addTorus" title="torus"/>
-                <mutation-button image="/dist/cube-icon.png" mutation="importStl" title="stl object"/>
                 <mutation-button image="/dist/gear-icon.png" mutation="gear"/>
+                <mutation-button :image="svgTextIcon('.STL')" mutation="importStl" title="stl object"/>
                 <mutation-button :image="svgTextIcon('RCL')" mutation="addNamedObject" title="add named object"/>
                 <mutation-button :image="svgTextIcon('POP')" mutation="popStack" title="remove top of stack"/>
                 <mutation-button :image="svgTextIcon('DUP')" mutation="dupStack" title="duplicates top of stack"/>
@@ -133,7 +133,7 @@
         }
       },
       svgTextIcon(text) {
-        return `data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3C%21DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11.dtd%22%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%0A%20%20version%3D%221.1%22%20baseProfile%3D%22full%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%2024.00%2024.00%22%20enable-background%3D%22new%200%200%2024.00%2024.00%22%20xml%3Aspace%3D%22preserve%22%3E%0A%20%20%3Ctext%20x%3D%225%22%20y%3D%2216%22%20font-family%3D%22Verdana%22%20font-size%3D%227%22%20%20stroke%3D%22none%22%20fill%3D%22black%22%3E${text}%3C%2Ftext%3E%0A%3C%2Fsvg%3E%0A`
+        return `data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3C%21DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11.dtd%22%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%0A%20%20version%3D%221.1%22%20baseProfile%3D%22full%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%2024.00%2024.00%22%20enable-background%3D%22new%200%200%2024.00%2024.00%22%20xml%3Aspace%3D%22preserve%22%3E%0A%20%20%3Ctext%20x%3D%225%22%20y%3D%2216%22%20font-family%3D%22Verdana%22%20font-size%3D%227%22%20%20stroke%3D%22none%22%20fill%3D%22black%22%3E${encodeURIComponent(text)}%3C%2Ftext%3E%0A%3C%2Fsvg%3E%0A`
       },
       adjustSignedInStatus(googleAuth) {
         this.isSignedIn = googleAuth.currentUser.get().isSignedIn();
