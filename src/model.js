@@ -1,6 +1,7 @@
 import commands from './commands';
 import {compileCode} from './compilecode';
 import specialFunctions from './specialFunctions';
+import {CSG, CAG} from '@jscad/csg';
 
 export function Stack(item, prev, depth = 0) {
   this.item = item;
@@ -104,6 +105,7 @@ export function prepareParams(command, actualParams, prevStack) {
     acos: x => toDegrees(Math.acos(x)),
     atan: x => toDegrees(Math.atan(x)),
     atan2: (y, x) => toDegrees(Math.atan2(y, x)),
+    CSG,
 
     ...specialFunctions,
 
@@ -139,6 +141,9 @@ export function getParamValue(key, command, actualParams, context, redirectionsL
       }
       let compiledParam = compileCode("return " + expr);
       let result = compiledParam(context);
+      if (key === 'f') {
+        console.log('f', result);
+      }
       return result;
     }
   } else {

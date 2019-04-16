@@ -42,7 +42,7 @@
                 <mutation-button :image="svgTextIcon('#')" mutation="comment" title="#"/>
                 <mutation-button :image="svgTextIcon('RPT')" mutation="repeat" title="repeat"/>
                 <mutation-button :image="svgTextIcon('CNST')" mutation="const" title="const"/>
-                <!-- <mutation-button :image="svgTextIcon('TRF')" mutation="transformVertices" title="trf"/> -->
+                <mutation-button :image="svgTextIcon('TRF')" mutation="transformVertices" title="trf"/>
               </div>
               <div class="button-row">
                 <!-- <button type="button" @click="get">get</button> -->

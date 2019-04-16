@@ -8,9 +8,9 @@ export default {
   gear: {
     title: 'gear',
     inItemCount: 0,
-    params: {
+    params: { // https://nptel.ac.in/courses/116102012/spur%20gears/design%20aspects%20of%20spur%20gear.html
       numTeeth: {type: 'number', defaultValue: '10', label: 'n'},
-      circularPitch: {type: 'number', defaultValue: '5', label: 'm'},
+      circularPitch: {type: 'number', defaultValue: '5', label: 'p'},
       pressureAngle: {type: 'number', defaultValue: '20', label: 'v'},
       clearance: {type: 'number', defaultValue: '0'},
       thickness: {type: 'number', defaultValue: '5', label: 'h'},
@@ -121,49 +121,45 @@ export default {
     title: 'trf',
     inItemCount: 1,
     params: {
-      f: {type: 'text', defaultValue: ''}
+      f: {type: 'number', defaultValue: 'function(x, y, z){return new CSG.Vector3D(x, y, z)}'}
     },
     execute(stack, params) {
-      // transform: function (matrix4x4) {
-      //   let ismirror = matrix4x4.isMirroring()
-      //   let transformedvertices = {}
-      //   let transformedplanes = {}
-      //   let newpolygons = this.polygons.map(function (p) {
-      //     let newplane
-      //     let plane = p.plane
-      //     let planetag = plane.getTag()
-      //     if (planetag in transformedplanes) {
-      //       newplane = transformedplanes[planetag]
-      //     } else {
-      //       newplane = plane.transform(matrix4x4)
-      //       transformedplanes[planetag] = newplane
-      //     }
-      //     let newvertices = p.vertices.map(function (v) {
-      //       let newvertex
-      //       let vertextag = v.getTag()
-      //       if (vertextag in transformedvertices) {
-      //         newvertex = transformedvertices[vertextag]
-      //       } else {
-      //         newvertex = v.transform(matrix4x4)
-      //         transformedvertices[vertextag] = newvertex
-      //       }
-      //       return newvertex
-      //     })
-      //     if (ismirror) newvertices.reverse()
-      //     return new Polygon(newvertices, p.shared, newplane)
-      //   })
-      //   let result = fromPolygons(newpolygons)
-      //   result.properties = this.properties._transform(matrix4x4)
-      //   result.isRetesselated = this.isRetesselated
-      //   result.isCanonicalized = this.isCanonicalized
-      //   return result
-      // }
-
-      function trf(obj) {
-        console.log('trf', obj);
-        return obj;
+      function transform(orig, f) {
+        let ismirror = false;//matrix4x4.isMirroring()
+        let transformedvertices = {}
+        let transformedplanes = {}
+        let newpolygons = orig.polygons.map(function (p) {
+          let newplane
+          let plane = p.plane
+          let planetag = plane.getTag()
+          if (planetag in transformedplanes) {
+            newplane = transformedplanes[planetag]
+          } else {
+            newplane = plane//.transform(matrix4x4)
+            transformedplanes[planetag] = newplane
+          }
+          let newvertices = p.vertices.map(function (v) {
+            let newvertex
+            let vertextag = v.getTag()
+            if (vertextag in transformedvertices) {
+              newvertex = transformedvertices[vertextag]
+            } else {
+              newvertex = new CSG.Vertex(f(v.pos.x, v.pos.y, v.pos.z))
+              transformedvertices[vertextag] = newvertex
+            }
+            return newvertex
+          })
+          if (ismirror) newvertices.reverse()
+          return new CSG.Polygon(newvertices, p.shared, newplane)
+        })
+        let result = CSG.fromPolygons(newpolygons)
+        result.properties = orig.properties//._transform(matrix4x4)
+        result.isRetesselated = orig.isRetesselated
+        result.isCanonicalized = orig.isCanonicalized
+        return result
       }
-      return stack.prev.add(trf(stack.item));
+
+      return stack.prev.add(transform(stack.item, params.f));
     }
   },
   constants,
