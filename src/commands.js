@@ -125,40 +125,15 @@ export default {
     },
     execute(stack, params) {
       function transform(orig, f) {
-        let ismirror = false;//matrix4x4.isMirroring()
-        let transformedvertices = {}
-        let transformedplanes = {}
-        let newpolygons = orig.polygons.map(function (p) {
-          let newplane
-          let plane = p.plane
-          let planetag = plane.getTag()
-          if (planetag in transformedplanes) {
-            newplane = transformedplanes[planetag]
-          } else {
-            newplane = plane//.transform(matrix4x4)
-            transformedplanes[planetag] = newplane
+        let polygons = [];
+        for (let polygon of orig.polygons) {
+          let vertices = polygon.vertices.map(v => new CSG.Vertex(f(v.pos.x, v.pos.y, v.pos.z)));
+          for (let i = 1; i < vertices.length - 1; i++) {
+            polygons.push(new CSG.Polygon([vertices[0], vertices[i], vertices[i + 1]]));
           }
-          let newvertices = p.vertices.map(function (v) {
-            let newvertex
-            let vertextag = v.getTag()
-            if (vertextag in transformedvertices) {
-              newvertex = transformedvertices[vertextag]
-            } else {
-              newvertex = new CSG.Vertex(f(v.pos.x, v.pos.y, v.pos.z))
-              transformedvertices[vertextag] = newvertex
-            }
-            return newvertex
-          })
-          if (ismirror) newvertices.reverse()
-          return new CSG.Polygon(newvertices, p.shared, newplane)
-        })
-        let result = CSG.fromPolygons(newpolygons)
-        result.properties = orig.properties//._transform(matrix4x4)
-        result.isRetesselated = orig.isRetesselated
-        result.isCanonicalized = orig.isCanonicalized
-        return result
+        }
+        return CSG.fromPolygons(polygons).reTesselated().canonicalized()
       }
-
       return stack.prev.add(transform(stack.item, params.f));
     }
   },
