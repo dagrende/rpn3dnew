@@ -183,8 +183,8 @@
       get() {
         this.$store.dispatch('openHttp', '/dist/test1.json');
       },
-      open() {
-        this.$store.dispatch('open');
+      open(e) {
+        this.$store.dispatch('open', {pickFromRoot: e.altKey === true});
       },
       save() {
         this.$store.commit('save')

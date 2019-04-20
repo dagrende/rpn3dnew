@@ -5,7 +5,10 @@ import {mutations} from './actionsMutations'
 const currentFormat = 2;  // format saved by this code - increment when releasing incompatible changes
 
 export default {
-  openAction(context) {
+  openAction(context, payLoad) {
+    if (payLoad.pickFromRoot) {
+      localStorage.removeItem('rpn3d-current-dir-id');
+    }
     window.gapi.load('picker', function () {
       showPicker().then(function(file) {
         getFileContents(file.id).then(function(documentText) {
@@ -90,7 +93,10 @@ function writeFile(options, data) {
         'mimeType': contentType
       };
       if (!options.id) {
-        metadata.parents = ['1gKI3Hw2ZzIu1pYJ9OCcfaScHNfK3__mQ']
+        let currentDirId = localStorage.getItem('rpn3d-current-dir-id');
+        if (currentDirId) {
+          metadata.parents = [currentDirId];
+        }
       }
 
       var multipartRequestBody =
@@ -120,15 +126,20 @@ function showPicker() {
     var view = new google.picker.DocsView(google.picker.ViewId.DOCS)
     view.setMimeTypes('application/json')
     view.setSelectFolderEnabled(false)
-    view.setIncludeFolders(false)
-    view.setParent("1gKI3Hw2ZzIu1pYJ9OCcfaScHNfK3__mQ")
+    view.setIncludeFolders(true)
+    let currentDirId = localStorage.getItem('rpn3d-current-dir-id');
+    if (currentDirId) {
+      view.setParent(currentDirId);
+    }
     var picker = new google.picker.PickerBuilder()
       .setAppId(process.env.APPLICATION_ID)
       .setOAuthToken(gapi.auth.getToken().access_token)
       .addView(view)
       .setCallback(function (data) {
         if (data.action === 'picked') {
-          resolve(data.docs[0])
+          let doc = data.docs[0];
+          localStorage.setItem('rpn3d-current-dir-id', doc.parentId);
+          resolve(doc)
         } else if (data.action === 'cancel') {
           reject('cancel')
         }
