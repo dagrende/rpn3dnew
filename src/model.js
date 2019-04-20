@@ -98,6 +98,7 @@ export function prepareParams(command, actualParams, prevStack) {
     sqrt: Math.sqrt,
     PI: Math.PI,
     sqr: x => x * x,
+    abs: x => Math.abs(x),
     sin: degrees => Math.sin(toRadians(degrees)),
     cos: degrees => Math.cos(toRadians(degrees)),
     tan: degrees => Math.tan(toRadians(degrees)),
@@ -106,6 +107,7 @@ export function prepareParams(command, actualParams, prevStack) {
     atan: x => toDegrees(Math.atan(x)),
     atan2: (y, x) => toDegrees(Math.atan2(y, x)),
     CSG,
+    Math,
 
     ...specialFunctions,
 
