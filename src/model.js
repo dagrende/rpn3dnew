@@ -108,6 +108,7 @@ export function prepareParams(command, actualParams, prevStack) {
     atan2: (y, x) => toDegrees(Math.atan2(y, x)),
     CSG,
     Math,
+    Vertex: (x, y, z) => new CSG.Vector3D(x, y, z),
 
     ...specialFunctions,
 

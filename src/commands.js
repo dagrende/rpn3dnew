@@ -121,7 +121,7 @@ export default {
     title: 'trf',
     inItemCount: 1,
     params: {
-      f: {type: 'number', defaultValue: 'function(x, y, z){return new CSG.Vector3D(x, y, z)}'}
+      f: {type: 'number', defaultValue: '(x, y, z)=>V(x, y, z)'}
     },
     execute(stack, params) {
       function transform(orig, f) {
