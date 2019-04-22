@@ -13,6 +13,9 @@
         <div class="left-fill">
           <div ref="viewer" class="viewer">
           </div>
+        </div>
+        <command-list-viewer class="right command-list"/>
+      </div>
           <div class="buttons">
               <param-form class="field-row"/>
               <div class="button-row">
@@ -53,10 +56,7 @@
                 <button type="button" :disabled="!$store.getters.canRedo" @click="$store.commit('redo')">redo</button>
                 <button type="button" @click="download">download</button>
               </div>
-          </div>
-        </div>
-        <command-list-viewer class="right command-list"/>
-      </div>
+            </div>
     </div>
 </template>
 
