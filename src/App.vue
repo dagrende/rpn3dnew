@@ -76,6 +76,7 @@
   import './assets/cylinder-icon.png'
   import './assets/torus-icon.png'
   import './assets/sphere-icon.png'
+  import './assets/gear-icon.png'
   import './assets/union-icon.svg'
   import './assets/difference-icon.svg'
   import './assets/intersection-icon.svg'
