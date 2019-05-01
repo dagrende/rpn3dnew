@@ -35,7 +35,7 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
         const command = commands[listItem.id];
         if (prevStack.depth >= command.inItemCount) {
           try {
-            const stack = command.execute(prevStack, prepareParams(command, listItem.params, prevStack), newList);
+            const stack = command.execute(prevStack, prepareParams(command, listItem.params, prevStack, newList), newList);
             prevStack = stack;
             listItem = {id: listItem.id, params: listItem.params, stack}
           } catch(err) {
@@ -88,7 +88,7 @@ export function CommandLog(list = [], currentIndex = -1, dirtyIndex = 0, errorIn
 }
 
 // returns an object with all effective param values, after handling any redirect for empty params
-export function prepareParams(command, actualParams, prevStack) {
+export function prepareParams(command, actualParams, prevStack, commandList) {
   let s1Bounds = prevStack.item ? prevStack.item.getBounds(): [{x:0,y:0,z:0},{x:0,y:0,z:0}];
   let toRadians = degrees => degrees * Math.PI / 180;
   let toDegrees = radians => radians / Math.PI * 180;
@@ -118,6 +118,8 @@ export function prepareParams(command, actualParams, prevStack) {
     // user defined constants
     ...commands.constants
   };
+  defineNamedObjectProps();
+  console.log('s1 size w:', context.s1.w, 'd:',context.s1.d, 'h:',context.s1.h);
   let p = {};
   if (command.params) {
     for (let key in command.params) {
@@ -125,6 +127,22 @@ export function prepareParams(command, actualParams, prevStack) {
     }
   }
   return p;
+
+  // define context properties for all STOred objects w, d, h, min, max
+  function defineNamedObjectProps() {
+    console.log('commands', commandList);
+    for (let command of commandList) {
+      if (command.id === 'nameTop' && command.params.name && command.stack) {
+        console.log('define context.', command.params.name);
+        Object.defineProperty(context, command.params.name, {
+          get: function() {
+            let bounds = command.stack.item.getBounds();
+            return {w: bounds[1].x - bounds[0].x, d: bounds[1].y - bounds[0].y, h: bounds[1].z - bounds[0].z};
+          }
+        });
+      }
+    }
+  }
 }
 
 
