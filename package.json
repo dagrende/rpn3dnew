@@ -18,7 +18,7 @@
     "downloadjs": "^1.4.7",
     "lodash.debounce": "^4.0.8",
     "lodash.mapvalues": "^4.6.0",
-    "three": "^0.73.0",
+    "three": "^0.125.0",
     "three-2-csg": "^1.0.2",
     "three-orbit-controls": "^72.0.0",
     "vue": "^2.6.10",
